@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.login.RegisterActivity">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:cardElevation="6dp">
+
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:translationZ="2dp"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="修改密码"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="14dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp">
+
+
+        <com.vondear.rxtools.view.layout.RxEditText
+            android:id="@+id/edit_phone"
+            android:layout_width="265dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="38dp"
+            android:hint="请输入手机号"
+            android:inputType="phone"
+            android:paddingLeft="28dp"
+            android:textColor="@color/color_8E8E93"
+            android:textSize="13sp"
+            app:background_normal="@color/color_F5F5F5"
+            app:corner_radius="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="106dp">
+
+
+            <com.vondear.rxtools.view.layout.RxEditText
+                android:id="@+id/edit_code"
+                android:layout_width="265dp"
+                android:layout_height="35dp"
+                android:hint="请输入验证码"
+                android:inputType="number"
+                android:paddingLeft="28dp"
+                android:textColor="@color/color_8E8E93"
+                android:textSize="13sp"
+                app:background_normal="@color/color_F5F5F5"
+                app:corner_radius="10dp"/>
+
+            <com.vondear.rxtools.view.layout.RxTextView
+                android:id="@+id/tv_code"
+                android:layout_width="81dp"
+                android:layout_height="26dp"
+                android:layout_alignRight="@+id/edit_code"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:text="@string/getVCode"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:background_normal="@color/colortheme"
+                app:corner_radius="10dp"
+                app:ripple_color="@color/ripple_ECEAE6"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="165dp">
+
+
+            <com.vondear.rxtools.view.layout.RxEditText
+                android:id="@+id/edit_pwd"
+                android:layout_width="265dp"
+                android:layout_height="35dp"
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:paddingLeft="28dp"
+                android:textColor="@color/color_8E8E93"
+                android:textSize="13sp"
+                app:background_normal="@color/color_F5F5F5"
+                app:corner_radius="10dp"/>
+
+            <com.vondear.rxtools.view.layout.RxTextView
+                android:id="@+id/tv_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/edit_pwd"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                app:icon_src_normal="@mipmap/ic_eye_close"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="224dp">
+
+
+            <com.vondear.rxtools.view.layout.RxEditText
+                android:id="@+id/edit_pwd_again"
+                android:layout_width="265dp"
+                android:layout_height="35dp"
+                android:hint="请输入密码"
+                android:inputType="textPassword"
+                android:paddingLeft="28dp"
+                android:textColor="@color/color_8E8E93"
+                android:textSize="13sp"
+                app:background_normal="@color/color_F5F5F5"
+                app:corner_radius="10dp"/>
+
+            <com.vondear.rxtools.view.layout.RxTextView
+                android:id="@+id/tv_pwd_again"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/edit_pwd_again"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                app:icon_src_normal="@mipmap/ic_eye_close"
+                />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="290dp"
+            android:alpha="0.6"
+            android:background="@mipmap/ic_btn"
+            android:elevation="6dp"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="完成"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:text="《威觅注册协议》和《法律声明及隐私权政策》"
+            android:textColor="@color/font_475669"
+            android:textSize="12sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

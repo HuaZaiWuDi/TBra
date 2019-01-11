@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/white</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+
+    <!--主题色-->
+    <color name="colortheme">#FD74B4</color>
+
+    <!--次要字体颜色-->
+    <color name="font_475669">#475669</color>
+    <color name="line_C3C5CA">#C3C5CA</color>
+    <color name="line_333845">#333845</color>
+    <color name="font_6A6F7B">#6A6F7B</color>
+    <color name="font_C3C5CA">#C3C5CA</color>
+    <color name="font_222222">#222222</color>
+    <color name="font_262628">#262628</color>
+    <color name="color_5F8DFF">#5F8DFF</color>
+    <color name="color_FE5FA9">#FE5FA9</color>
+    <color name="color_F5F5F5">#F5F5F5</color>
+    <color name="color_8E8E93">#8E8E93</color>
+    <color name="font_666666">#666666</color>
+    <color name="ripple_ECEAE6">#ECEAE6</color>
+
+</resources>

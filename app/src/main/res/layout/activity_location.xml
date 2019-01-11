@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.login.LocationActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:cardElevation="6dp">
+
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:translationZ="2dp"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:rightText="跳过"
+            app:rightTextColor="@color/font_475669"
+            app:rightTextSize="13sp"
+            app:title="个人信息验证"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="14dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="38dp"
+            android:text="请允许我们获取您的城市"/>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="95dp"
+            android:src="@mipmap/bg_location"/>
+
+
+        <ImageView
+            android:id="@+id/img_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="200dp"
+            android:src="@mipmap/ic_btn_location"/>
+
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="308dp"
+            android:drawableLeft="@mipmap/ic_location"
+            android:drawablePadding="4dp"
+            android:text="2222222"
+            android:textColor="@color/font_475669"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+
+
+        <TextView
+            android:id="@+id/tv_nextStep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="370dp"
+            android:alpha="0.6"
+            android:background="@mipmap/ic_btn"
+            android:elevation="6dp"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="为了给您推送个性化的资讯，我们需要获得您的位置信息，您的隐私将会得到严格保护。"
+            android:textColor="@color/font_475669"
+            android:textSize="12sp"/>
+
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

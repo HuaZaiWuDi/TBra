@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+
+    <com.flyco.tablayout.CommonTabLayout
+        android:id="@+id/commonTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:background="@color/white"
+        app:tl_indicator_anim_duration="500"
+        app:tl_indicator_anim_enable="true"
+        app:tl_indicator_bounce_enable="true"
+        app:tl_indicator_color="@color/colortheme"
+        app:tl_indicator_height="19dp"
+        app:tl_indicator_margin_top="5dp"
+        app:tl_indicator_style="BLOCK"
+        app:tl_textBold="SELECT"
+        app:tl_textSelectColor="@color/white"
+        app:tl_textUnselectColor="@color/font_6A6F7B"
+        app:tl_textsize="12sp"
+        tools:background="@color/gray"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/line_C3C5CA"/>
+
+
+    <com.vondear.rxtools.view.layout.RxRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="156dp"
+        app:background_normal="@color/colortheme"
+        app:corner_radius="6dp">
+
+
+    </com.vondear.rxtools.view.layout.RxRelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="异常数据"
+            android:textColor="@color/font_475669"
+            android:textSize="14sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="更多"
+            android:textColor="@color/colortheme"/>
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/line_C3C5CA"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/errorRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="14dp"
+        android:text="重点关注“L04”"
+        android:textColor="@color/font_666666"
+        android:textSize="12sp"/>
+
+
+</LinearLayout>

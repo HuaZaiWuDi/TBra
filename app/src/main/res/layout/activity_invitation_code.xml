@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.login.InvitationCodeActivity">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:cardElevation="6dp">
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:translationZ="2dp"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="邀请码"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="14dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp">
+
+
+        <ImageView
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/ic_launcher"/>
+
+
+        <RelativeLayout
+            android:layout_width="265dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="170dp">
+
+
+            <com.vondear.rxtools.view.layout.RxEditText
+                android:id="@+id/edit_invitationCode"
+                android:layout_width="265dp"
+                android:layout_height="35dp"
+                android:hint="请输入邀请码"
+                android:maxLength="5"
+                android:paddingLeft="66dp"
+                android:textColor="@color/color_8E8E93"
+                android:textSize="13sp"
+                app:background_normal="@color/color_F5F5F5"
+                app:corner_radius="10dp"/>
+
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/ic_launcher"/>
+
+            <com.vondear.rxtools.view.layout.RxView
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="45dp"
+                app:background_normal="@color/white"
+                app:gradient_angle="TOP_BOTTOM"
+                app:gradient_centerColor="#BCBCBC"
+                app:gradient_endColor="@color/white"
+                app:gradient_startColor="@color/white"/>
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_verify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="260dp"
+            android:alpha="0.6"
+            android:background="@mipmap/ic_btn"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="开始验证"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

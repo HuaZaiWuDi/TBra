@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.wesmartclothing.tbra">
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+    <application
+        android:name=".app.APP"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/appName"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="label,icon,roundIcon,theme">
+
+        <!-- android7.0适配 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <!-- 元数据 -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path"/>
+        </provider>
+
+        <!-- BUGly升级 -->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent"/>
+
+        <!-- 高德地图KEY -->
+        <!-- <meta-data -->
+        <!-- android:name="com.amap.api.v2.apikey" -->
+        <!-- android:value="20cc8510855f543b2bf4c59d647852e2"/> -->
+
+
+        <!-- <service android:name="com.amap.api.location.APSService"/> -->
+
+
+        <!-- &lt;!&ndash; 极光通知广播 &ndash;&gt; -->
+        <!-- <receiver -->
+        <!-- android:name=".utils.jpush.MyJpushReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="false"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.REGISTRATION"/> -->
+        <!-- <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION"/> -->
+
+
+        <!-- &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.CONNECTION"/> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> &lt;!&ndash; 开机广播 &ndash;&gt; -->
+        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> &lt;!&ndash; 网络状态改变广播 &ndash;&gt; -->
+
+
+        <!-- <category android:name="lab.wesmartclothing.wefit.flyso"/> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <!-- <receiver android:name=".utils.jpush.MyJPushMessageReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE"/> -->
+
+
+        <!-- <category android:name="lab.wesmartclothing.wefit.flyso"/> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+
+        <!-- &lt;!&ndash; DUF服务 &ndash;&gt; -->
+        <!-- <activity android:name=".ble.dfu.NotificationActivity"/> -->
+
+
+        <!-- <service -->
+        <!-- android:name=".ble.dfu.DfuService" -->
+        <!-- android:exported="true"/> -->
+
+
+        <!-- 友盟社会SDK -->
+        <!-- 友盟 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5a38b2e8b27b0a02a7000026">
+        </meta-data>
+
+        <!-- 友盟社会分享登录 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="tencent1106924585"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        </activity>
+        <activity
+            android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <!-- 分割线============================================================================== -->
+
+        <activity android:name=".ui.guide.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.main.MainActivity">
+        </activity>
+        <activity android:name=".ui.login.LoginActivity">
+        </activity>
+        <activity android:name=".ui.login.RegisterActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.SettingActivity">
+        </activity>
+        <activity android:name=".ui.login.InvitationCodeActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.ResetPwdActivity">
+        </activity>
+        <activity android:name=".ui.login.VerifyPhoneActivity">
+        </activity>
+        <activity android:name=".ui.login.InputInfoActivity">
+        </activity>
+        <activity android:name=".ui.login.IllnessActivity">
+        </activity>
+        <activity android:name=".ui.login.LocationActivity">
+        </activity>
+
+        <service
+            android:name=".service.LocationIntentService"
+            android:exported="false">
+        </service>
+
+        <activity android:name=".ui.main.mine.ScanDeviceActivity">
+        </activity>
+    </application>
+
+</manifest>

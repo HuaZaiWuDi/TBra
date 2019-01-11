@@ -1,0 +1,121 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.wesmartclothing.tbra"
+        minSdkVersion 24
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [qqappid: "1106924585"]
+
+        //修改apk名字
+        applicationVariants.all { variant ->
+            if (variant.buildType.name == "release") {
+                variant.outputs.all { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // apk_渠道名-版本号-版本名称-编译时间.apk
+                        def fileName = "tbra-v${defaultConfig.versionName}-${new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}-release.apk"
+                        outputFileName = fileName
+                    }
+                }
+            } else if (variant.buildType.name == "debug") {
+                variant.outputs.all { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // apk_渠道名-版本号-版本名称-编译时间.apk
+                        def fileName = "tbra-v${defaultConfig.versionName}-${new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}-debug.apk"
+                        outputFileName = fileName
+                    }
+                }
+            }
+        }
+
+    }
+
+    buildTypes {
+        release {
+            buildConfigField "boolean", "LeakCanary", "false"//9月5号演示版本置为true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "boolean", "LeakCanary", "false"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'jack'
+            keyPassword '123456'
+            storeFile file('D:/Android/jack.jks')
+            storePassword '123456'
+        }
+    }
+    defaultConfig {
+        packagingOptions {
+            exclude 'META-INF/proguard/androidx-annotations.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    debugImplementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.jackUtil:RxTools:1.1.3'
+    //友盟社会分享
+    implementation 'com.umeng.umsdk:share-core:6.9.4'
+    implementation 'com.umeng.umsdk:share-qq:6.9.4'
+//    implementation 'com.umeng.umsdk:share-wechat:6.9.4'
+    implementation 'com.umeng.umsdk:share-sina:6.9.4'
+    implementation 'com.umeng.umsdk:common:1.5.4'
+    implementation 'com.umeng.umsdk:utdid:1.1.5.3'
+    //官方文档中没有这个依赖，要是不添加会导致初始化的时候的UMConfigure这个类不能识别
+    implementation files('libs/umeng-share-wechat-simplify-6.9.4.jar')
+    //BUGly
+    //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+
+    //https://github.com/kongzue/Dialog
+    implementation 'com.kongzue.dialog:dialog:2.4.5'
+
+    //蓝牙库
+    implementation 'com.clj.fastble:FastBleLib:2.3.2'
+    implementation 'no.nordicsemi.android:dfu:1.6.1'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+
+    //快速开发顶部、底部导航栏
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+
+    implementation('com.alibaba.android:ultraviewpager:1.0.7.7@aar') {
+        transitive = true
+        exclude group: 'com.android.support'
+    }
+
+    implementation('com.github.florent37:arclayout:1.0.3') {
+        exclude group: 'com.android.support'
+    }
+    //https://github.com/gzu-liyujiang/AndroidPicker
+    implementation('cn.qqtheme.framework:WheelPicker:+') {
+        exclude group: 'com.android.support'
+    }
+}
