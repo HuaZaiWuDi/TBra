@@ -172,4 +172,24 @@ public class UserInfoBean {
     }
 
 
+    @Override
+    public String toString() {
+        return "UserInfoBean{" +
+                "age=" + age +
+                ", avatar='" + avatar + '\'' +
+                ", birthday=" + birthday +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", createTime=" + createTime +
+                ", height=" + height +
+                ", invitationCode='" + invitationCode + '\'' +
+                ", phone='" + phone + '\'' +
+                ", province='" + province + '\'' +
+                ", signature='" + signature + '\'' +
+                ", status=" + status +
+                ", userName='" + userName + '\'' +
+                ", illnessList=" + illnessList +
+                ", macAddrList=" + macAddrList +
+                '}';
+    }
 }

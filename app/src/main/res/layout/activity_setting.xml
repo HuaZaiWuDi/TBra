@@ -157,20 +157,18 @@
     </android.support.v7.widget.CardView>
 
 
-    <com.vondear.rxtools.view.layout.RxTextView
+    <TextView
         android:id="@+id/tv_logout"
-        android:layout_width="260dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"
-        android:elevation="6dp"
+        android:background="@mipmap/ic_btn"
         android:gravity="center"
         android:text="退出登录"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:background_normal="@color/colortheme"
-        app:corner_radius="24dp"
-        app:ripple_color="@color/ripple_ECEAE6"/>
+        />
 
 
 </LinearLayout>

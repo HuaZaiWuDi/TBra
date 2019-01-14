@@ -21,7 +21,7 @@ import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.net.ServiceAPI;
 import com.zchu.rxcache.RxCache;
-import com.zchu.rxcache.diskconverter.SerializableDiskConverter;
+import com.zchu.rxcache.diskconverter.GsonDiskConverter;
 
 import java.util.Arrays;
 
@@ -79,6 +79,8 @@ public class APP extends Application {
 
     private void initDialog() {
         DialogSettings.use_blur = false;
+        DialogSettings.dialog_cancelable_default = true;
+        DialogSettings.style = DialogSettings.STYLE_IOS;
     }
 
     private void BugLyInit() {
@@ -100,9 +102,9 @@ public class APP extends Application {
             RxCache.initializeDefault(new RxCache.Builder()
                     .appVersion(2)
                     .diskDir(RxFileUtils.getCecheFolder(myApp, getString(R.string.appName) + "-cache"))
-                    .diskConverter(new SerializableDiskConverter())
+                    .diskConverter(new GsonDiskConverter())
                     .diskMax((20 * 1024 * 1024))
-                    .memoryMax(0)
+                    .memoryMax((20 * 1024 * 1024))
                     .setDebug(false)
                     .build());
         } catch (Exception e) {

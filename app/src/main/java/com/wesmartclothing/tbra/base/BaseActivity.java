@@ -18,6 +18,8 @@ import com.vondear.rxtools.utils.RxScreenAdapter;
 import com.vondear.rxtools.utils.StatusBarUtils;
 import com.vondear.rxtools.view.RxTitle;
 import com.wesmartclothing.tbra.R;
+import com.wesmartclothing.tbra.app.APP;
+import com.wesmartclothing.tbra.ui.guide.SplashActivity;
 
 import butterknife.ButterKnife;
 import io.reactivex.subjects.BehaviorSubject;
@@ -48,6 +50,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IBase {
 
         mContext = this;
         mActivity = this;
+
+        //防止应用处于后台，被杀死，再次唤醒时，重走启动流程
+        if (savedInstanceState != null) {
+            Intent intent = new Intent(APP.myApp, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return;
+        }
 
         initStatusBar();
 

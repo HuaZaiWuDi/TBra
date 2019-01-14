@@ -21,4 +21,14 @@ public interface SPKey {
 
     String SP_token = "SP_token";
 
+
+    String SP_UserInfo = "SP_UserInfo";
+
+    String SP_GUIDE = "SP_GUIDE";//引导页
+
+    /**
+     * 警告规则
+     */
+    String SP_WARNING_RULE = "SP_WARNING_RULE";
+
 }

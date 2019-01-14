@@ -7,9 +7,11 @@ import com.wesmartclothing.tbra.entity.EmptyBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
+import com.wesmartclothing.tbra.entity.RelateAccountListBean;
 import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
 import com.wesmartclothing.tbra.entity.UserCenterBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
+import com.wesmartclothing.tbra.entity.WarningRuleBean;
 
 import java.util.List;
 
@@ -212,13 +214,40 @@ public interface ApiService {
      * 绑定设备信息
      */
     @POST("device/bindDevice")
-    Observable<HttpResult<EmptyBean>> saveUserInfo(@Body BindDeviceBean Bean);
+    Observable<HttpResult<String>> saveUserInfo(@Body BindDeviceBean Bean);
 
     /**
      * 移除绑定设备
      */
     @POST("device/removeDeviceBind")
-    Observable<HttpResult<EmptyBean>> saveUserInfo(@Body GidBean Bean);
+    Observable<HttpResult<String>> saveUserInfo(@Body GidBean Bean);
 
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 通知账号信息
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 添加通知账号信息
+     */
+    @POST("relateAccount/addRelateAccount")
+    Observable<HttpResult<String>> addRelateAccount(@Body RelateAccountListBean.ListBean Bean);
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 用户告警规则信息
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 添加用户告警规则信息
+     */
+    @POST("warningRule/addUserRule")
+    Observable<HttpResult<String>> addUserRule(@Body WarningRuleBean Bean);
+
+    /**
+     * 用户告警规则信息详情
+     */
+    @POST("warningRule/userRuleDetail")
+    Observable<HttpResult<WarningRuleBean>> userRuleDetail();
 
 }

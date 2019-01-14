@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.mine.relationphone.EditPhoneActivity">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:cardElevation="6dp">
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:translationZ="2dp"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="关联手机号"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="14dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="33dp"
+            android:layout_marginTop="21dp"
+            android:text="验证手机号"
+            android:textColor="@color/font_475669"
+            android:textSize="31sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="33dp"
+            android:layout_marginTop="98dp"
+            android:text="昵称"
+            android:textColor="@color/font_475669"
+            android:textSize="13sp"/>
+
+
+        <com.vondear.rxtools.view.layout.RxEditText
+            android:id="@+id/edit_niceName"
+            android:layout_width="265dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="125dp"
+            android:hint="请输入昵称"
+            android:paddingLeft="28dp"
+            android:textSize="13sp"
+            app:background_normal="@color/color_F5F5F5"
+            app:corner_radius="18dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="33dp"
+            android:layout_marginTop="188dp"
+            android:text="关联手机号"
+            android:textColor="@color/font_475669"
+            android:textSize="13sp"/>
+
+
+        <com.vondear.rxtools.view.layout.RxEditText
+            android:id="@+id/edit_phone"
+            android:layout_width="265dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="215dp"
+            android:hint="请输入您需要关联的手机号"
+            android:inputType="phone"
+            android:paddingLeft="28dp"
+            android:textSize="13sp"
+            app:background_normal="@color/color_F5F5F5"
+            app:corner_radius="18dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="33dp"
+            android:layout_marginTop="278dp"
+            android:text="验证码"
+            android:textColor="@color/font_475669"
+            android:textSize="13sp"/>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="305dp">
+
+
+            <com.vondear.rxtools.view.layout.RxEditText
+                android:id="@+id/edit_code"
+                android:layout_width="265dp"
+                android:layout_height="35dp"
+                android:hint="请输入验证码"
+                android:inputType="number"
+                android:paddingLeft="28dp"
+                android:textColor="@color/color_8E8E93"
+                android:textSize="13sp"
+                app:background_normal="@color/color_F5F5F5"
+                app:corner_radius="10dp"/>
+
+            <com.vondear.rxtools.view.layout.RxTextView
+                android:id="@+id/tv_code"
+                android:layout_width="81dp"
+                android:layout_height="26dp"
+                android:layout_alignRight="@+id/edit_code"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:gravity="center"
+                android:text="@string/getVCode"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:background_normal="@color/colortheme"
+                app:corner_radius="10dp"
+                app:ripple_color="@color/ripple_ECEAE6"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_addPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="370dp"
+            android:alpha="0.6"
+            android:background="@mipmap/ic_btn"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="开始验证"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,17 +1,31 @@
 package com.wesmartclothing.tbra.ui.main.monitor;
 
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.CardView;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.kongzue.dialog.v2.CustomDialog;
 import com.tmall.ultraviewpager.UltraViewPager;
+import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
+import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
+import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
+import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
+import com.wesmartclothing.tbra.view.PowerIconView;
+import com.wesmartclothing.tbra.view.TimingMonitorView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * @Package com.wesmartclothing.tbra.ui.main.testing
@@ -25,6 +39,23 @@ public class MonitorFragment extends BaseAcFragment {
 
     @BindView(R.id.ultraViewPager)
     UltraViewPager ultraViewPager;
+    @BindView(R.id.tv_deviceName)
+    TextView mTvDeviceName;
+    @BindView(R.id.powerIcon)
+    PowerIconView mPowerIcon;
+    @BindView(R.id.tv_switchDevice)
+    TextView mTvSwitchDevice;
+    @BindView(R.id.tv_bindDevice)
+    TextView mTvBindDevice;
+    @BindView(R.id.layout_device_empty)
+    LinearLayout mLayoutDeviceEmpty;
+    @BindView(R.id.layout_device)
+    CardView mLayoutDevice;
+    @BindView(R.id.timingMonitorView)
+    TimingMonitorView mTimingMonitorView;
+    @BindView(R.id.layout_monitor_empty)
+    LinearLayout mLayoutMonitorEmpty;
+
 
     private List<String> imgs = new ArrayList<>();
 
@@ -46,6 +77,21 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initViews() {
         initViewPage();
+        bleConnectState(BleTools.getInstance().isConnected());
+    }
+
+    private void bleConnectState(boolean isConnected) {
+        mLayoutDeviceEmpty.setVisibility(View.VISIBLE);
+        mTvBindDevice.setText("去连接");
+        if (!isConnected) {//未连接
+            mPowerIcon.setVisibility(View.GONE);
+            mTvSwitchDevice.setText("连接设备\t\t>>");
+            mTvDeviceName.setText("设备名字：-\t-");
+        } else {//已连接
+            mTvSwitchDevice.setText("切换设备\t\t>>");
+            mPowerIcon.setVisibility(View.VISIBLE);
+            mTvDeviceName.setText("设备名字：" + BleTools.getInstance().getBleDevice().getMac());
+        }
     }
 
 
@@ -56,7 +102,18 @@ public class MonitorFragment extends BaseAcFragment {
 
     @Override
     public void initRxBus2() {
-
+        //系统蓝牙监听
+        RxBus.getInstance().register2(SystemBleOpenBus.class)
+                .compose(RxComposeUtils.<SystemBleOpenBus>bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<SystemBleOpenBus>() {
+                    @Override
+                    protected void _onNext(SystemBleOpenBus systemBleOpenBus) {
+//                        if (systemBleOpenBus.isOpen) {
+//                            CustomDialog.unloadAllDialog();
+//                            RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
+//                        }
+                    }
+                });
     }
 
 
@@ -67,10 +124,43 @@ public class MonitorFragment extends BaseAcFragment {
         imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=53404ec533a940868fef1c0793cc8a5d&imgtype=0&src=http%3A%2F%2Fwerkstette.dk%2Fwp-content%2Fuploads%2F2015%2F09%2FEntertainment_Weekly_Photographer_Marc_Hom_British_Actor_Charlie_Hunnam_as_King_Arthur_Retouch_Werkstette10-770x841.jpg");
 
         //UltraPagerAdapter 绑定子view到UltraViewPager
-        PagerAdapter adapter = new UltraPagerAdapter(imgs, ultraViewPager);
+        UltraPagerAdapter adapter = new UltraPagerAdapter(imgs, ultraViewPager);
+        adapter.setSelectImgListener(new UltraPagerAdapter.SelectImgListener() {
+            @Override
+            public void selectItem(String URL) {
+
+            }
+        });
         ultraViewPager.setAdapter(adapter);
 
     }
 
 
+    @OnClick({R.id.tv_switchDevice, R.id.tv_bindDevice})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_switchDevice:
+                break;
+            case R.id.tv_bindDevice:
+                if (!BleTools.getBleManager().isBlueEnable()) {
+                    CustomDialog.show(mContext, R.layout.dialog_default, new CustomDialog.BindView() {
+                        @Override
+                        public void onBind(View rootView) {
+                            rootView.findViewById(R.id.tv_complete)
+                                    .setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            CustomDialog.unloadAllDialog();
+                                            BleTools.getBleManager().enableBluetooth();
+                                        }
+                                    });
+                        }
+                    }).setCanCancel(true);
+                } else {
+                    //去绑定或者连接
+                    RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
+                }
+                break;
+        }
+    }
 }

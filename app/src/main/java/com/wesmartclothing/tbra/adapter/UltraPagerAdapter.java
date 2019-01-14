@@ -31,6 +31,15 @@ public class UltraPagerAdapter extends PagerAdapter {
 
     private List<String> imgs;
 
+    public interface SelectImgListener {
+        void selectItem(String URL);
+    }
+
+    private SelectImgListener mSelectImgListener;
+
+    public void setSelectImgListener(SelectImgListener selectImgListener) {
+        mSelectImgListener = selectImgListener;
+    }
 
     public UltraPagerAdapter(List<String> imgs, UltraViewPager ultraViewPager) {
         this.imgs = imgs;
@@ -82,6 +91,13 @@ public class UltraPagerAdapter extends PagerAdapter {
                 imgs.get(position),
                 R.mipmap.ic_launcher,
                 rxImageView);
+
+        rxImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSelectImgListener != null) mSelectImgListener.selectItem("");
+            }
+        });
         container.addView(rxImageView);
         return rxImageView;
     }

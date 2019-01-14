@@ -58,10 +58,8 @@
         <com.vondear.rxtools.view.layout.RxTextView
             android:layout_width="10dp"
             android:layout_height="10dp"
-            app:background_normal="@color/white"
-            app:corner_radius="5dp"
-            app:gradient_endColor="#4C9FFF"
-            app:gradient_startColor="#717DFF"/>
+            app:icon_src_normal="@mipmap/ic_legend"
+            />
 
 
         <TextView
@@ -426,6 +424,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
 
 
 </RelativeLayout>

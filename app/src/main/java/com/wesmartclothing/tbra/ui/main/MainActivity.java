@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
@@ -16,18 +17,18 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxUtils;
+import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.StatusBarUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.net.ServiceAPI;
-import com.wesmartclothing.tbra.ui.guide.SplashActivity;
 import com.wesmartclothing.tbra.ui.main.home.HomeFragment;
 import com.wesmartclothing.tbra.ui.main.mine.MineFragment;
 import com.wesmartclothing.tbra.ui.main.monitor.MonitorFragment;
@@ -46,6 +47,8 @@ public class MainActivity extends BaseActivity {
     CommonTabLayout mCommonTabLayout;
     @BindView(R.id.layoutTitle)
     RelativeLayout mLayoutTitle;
+    @BindView(R.id.tv_tip)
+    TextView mTvTip;
 
 
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
@@ -74,12 +77,15 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         RxLogUtils.e("加载：MainActivity：" + savedInstanceState);
-        //防止应用处于后台，被杀死，再次唤醒时，重走启动流程
-        if (savedInstanceState != null && mActivity != null) {
-            RxActivityUtils.skipActivityAndFinish(mActivity, SplashActivity.class);
-            return;
-        }
+
         super.onCreate(savedInstanceState);
+    }
+
+    private void initFragment() {
+        mFragments.clear();
+        mFragments.add(MonitorFragment.getInstance());
+        mFragments.add(HomeFragment.getInstance());
+        mFragments.add(MineFragment.getInstance());
     }
 
     @Override
@@ -88,13 +94,12 @@ public class MainActivity extends BaseActivity {
         initBottomBar();
         setDefaultFragment();
         initSystemConfig();
-    }
 
-    private void initFragment() {
-        mFragments.clear();
-        mFragments.add(MonitorFragment.getInstance());
-        mFragments.add(HomeFragment.getInstance());
-        mFragments.add(MineFragment.getInstance());
+        //初次进入提示用户穿戴设备及设置警告规则
+        if (!SPUtils.getBoolean(SPKey.SP_WARNING_RULE, false)) {
+            new UsedTipDialog(mContext, lifecycleSubject);
+        }
+
     }
 
 
@@ -110,18 +115,16 @@ public class MainActivity extends BaseActivity {
 
 
     private void initBottomBar() {
-        String[] tab_text = {getString(R.string.navMonitor), getString(R.string.navMain), getString(R.string.navMine)};
-//        int[] imgs_unselect = {R.mipmap.icon_slimming_unselect, R.mipmap.icon_record,
-//                R.mipmap.icon_find_unselect, R.mipmap.icon_mine_unselect};
-//        int[] imgs_select = {R.mipmap.icon_slimming_select, R.mipmap.icon_record_unselect,
-//                R.mipmap.icon_find_select, R.mipmap.icon_mine_select};
+        int[] imgs_unselect = {R.mipmap.nav_monitor, R.mipmap.nav_home,
+                R.mipmap.nav_mine};
+        int[] imgs_select = {R.mipmap.nav_monitor_select, R.mipmap.nav_home_select,
+                R.mipmap.nav_mine_select};
         mBottomTabItems.clear();
-        for (int i = 0; i < tab_text.length; i++) {
-            mBottomTabItems.add(new BottomTabItem(tab_text[i]));
+        for (int i = 0; i < imgs_unselect.length; i++) {
+            mBottomTabItems.add(new BottomTabItem(imgs_select[i], imgs_unselect[i], ""));
         }
 
         mCommonTabLayout.setTabData(mBottomTabItems);
-
         mCommonTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
@@ -236,5 +239,6 @@ public class MainActivity extends BaseActivity {
 //        }
 
     }
+
 
 }

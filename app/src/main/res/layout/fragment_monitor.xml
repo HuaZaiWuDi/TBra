@@ -60,28 +60,36 @@
                     >
 
                     <TextView
+                        android:id="@+id/tv_deviceName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="Antina的小觅"
+                        android:text="设备名字：-\t-"
                         android:textColor="@color/font_475669"
                         android:textSize="12sp"/>
 
-                    <ImageView
-                        android:id="@+id/img_battery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"/>
+                    <com.wesmartclothing.tbra.view.PowerIconView
+                        android:id="@+id/powerIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="12dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toRightOf="@+id/tv_deviceName"
+                        android:visibility="gone"/>
 
 
                     <TextView
+                        android:id="@+id/tv_switchDevice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="切换设备"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:text="切换设备\t\t>>"
                         android:textColor="@color/colortheme"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp"
+                        />
 
 
                     <View
@@ -100,11 +108,44 @@
                     app:background_normal="@color/colortheme"
                     app:corner_radius="6dp">
 
-
                 </com.vondear.rxtools.view.layout.RxRelativeLayout>
 
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_device_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@mipmap/ic_p"
+                    android:drawablePadding="14dp"
+                    android:text="请打开蓝牙并允许新的连接"
+                    android:textColor="@color/font_C3C5CA"
+                    android:textSize="12sp"/>
+
+
+                <TextView
+                    android:id="@+id/tv_bindDevice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@mipmap/ic_btn"
+                    android:gravity="center"
+                    android:text="去连接"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    />
+
+            </LinearLayout>
+
 
         </android.support.v7.widget.CardView>
 
@@ -135,6 +176,29 @@
                 android:layout_height="match_parent">
 
             </com.wesmartclothing.tbra.view.TimingMonitorView>
+
+
+            <LinearLayout
+                android:id="@+id/layout_monitor_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@mipmap/ic_p"
+                    android:drawablePadding="14dp"
+                    android:text="未有实时监测数据，穿上监测内衣试试吧！"
+                    android:textColor="@color/font_C3C5CA"
+                    android:textSize="12sp"/>
+
+
+            </LinearLayout>
 
 
         </android.support.v7.widget.CardView>

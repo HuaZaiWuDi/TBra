@@ -12,14 +12,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="39dp"
-            android:background="#FBEDD5"
-            android:gravity="center"
-            android:text="您的胸部健康超越了全国XX%用户"
-            android:textColor="@color/font_6A6F7B"
-            android:textSize="13sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

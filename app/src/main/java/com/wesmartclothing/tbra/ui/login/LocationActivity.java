@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kongzue.dialog.v2.WaitDialog;
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxManager;
@@ -19,6 +20,7 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.service.LocationIntentService;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.wesmartclothing.tbra.ui.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -80,9 +82,11 @@ public class LocationActivity extends BaseActivity {
                             WaitDialog.dismiss();
                             mTvNextStep.setEnabled(true);
                             mTvNextStep.setAlpha(1f);
-                            InputInfoActivity.sInfoBean.setCountry("中国");
-                            InputInfoActivity.sInfoBean.setProvince(address.getAdminArea());
-                            InputInfoActivity.sInfoBean.setCity(address.getLocality());
+                            if (InputInfoActivity.sInfoBean != null) {
+                                InputInfoActivity.sInfoBean.setCountry("中国");
+                                InputInfoActivity.sInfoBean.setProvince(address.getAdminArea());
+                                InputInfoActivity.sInfoBean.setCity(address.getLocality());
+                            }
                         }
                     }
                 });
@@ -106,6 +110,7 @@ public class LocationActivity extends BaseActivity {
 //                        Bundle bundle = new Bundle();
 //                        bundle.putBoolean(Key.BUNDLE_FORCE_BIND, false);
 //                        RxActivityUtils.skipActivity(mContext, AddDeviceActivity.class, bundle);
+                        RxActivityUtils.skipActivity(mContext, MainActivity.class);
                     }
 
                     @Override

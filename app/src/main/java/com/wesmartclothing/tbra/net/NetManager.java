@@ -8,7 +8,6 @@ import com.vondear.rxtools.utils.RxDeviceUtils;
 import com.wesmartclothing.tbra.BuildConfig;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -42,10 +41,10 @@ public class NetManager {
 
     public NetManager() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true);
+//        builder.connectTimeout(10, TimeUnit.SECONDS)
+//                .readTimeout(10, TimeUnit.SECONDS)
+//                .writeTimeout(10, TimeUnit.SECONDS)
+//                .retryOnConnectionFailure(true);
         if (BuildConfig.DEBUG) {
             //日志显示级别
             HttpLoggingInterceptor.Level level = HttpLoggingInterceptor.Level.BODY;

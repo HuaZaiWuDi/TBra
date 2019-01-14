@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
 
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLocationUtils;
@@ -67,18 +66,18 @@ public class LocationIntentService extends IntentService {
     public void onCreate() {
         RxLogUtils.d(TAG, "onCreate");
         super.onCreate();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                isSuccess = RxLocationUtils.register(getApplicationContext(), 0, 0, mOnLocationChangeListener);
-                if (isSuccess) {
-                    RxLogUtils.d("init success");
-                    Looper.loop();
-                }
-            }
-        }).start();
+        initLocation();
     }
+
+    private void initLocation() {
+        isSuccess = RxLocationUtils.register(getApplicationContext(), 0, 0, mOnLocationChangeListener);
+        if (isSuccess) {
+            RxLogUtils.d("init success");
+        } else {
+            initLocation();
+        }
+    }
+
 
     @Override
     public void onDestroy() {

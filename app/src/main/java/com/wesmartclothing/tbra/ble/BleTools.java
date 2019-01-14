@@ -307,6 +307,18 @@ public class BleTools {
     }
 
 
+    /**
+     * 是否连接设备
+     *
+     * @return
+     */
+    public boolean isConnected() {
+        if (bleDevice != null) {
+            return getBleManager().isConnected(bleDevice);
+        }
+        return false;
+    }
+
     public boolean connectedState(BleDevice bleDevice) {
         return getBleManager().getConnectState(bleDevice) == 1 || getBleManager().getConnectState(bleDevice) == 2;
     }

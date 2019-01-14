@@ -139,14 +139,18 @@
 
         <!-- 分割线============================================================================== -->
 
-        <activity android:name=".ui.guide.SplashActivity">
+        <activity
+            android:name=".ui.guide.SplashActivity"
+            android:theme="@style/StartTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity">
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTask">
         </activity>
         <activity android:name=".ui.login.LoginActivity">
         </activity>
@@ -174,6 +178,16 @@
 
         <activity android:name=".ui.main.mine.ScanDeviceActivity">
         </activity>
+        <activity android:name=".ui.main.mine.relationphone.RelationPhoneActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.relationphone.EditPhoneActivity">
+        </activity>
+
+        <service
+            android:name=".service.BleService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="88dp"
+    android:paddingLeft="19dp"
+    android:paddingRight="19dp">
 
-</android.support.constraint.ConstraintLayout>
+    <com.vondear.rxtools.view.layout.RxImageView
+        android:id="@+id/img_device"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        app:corner_radius="8dp"
+        app:icon_src_normal="@color/colortheme"
+        />
+
+    <TextView
+        android:id="@+id/tv_deviceDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="11dp"
+        android:layout_toRightOf="@+id/img_device"
+        android:textColor="@color/font_6A6F7B"
+        android:textSize="16sp"
+        tools:text="设备mac地址\n距离:0.6m"/>
+
+
+    <TextView
+        android:id="@+id/tv_deviceState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="连接"
+        android:textColor="@color/colortheme"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_C3C5CA"/>
+</RelativeLayout>

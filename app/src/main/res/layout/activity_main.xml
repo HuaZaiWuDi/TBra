@@ -18,7 +18,7 @@
         android:paddingLeft="26dp"
         android:paddingRight="26dp"
         android:paddingBottom="18dp"
-       >
+        >
 
 
         <com.vondear.rxtools.view.layout.RxImageView
@@ -46,7 +46,7 @@
             android:layout_height="19dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            tools:background="@mipmap/ic_launcher"/>
+            android:background="@mipmap/ic_message"/>
 
     </RelativeLayout>
 
@@ -59,6 +59,21 @@
         android:layout_below="@+id/layoutTitle"/>
 
 
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_tip"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_below="@+id/layoutTitle"
+        android:background="#FBEDD5"
+        android:drawableRight="@drawable/ic_cancel_black_24dp"
+        android:gravity="center"
+        android:paddingRight="12dp"
+        android:text="您的胸部健康超越了全国XX%用户"
+        android:textColor="@color/font_6A6F7B"
+        android:textSize="13sp"/>
+
+
     <com.flyco.tablayout.CommonTabLayout
         android:id="@+id/commonTabLayout"
         android:layout_width="match_parent"
@@ -66,16 +81,6 @@
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:padding="5dp"
-        app:tl_indicator_anim_duration="500"
-        app:tl_indicator_anim_enable="true"
-        app:tl_indicator_bounce_enable="true"
-        app:tl_indicator_color="@color/colortheme"
-        app:tl_indicator_corner_radius="8dp"
-        app:tl_indicator_style="BLOCK"
-        app:tl_textBold="SELECT"
-        app:tl_textSelectColor="@color/colortheme"
-        app:tl_textUnselectColor="@color/font_C3C5CA"
-        app:tl_textsize="10sp"
         tools:background="@color/gray"/>
 
 </RelativeLayout>

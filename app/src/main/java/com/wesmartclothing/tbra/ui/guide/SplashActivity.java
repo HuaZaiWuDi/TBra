@@ -1,16 +1,22 @@
 package com.wesmartclothing.tbra.ui.guide;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
-import com.vondear.rxtools.view.RxTitle;
+import com.vondear.rxtools.utils.SPUtils;
+import com.vondear.rxtools.utils.net.RxManager;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
+import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
+import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.constant.SPKey;
+import com.wesmartclothing.tbra.entity.UserInfoBean;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.service.BleService;
+import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.zchu.rxcache.stategy.CacheStrategy;
 
 /**
  * @author Jack
@@ -18,46 +24,79 @@ import butterknife.ButterKnife;
  * @describe TODO启动页
  * @org 智裳科技
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
-    @BindView(R.id.mRxTitleBar)
-    RxTitle mMRxTitleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        ButterKnife.bind(this);
-
-
-        RxActivityUtils.skipActivity(this, MainActivity.class);
-
-
-//        String signatureSHA1 = RxSignaturesUtils.signatureSHA1(this.getApplication());
-//        RxLogUtils.e("SHA1：" + signatureSHA1);
-
-        mMRxTitleBar.setLeftIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                RxNetManager.getInstance().doNetSubscribe(
-//                        NetManager.getApiService().fetchWeightInfo(1, 10),
-//                        lifecycleSubject,
-//                        "fetchWeightInfo",
-//                        WeightDataBean.class,
-//                        CacheStrategy.firstCache())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(new RxNetSubscriber<WeightDataBean>() {
-//                            @Override
-//                            protected void _onNext(WeightDataBean weightDataBean) {
-//                                RxLogUtils.d("当前线程：" + Thread.currentThread().getName());
-//                                RxLogUtils.d("getWeight:" + weightDataBean.getWeight());
-//                            }
-//                        });
-            }
-        });
-
 
     }
 
 
+    @Override
+    public int layoutId() {
+        return R.layout.activity_splash;
+    }
+
+    @Override
+    public void initBundle(Bundle bundle) {
+
+    }
+
+    @Override
+    public void initViews() {
+        startService(new Intent(mContext, BleService.class));
+    }
+
+    @Override
+    public void initNetData() {
+        RxActivityUtils.skipActivityAndFinish(mActivity, MainActivity.class);
+
+
+        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
+            SPUtils.put(SPKey.SP_GUIDE, true);
+//            RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);
+            return;
+        }
+//        initUserInfo();
+    }
+
+    //获取用户信息
+    public void initUserInfo() {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().userInfo(),
+                lifecycleSubject,
+                SPKey.SP_UserInfo,
+                UserInfoBean.class,
+                CacheStrategy.firstRemote()
+        )
+//                .timeout(3, TimeUnit.SECONDS)
+                .subscribe(new RxNetSubscriber<UserInfoBean>() {
+                    @Override
+                    protected void _onNext(UserInfoBean userInfo) {
+
+//                        if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
+//                            RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
+//                        } else
+                        if (userInfo.getAge() == 0) {
+                            RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InputInfoActivity.class);
+                        } else {
+                            RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), MainActivity.class);
+                        }
+                    }
+
+                    @Override
+                    protected void _onError(String error, int code) {
+                        RxToast.error(error);
+
+                    }
+                });
+    }
+
+
+    @Override
+    public void initRxBus2() {
+
+    }
 }

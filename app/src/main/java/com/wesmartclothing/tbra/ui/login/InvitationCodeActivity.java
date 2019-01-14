@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.ui.login;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.interfaces.onEditTextChangeListener;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRegUtils;
@@ -13,8 +14,13 @@ import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.layout.RxEditText;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.constant.SPKey;
+import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.wesmartclothing.tbra.ui.main.MainActivity;
+import com.zchu.rxcache.RxCache;
+import com.zchu.rxcache.data.CacheResult;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -89,11 +95,18 @@ public class InvitationCodeActivity extends BaseActivity {
                     @Override
                     protected void _onNext(Boolean b) {
                         if (b) {
-//                            if (mUserInfo != null && mUserInfo.getSex() == 0) {
-//                                RxActivityUtils.skipActivityAndFinish(mActivity, UserInfoActivity.class);
-//                            } else {
-//                                RxActivityUtils.skipActivity(mActivity, MainActivity.class);
-//                            }
+                            RxCache.getDefault().load(SPKey.SP_UserInfo, UserInfoBean.class)
+                                    .map(new CacheResult.MapFunc())
+                                    .subscribe(new RxNetSubscriber<UserInfoBean>() {
+                                        @Override
+                                        protected void _onNext(UserInfoBean mUserInfo) {
+                                            if (mUserInfo != null && mUserInfo.getAge() == 0) {
+                                                RxActivityUtils.skipActivityAndFinish(mActivity, InputInfoActivity.class);
+                                            } else {
+                                                RxActivityUtils.skipActivityAndFinish(mActivity, MainActivity.class);
+                                            }
+                                        }
+                                    });
                         } else {
                             RxToast.normal("邀请码无效，请正确输入有效邀请码");
                         }

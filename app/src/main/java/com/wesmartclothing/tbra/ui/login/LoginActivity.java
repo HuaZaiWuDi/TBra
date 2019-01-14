@@ -219,7 +219,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         mTvLogin.setEnabled(complete);
-        mTvLogin.setAlpha(0.6f);
+        mTvLogin.setAlpha(complete ? 1f : 0.6f);
     }
 
     private void vCodeState() {

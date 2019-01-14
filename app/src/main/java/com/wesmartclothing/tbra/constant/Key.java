@@ -12,9 +12,10 @@ public interface Key {
 
     String BUNDLE_OTHER_LOGIN_INFO = "BUNDLE_OTHER_LOGIN_INFO";//第三方登录用户信息
 
-
     String LoginType_WEXIN = "WeChat";
     String LoginType_QQ = "ic_qq";
     String LoginType_WEIBO = "MicroBlog";
+
+
 
 }

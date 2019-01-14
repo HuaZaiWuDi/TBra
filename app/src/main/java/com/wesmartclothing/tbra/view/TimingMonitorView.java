@@ -102,6 +102,10 @@ public class TimingMonitorView extends LinearLayout {
     ArrayList<BarEntry> valuesLeft = new ArrayList<>();
     ArrayList<BarEntry> valuesRight = new ArrayList<>();
     ArrayList<Entry> valueLine = new ArrayList<>();
+    ArrayList<Float> tempDiffs = new ArrayList<>();
+    private float maxValue = 45f;
+    private float minValue = 0f;
+    private final float normalTemp = 35.0f;
 
     private void initView(Context context) {
         View view = View.inflate(context, R.layout.layout_timing_monitor, this);
@@ -118,8 +122,8 @@ public class TimingMonitorView extends LinearLayout {
         float[] leftValue = new float[8];
         float[] rightValue = new float[8];
         for (int i = 0; i < 8; i++) {
-            leftValue[i] = 1000f;
-            rightValue[i] = 500f;
+            leftValue[i] = RxRandom.getRandom(35, 42);
+            rightValue[i] = RxRandom.getRandom(35, 42);
         }
         testData[0] = leftValue;
         testData[1] = rightValue;
@@ -140,13 +144,50 @@ public class TimingMonitorView extends LinearLayout {
             valuesRight.add(new BarEntry(j, temps[1][j]));
         }
 
+
         for (int i = 0; i < temps[0].length; i++) {
-            valueLine.add(new Entry(i, RxRandom.getRandom(500, 1000)));
+            float tempDiff = temps[0][i] - temps[1][i];
+            tempDiffs.add(Math.abs(tempDiff));
+            valueLine.add(new Entry(i, normalTemp + tempDiff));
         }
+
+        mMBarChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return tempDiffs.get(Math.min(Math.max((int) value, 0), tempDiffs.size() - 1)) + "";
+//                return "0.5";
+            }
+        });
+
 
         setData();
 
         setLine();
+
+        initTemp();
+
+    }
+
+    private void initTemp() {
+        mTvL1.setText(valuesLeft.get(0).getY() + "");
+        mTvL2.setText(valuesLeft.get(1).getY() + "");
+        mTvL3.setText(valuesLeft.get(2).getY() + "");
+        mTvL4.setText(valuesLeft.get(3).getY() + "");
+        mTvL5.setText(valuesLeft.get(4).getY() + "");
+        mTvL6.setText(valuesLeft.get(5).getY() + "");
+        mTvL7.setText(valuesLeft.get(6).getY() + "");
+        mTvL8.setText(valuesLeft.get(7).getY() + "");
+
+
+        mTvR1.setText(valuesRight.get(0).getY() + "");
+        mTvR2.setText(valuesRight.get(1).getY() + "");
+        mTvR3.setText(valuesRight.get(2).getY() + "");
+        mTvR4.setText(valuesRight.get(3).getY() + "");
+        mTvR5.setText(valuesRight.get(4).getY() + "");
+        mTvR6.setText(valuesRight.get(5).getY() + "");
+        mTvR7.setText(valuesRight.get(6).getY() + "");
+        mTvR8.setText(valuesRight.get(7).getY() + "");
+
     }
 
 
@@ -167,8 +208,8 @@ public class TimingMonitorView extends LinearLayout {
 
         YAxis yAxis = mMBarChart.getAxisLeft();
         yAxis.setEnabled(false);
-        yAxis.setAxisMaximum(1200f);
-        yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMaximum(maxValue);
+        yAxis.setAxisMinimum(minValue);
 
         YAxis yRAxis = mMBarChart.getAxisRight();
         yRAxis.setEnabled(false);
@@ -182,13 +223,6 @@ public class TimingMonitorView extends LinearLayout {
         xAxis.setAxisMinimum(0);
         xAxis.setAxisMaximum(8);
         xAxis.setLabelCount(8);
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-//                return data.get(Math.min(Math.max((int) value, 0), data.size() - 1)).xAxisValue;
-                return "0.5";
-            }
-        });
 
 
         //初始化线条
@@ -206,13 +240,13 @@ public class TimingMonitorView extends LinearLayout {
         mLineChart.getXAxis().setDrawAxisLine(false);
         mLineChart.getXAxis().setEnabled(false);
 
-
+        mLineChart.getAxisLeft().setAxisMaximum(maxValue);
+        mLineChart.getAxisLeft().setAxisMinimum(minValue);
     }
 
 
     private void setLine() {
-        mLineChart.getAxisLeft().setAxisMaximum(1200f);
-        mLineChart.getAxisLeft().setAxisMinimum(0f);
+
         LineDataSet set;
         if (mLineChart.getData() != null &&
                 mLineChart.getData().getDataSetCount() > 0) {
@@ -221,7 +255,7 @@ public class TimingMonitorView extends LinearLayout {
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
         } else {
-            set = new LineDataSet(valueLine, "Line");
+            set = new LineDataSet(valueLine, "ic_legend");
             set.setColor(Color.parseColor("#FD74B4"));
             set.setLineWidth(1f);
             set.setDrawFilled(true);
@@ -248,10 +282,6 @@ public class TimingMonitorView extends LinearLayout {
     }
 
     private void setData() {
-        YAxis yAxis = mMBarChart.getAxisLeft();
-        yAxis.setAxisMaximum(1200f);
-        yAxis.setAxisMinimum(0f);
-
         BarDataSet set, set2;
         int green = Color.parseColor("#6589FF");
         int red = Color.parseColor("#FE68AE");

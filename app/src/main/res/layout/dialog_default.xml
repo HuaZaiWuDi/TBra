@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.vondear.rxtools.view.layout.RxLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="329dp"
+    android:layout_height="282dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    app:background_normal="@color/white"
+    app:corner_radius="8dp">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:text="蓝牙未开启"
+        android:textColor="@color/font_475669"
+        android:textSize="21sp"/>
+
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="274dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:text="请打开手机设置中蓝牙的【允许新连接】，也可直接通过手机控制中心的蓝牙开关打开"
+        android:textColor="@color/font_6A6F7B"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tv_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="55dp"
+        android:background="@mipmap/ic_btn"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        />
+
+
+</com.vondear.rxtools.view.layout.RxLinearLayout>
