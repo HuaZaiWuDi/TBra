@@ -9,23 +9,33 @@ import android.widget.TextView;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.model.timer.MyTimer;
 import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.RxRandom;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
+import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.entity.JsonDataBean;
+import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.tools.CheckTempErrorUtil;
 import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
+import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.wesmartclothing.tbra.view.PowerIconView;
 import com.wesmartclothing.tbra.view.TimingMonitorView;
+import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * @Package com.wesmartclothing.tbra.ui.main.testing
@@ -55,10 +65,13 @@ public class MonitorFragment extends BaseAcFragment {
     TimingMonitorView mTimingMonitorView;
     @BindView(R.id.layout_monitor_empty)
     LinearLayout mLayoutMonitorEmpty;
+    @BindView(R.id.historyTempView)
+    HistoryTempView mHistoryTempView;
+    Unbinder unbinder;
 
 
     private List<String> imgs = new ArrayList<>();
-
+    private WarningRuleBean mWarningRuleBean;
 
     public static MonitorFragment getInstance() {
         return new MonitorFragment();
@@ -77,7 +90,7 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initViews() {
         initViewPage();
-        bleConnectState(BleTools.getInstance().isConnected());
+//        bleConnectState(BleTools.getInstance().isConnected());
     }
 
     private void bleConnectState(boolean isConnected) {
@@ -97,7 +110,7 @@ public class MonitorFragment extends BaseAcFragment {
 
     @Override
     public void initNetData() {
-
+        getRuleDetail();
     }
 
     @Override
@@ -117,6 +130,18 @@ public class MonitorFragment extends BaseAcFragment {
     }
 
 
+    @Override
+    public void onResume() {
+        testTimer.startTimer();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        testTimer.stopTimer();
+        super.onPause();
+    }
+
     private void initViewPage() {
         imgs.clear();
         imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=87077840f66f6c7607074ad9d7681e80&imgtype=0&src=http%3A%2F%2Fpic.kekenet.com%2F2017%2F0323%2F24621490236152.png");
@@ -125,14 +150,71 @@ public class MonitorFragment extends BaseAcFragment {
 
         //UltraPagerAdapter 绑定子view到UltraViewPager
         UltraPagerAdapter adapter = new UltraPagerAdapter(imgs, ultraViewPager);
-        adapter.setSelectImgListener(new UltraPagerAdapter.SelectImgListener() {
-            @Override
-            public void selectItem(String URL) {
+        adapter.setSelectImgListener(URL -> {
 
-            }
         });
         ultraViewPager.setAdapter(adapter);
 
+    }
+
+    private void getRuleDetail() {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().userRuleDetail(),
+                lifecycleSubject,
+                "userRuleDetail",
+                WarningRuleBean.class,
+                CacheStrategy.firstRemote()
+        ).subscribe(new RxSubscriber<WarningRuleBean>() {
+            @Override
+            protected void _onNext(WarningRuleBean warningRuleBean) {
+                mWarningRuleBean = warningRuleBean;
+                testTimer.startTimer();
+            }
+        });
+    }
+
+    MyTimer testTimer = new MyTimer(5000, () -> {
+
+        byte[] bytes = new byte[16];
+        for (int i = 0; i < 16; i++) {
+            bytes[i] = (byte) RxRandom.getRandom(30, 45);
+        }
+        checkTemp(bytes);
+    });
+
+
+    private void checkTemp(byte[] data) {
+        if (data.length != 16) return;
+        if (mWarningRuleBean == null) return;
+        List<Double> tempLists = new ArrayList<>();
+        List<JsonDataBean> jsonDataBeans = new ArrayList<>();
+        for (byte b : data) {
+            if (CheckTempErrorUtil.isValidTemperature(b)) {
+                tempLists.add((double) b);
+            }
+        }
+        //标准温度
+        double normTemp = CheckTempErrorUtil.calculationNormTemp(tempLists);
+        //标准温度的区间
+        double[] normTemps = {normTemp - mWarningRuleBean.getTempNum(), normTemp + mWarningRuleBean.getTempNum()};
+
+        for (int i = 0; i < data.length; i++) {
+            double temp = data[i];
+            int flag = 0;
+            if (CheckTempErrorUtil.isValidTemperature(data[i])) {
+                if (temp <= normTemps[1] && temp >= normTemps[0]) {
+                    flag = 0;
+                } else {
+                    flag = 1;
+                }
+            } else {
+                flag = -1;
+            }
+            JsonDataBean dataBean = new JsonDataBean((i % 2 == 0 ? "L0" : "R0") + (i / 2 + 1), data[i], flag);
+            jsonDataBeans.add(dataBean);
+        }
+        mHistoryTempView.setTimingData(jsonDataBeans);
+        mTimingMonitorView.updateUI(jsonDataBeans);
     }
 
 
@@ -143,19 +225,12 @@ public class MonitorFragment extends BaseAcFragment {
                 break;
             case R.id.tv_bindDevice:
                 if (!BleTools.getBleManager().isBlueEnable()) {
-                    CustomDialog.show(mContext, R.layout.dialog_default, new CustomDialog.BindView() {
-                        @Override
-                        public void onBind(View rootView) {
+                    CustomDialog.show(mContext, R.layout.dialog_default, rootView ->
                             rootView.findViewById(R.id.tv_complete)
-                                    .setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            CustomDialog.unloadAllDialog();
-                                            BleTools.getBleManager().enableBluetooth();
-                                        }
-                                    });
-                        }
-                    }).setCanCancel(true);
+                                    .setOnClickListener(view1 -> {
+                                        CustomDialog.unloadAllDialog();
+                                        BleTools.getBleManager().enableBluetooth();
+                                    })).setCanCancel(true);
                 } else {
                     //去绑定或者连接
                     RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
@@ -163,4 +238,5 @@ public class MonitorFragment extends BaseAcFragment {
                 break;
         }
     }
+
 }

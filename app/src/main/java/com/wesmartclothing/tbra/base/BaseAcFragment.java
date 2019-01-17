@@ -182,6 +182,8 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
     public void onResume() {
         RxLogUtils.i(TGA + "：onResume");
         lifecycleSubject.onNext(LifeCycleEvent.RESUME);
+        isVisible = true;
+        lazyLoad();
         super.onResume();
     }
 

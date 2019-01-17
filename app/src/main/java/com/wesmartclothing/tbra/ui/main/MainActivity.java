@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity {
 
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
     private List<Fragment> mFragments = new ArrayList<>();
-    private int position = 0;
+    private int position = 1;
 
     @Override
     public void initStatusBar() {
@@ -125,6 +125,7 @@ public class MainActivity extends BaseActivity {
         }
 
         mCommonTabLayout.setTabData(mBottomTabItems);
+        mCommonTabLayout.setCurrentTab(position);
         mCommonTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
@@ -154,6 +155,8 @@ public class MainActivity extends BaseActivity {
                             })
                             .build()
                             .show();
+                } else if (position == 0) {
+                    new UsedTipDialog(mContext, lifecycleSubject);
                 }
             }
         });

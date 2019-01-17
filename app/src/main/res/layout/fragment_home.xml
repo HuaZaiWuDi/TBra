@@ -32,19 +32,21 @@
                 android:id="@+id/tv_connectState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginRight="19dp"
                 android:layout_toLeftOf="@+id/img_battery"
                 android:text="设备已连接"
                 android:textColor="@color/colortheme"
                 android:textSize="12sp"/>
 
-            <ImageView
+            <com.wesmartclothing.tbra.view.PowerIconView
                 android:id="@+id/img_battery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_width="22dp"
+                android:layout_height="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginRight="25dp"
                 />
 
         </RelativeLayout>
@@ -60,9 +62,84 @@
             app:cardElevation="6dp">
 
 
-            <com.wesmartclothing.tbra.view.HistoryTempView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="14dp">
+
+                <com.flyco.tablayout.CommonTabLayout
+                    android:id="@+id/commonTabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp"
+                    android:background="@color/white"
+                    app:tl_indicator_anim_duration="500"
+                    app:tl_indicator_anim_enable="true"
+                    app:tl_indicator_bounce_enable="true"
+                    app:tl_indicator_color="@color/colortheme"
+                    app:tl_indicator_height="19dp"
+                    app:tl_indicator_margin_top="5dp"
+                    app:tl_indicator_style="BLOCK"
+                    app:tl_textBold="SELECT"
+                    app:tl_textSelectColor="@color/white"
+                    app:tl_textUnselectColor="@color/font_6A6F7B"
+                    app:tl_textsize="12sp"
+                    tools:background="@color/gray"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/line_C3C5CA"/>
+
+
+                <com.wesmartclothing.tbra.view.HistoryTempView
+                    android:id="@+id/historyTempView"
+                    android:layout_width="match_parent"
+                    android:layout_height="156dp"/>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="异常数据"
+                        android:textColor="@color/font_475669"
+                        android:textSize="14sp"/>
+
+
+                    <TextView
+                        android:id="@+id/tv_seeMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="更多\t>>"
+                        android:textColor="@color/colortheme"/>
+
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/line_C3C5CA"/>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/errorRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
 
 
         </android.support.v7.widget.CardView>

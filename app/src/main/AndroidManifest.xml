@@ -188,6 +188,9 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".ui.main.home.HistoryMonitorActivity">
+        </activity>
     </application>
 
 </manifest>

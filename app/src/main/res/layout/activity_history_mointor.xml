@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.home.HistoryMonitorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            app:cardElevation="6dp">
+
+            <com.vondear.rxtools.view.RxTitle
+                android:id="@+id/rxTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:translationZ="2dp"
+                app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+                app:title="历史监测数据"
+                app:titleColor="@color/line_333845"
+                app:titleSize="16sp"/>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="14dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19dp"
+                    android:text="异常点位分布"
+                    android:textColor="@color/font_475669"
+                    android:textSize="12sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/line_C3C5CA"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerPoint"
+                    android:layout_width="match_parent"
+                    android:layout_height="76dp"
+                    >
+
+                </android.support.v7.widget.RecyclerView>
+
+                <com.vondear.rxtools.view.layout.RxRelativeLayout
+                    android:layout_width="302dp"
+                    android:layout_height="156dp"
+                    app:background_normal="@color/colortheme"
+                    app:corner_radius="6dp">
+
+                </com.vondear.rxtools.view.layout.RxRelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="19dp"
+                    android:background="@color/line_C3C5CA"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="折线图"
+                    android:textColor="@color/font_475669"
+                    android:textSize="19sp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@mipmap/ic_legend"
+                        android:drawablePadding="4dp"
+                        android:text="温差"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="12sp"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="---"
+                        android:textColor="@color/colortheme"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:drawablePadding="4dp"
+                        android:text="标准"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="12sp"/>
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="10dp">
+
+
+                </com.github.mikephil.charting.charts.LineChart>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="121dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="19dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="6dp">
+
+            <TextView
+                android:id="@+id/tv_pointTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:text="2018-12-01 12:02"
+                android:textColor="@color/font_475669"
+                android:textSize="12sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="14dp"
+                android:background="@color/line_C3C5CA"/>
+
+
+            <TextView
+                android:id="@+id/tv_pointTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="52dp"
+                android:lineSpacingExtra="6dp"
+                android:text="单点温差：1.6°C\nL03：34.6°C"
+                android:textColor="#2C272D"
+                android:textSize="12sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_normalTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="72dp"
+                android:layout_marginRight="14dp"
+                android:lineSpacingExtra="6dp"
+                android:text="标准温度：35.0°C"
+                android:textColor="#2C272D"
+                android:textSize="12sp"/>
+
+        </android.support.v7.widget.CardView>
+
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

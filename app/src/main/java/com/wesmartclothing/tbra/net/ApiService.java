@@ -7,8 +7,12 @@ import com.wesmartclothing.tbra.entity.EmptyBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
+import com.wesmartclothing.tbra.entity.PointDataBean;
+import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.RelateAccountListBean;
+import com.wesmartclothing.tbra.entity.ReportDataBean;
 import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
+import com.wesmartclothing.tbra.entity.SingleHistoryPointBean;
 import com.wesmartclothing.tbra.entity.UserCenterBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
@@ -249,5 +253,72 @@ public interface ApiService {
      */
     @POST("warningRule/userRuleDetail")
     Observable<HttpResult<WarningRuleBean>> userRuleDetail();
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 用户数据模块
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * 月报信息列表数据
+     */
+    @FormUrlEncoded
+    @POST("dataRecord/monthDataList")
+    Observable<HttpResult<ReportDataBean>> monthDataList(
+            @Field("pageNum") int pageNum,
+            @Field("pageSize") int pageSize
+    );
+
+    /**
+     * 周报信息列表数据
+     */
+    @FormUrlEncoded
+    @POST("dataRecord/weekDataList")
+    Observable<HttpResult<ReportDataBean>> weekDataList(
+            @Field("pageNum") int pageNum,
+            @Field("pageSize") int pageSize
+    );
+
+
+    /**
+     * 获取用户最近一段时间的单次数据
+     */
+    @POST("dataRecord/latestSingleData")
+    Observable<HttpResult<List<PointDataBean>>> latestSingleData(@Body RecordBean bean);
+
+
+    /**
+     * 每月的月报数据
+     */
+    @POST("dataRecord/monthInfo")
+    Observable<HttpResult<ReportDataBean>> monthInfo(@Body GidBean bean);
+
+
+    /**
+     * 每周的周报数据
+     */
+    @POST("dataRecord/weekInfo")
+    Observable<HttpResult<ReportDataBean>> weekInfo(@Body GidBean bean);
+
+
+    /**
+     * 获取用户最近一段时间的异常点位数据
+     */
+    @FormUrlEncoded
+    @POST(" dataRecord/unusualPointData")
+    Observable<HttpResult<SingleHistoryPointBean>> unusualPointData(
+            @Field("latestType") String latestType,
+            @Field("pointName") String pointName,
+            @Field("pageNum") int pageNum,
+            @Field("pageSize") int pageSize
+    );
+
+
+    /**
+     * 获取用户最近一段时间的异常数据
+     */
+    @POST("dataRecord/unusualData")
+    Observable<HttpResult<WarningRuleBean>> unusualData(@Body RecordBean bean);
 
 }

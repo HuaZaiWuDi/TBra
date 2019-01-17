@@ -1,97 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/parent"
+    android:layout_width="302dp"
+    android:layout_height="156dp"
+    android:background="@mipmap/bg_bra"
     android:orientation="vertical"
-    android:padding="14dp">
-
-
-    <com.flyco.tablayout.CommonTabLayout
-        android:id="@+id/commonTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="26dp"
-        android:background="@color/white"
-        app:tl_indicator_anim_duration="500"
-        app:tl_indicator_anim_enable="true"
-        app:tl_indicator_bounce_enable="true"
-        app:tl_indicator_color="@color/colortheme"
-        app:tl_indicator_height="19dp"
-        app:tl_indicator_margin_top="5dp"
-        app:tl_indicator_style="BLOCK"
-        app:tl_textBold="SELECT"
-        app:tl_textSelectColor="@color/white"
-        app:tl_textUnselectColor="@color/font_6A6F7B"
-        app:tl_textsize="12sp"
-        tools:background="@color/gray"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/line_C3C5CA"/>
-
-
-    <com.vondear.rxtools.view.layout.RxRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="156dp"
-        app:background_normal="@color/colortheme"
-        app:corner_radius="6dp">
-
-
-    </com.vondear.rxtools.view.layout.RxRelativeLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="异常数据"
-            android:textColor="@color/font_475669"
-            android:textSize="14sp"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="更多"
-            android:textColor="@color/colortheme"/>
-
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/line_C3C5CA"/>
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/errorRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.RecyclerView>
-
+    >
 
     <TextView
+        android:id="@+id/tv_L1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="14dp"
-        android:text="重点关注“L04”"
-        android:textColor="@color/font_666666"
-        android:textSize="12sp"/>
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="49dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:gravity="center_horizontal"
+        android:text="01"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="88dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="08"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L2"
+        android:layout_width="13dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="60dp"
+        android:drawableBottom="@mipmap/ic_cricle_red"
+        android:text="02"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L3"
+        android:layout_width="14dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="69dp"
+        android:drawableBottom="@mipmap/ic_cricle_red"
+        android:text="03"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L4"
+        android:layout_width="14dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="79dp"
+        android:drawableBottom="@mipmap/ic_cricle_red"
+        android:text="04"
+        android:textAlignment="center"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="71dp"
+        android:layout_marginTop="108dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="07"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="108dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="06"
+        android:textAlignment="center"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_L5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="114dp"
+        android:layout_marginTop="102dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="05"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="182dp"
+        android:layout_marginTop="102dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="05"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="204dp"
+        android:layout_marginTop="108dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="06"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R4"
+        android:layout_width="14dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="202dp"
+        android:layout_marginTop="79dp"
+        android:drawableBottom="@mipmap/ic_cricle_red"
+        android:text="04"
+        android:textAlignment="center"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="223dp"
+        android:layout_marginTop="98dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="07"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R3"
+        android:layout_width="14dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="221dp"
+        android:layout_marginTop="69dp"
+        android:drawableBottom="@mipmap/ic_cricle_red"
+        android:text="03"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R2"
+        android:layout_width="13dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="236dp"
+        android:layout_marginTop="60dp"
+        android:drawableBottom="@mipmap/ic_cricle_red"
+        android:text="02"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="261dp"
+        android:layout_marginTop="49dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:gravity="center_horizontal"
+        android:text="01"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_R8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="248dp"
+        android:layout_marginTop="88dp"
+        android:drawableTop="@mipmap/ic_cricle_red"
+        android:text="08"
+        android:textColor="@color/White"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"/>
 
 
-</LinearLayout>
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:maxHeight="2dp"
+        android:nestedScrollingEnabled="false"
+        android:progressDrawable="@drawable/bg_seekbar"
+        android:thumbTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/img_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@mipmap/ic_left"/>
+
+    <ImageView
+        android:id="@+id/img_play_pause"
+        android:layout_width="30dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_media_play"/>
+
+    <ImageView
+        android:id="@+id/img_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@mipmap/ic_right"/>
+
+    <TextView
+        android:id="@+id/tv_playTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="106dp"
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/tv_playSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="6dp"
+        android:text="X2倍"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>

@@ -23,12 +23,13 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
-import com.vondear.rxtools.utils.RxLogUtils;
-import com.vondear.rxtools.utils.RxRandom;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.wesmartclothing.tbra.R;
+import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.tools.BarRoundChartRenderer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -113,40 +114,22 @@ public class TimingMonitorView extends LinearLayout {
 
         initChart();
 
-        updateUI(testData());
     }
 
-
-    private float[][] testData() {
-        float[][] testData = new float[2][8];
-        float[] leftValue = new float[8];
-        float[] rightValue = new float[8];
-        for (int i = 0; i < 8; i++) {
-            leftValue[i] = RxRandom.getRandom(35, 42);
-            rightValue[i] = RxRandom.getRandom(35, 42);
-        }
-        testData[0] = leftValue;
-        testData[1] = rightValue;
-        return testData;
-    }
-
-    public void updateUI(float[][] temps) {
-        if (temps.length != 2) {
-            RxLogUtils.e("数据源不正确");
-        }
-
+    public void updateUI(List<JsonDataBean> jsonDataBeans) {
+        if (RxDataUtils.isEmpty(jsonDataBeans)) return;
+        tempDiffs.clear();
         valuesLeft.clear();
         valuesRight.clear();
-        for (int j = 0; j < temps[0].length; j++) {
-            valuesLeft.add(new BarEntry(j, temps[0][j]));
-        }
-        for (int j = 0; j < temps[1].length; j++) {
-            valuesRight.add(new BarEntry(j, temps[1][j]));
+        valueLine.clear();
+
+        for (int i = 0; i < jsonDataBeans.size(); i = i + 2) {
+            valuesLeft.add(new BarEntry((i / 2), (float) jsonDataBeans.get(i).getNodeTemp()));
+            valuesRight.add(new BarEntry((i / 2), (float) jsonDataBeans.get(i + 1).getNodeTemp()));
         }
 
-
-        for (int i = 0; i < temps[0].length; i++) {
-            float tempDiff = temps[0][i] - temps[1][i];
+        for (int i = 0; i < valuesRight.size(); i++) {
+            float tempDiff = valuesLeft.get(i).getY() - valuesRight.get(i).getY();
             tempDiffs.add(Math.abs(tempDiff));
             valueLine.add(new Entry(i, normalTemp + tempDiff));
         }
@@ -248,14 +231,13 @@ public class TimingMonitorView extends LinearLayout {
     private void setLine() {
 
         LineDataSet set;
-        if (mLineChart.getData() != null &&
-                mLineChart.getData().getDataSetCount() > 0) {
-            set = (LineDataSet) mLineChart.getData().getDataSetByIndex(0);
+        if (mLineChart.getData() != null) {
+            set = (LineDataSet) mLineChart.getData().getDataSetByLabel("lineChart", false);
             set.setValues(valueLine);
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
         } else {
-            set = new LineDataSet(valueLine, "ic_legend");
+            set = new LineDataSet(valueLine, "lineChart");
             set.setColor(Color.parseColor("#FD74B4"));
             set.setLineWidth(1f);
             set.setDrawFilled(true);
@@ -310,10 +292,11 @@ public class TimingMonitorView extends LinearLayout {
 
             mMBarChart.setData(data);
 
-            float groupSpace = 0.3f;
-            float barSpace = 0.15f; // x4 DataSet
-            mMBarChart.groupBars(0, groupSpace, barSpace);
         }
+
+        float groupSpace = 0.3f;
+        float barSpace = 0.15f; // x4 DataSet
+        mMBarChart.groupBars(0, groupSpace, barSpace);
 
         mMBarChart.invalidate();
 

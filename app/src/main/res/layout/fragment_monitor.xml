@@ -86,7 +86,7 @@
                         android:layout_centerVertical="true"
                         android:drawablePadding="4dp"
                         android:gravity="center"
-                        android:text="切换设备\t\t>>"
+                        android:text="切换设备\t>>"
                         android:textColor="@color/colortheme"
                         android:textSize="12sp"
                         />
@@ -101,14 +101,14 @@
                 </RelativeLayout>
 
 
-                <com.vondear.rxtools.view.layout.RxRelativeLayout
+                <com.wesmartclothing.tbra.view.HistoryTempView
+                    android:id="@+id/historyTempView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="11dp"
-                    app:background_normal="@color/colortheme"
-                    app:corner_radius="6dp">
+                    >
 
-                </com.vondear.rxtools.view.layout.RxRelativeLayout>
+                </com.wesmartclothing.tbra.view.HistoryTempView>
 
 
             </LinearLayout>

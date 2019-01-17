@@ -1,77 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.vondear.rxtools.view.layout.RxLinearLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:background_normal="#FAFAFB"
-    app:corner_radius="8dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="21dp"
-        android:text="首次使用提示"
-        android:textColor="@color/font_475669"
-        android:textSize="19sp"/>
-
-
-    <android.support.v7.widget.CardView
+    <com.vondear.rxtools.view.layout.RxLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="461dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="19dp"
-        android:layout_marginBottom="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="6dp">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="252dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="38dp"
-                android:text="感谢您使用威觅监测内衣产品，为了能够为您提供更加精准的服务，首次使用我们需要计算您的标准体温。请在无特殊条件（生理期、生病、空调、剧烈运动等）干扰下正常穿戴监测内衣，完成后即可进行预警设置。"
-                android:textColor="@color/font_6A6F7B"
-                android:textSize="12sp"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="235dp"/>
-
-
-            <TextView
-                android:layout_width="252dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="若您需要重新设置或修改预警条件，您可通过[我的]界面中[预警设置]进行修改。"
-                android:textColor="@color/font_6A6F7B"
-                android:textSize="12sp"/>
-
-        </LinearLayout>
-
-
-    </android.support.v7.widget.CardView>
-
-    <TextView
-        android:id="@+id/tv_complete"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@mipmap/ic_btn"
-        android:gravity="center"
-        android:text="下一步"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        />
+        android:orientation="vertical"
+        app:background_normal="#FAFAFB"
+        app:corner_radius="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="19dp"
+            android:layout_marginTop="21dp"
+            android:text="首次使用提示"
+            android:textColor="@color/font_475669"
+            android:textSize="19sp"/>
 
 
-</com.vondear.rxtools.view.layout.RxLinearLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="461dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="6dp"
+            android:src="@mipmap/ic_use_guide_1"
+            />
+
+        <TextView
+            android:id="@+id/tv_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@mipmap/ic_btn"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+
+    </com.vondear.rxtools.view.layout.RxLinearLayout>
+</LinearLayout>

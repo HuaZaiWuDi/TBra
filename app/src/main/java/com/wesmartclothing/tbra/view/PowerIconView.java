@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.view;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -12,10 +13,10 @@ import android.view.View;
 
 public class PowerIconView extends View {
     private static final String TAG = "【PowerIconView】";
-    private int borderColor = 0xffc0c0c0;
-    private int fillColor = 0xffdedede;
-    private int selectColor = 0xff12b657;
-    private int selectAlertColor = 0xffe04d4d;
+    private int borderColor = 0xffc0c0c0;//边框颜色
+    private int bgColor = 0xffdedede;//背景颜色
+    private int lowColor = Color.RED;//低电量值
+    private int normalColor = Color.parseColor("#7ED321");//正常颜色
 
     private float width;
     private float height;
@@ -42,6 +43,10 @@ public class PowerIconView extends View {
         this.invalidate();
     }
 
+    public void setNormalColor(int normalColor) {
+        this.normalColor = normalColor;
+    }
+
     public void setLowValue(float lowValue) {
         this.lowValue = lowValue;
     }
@@ -60,11 +65,11 @@ public class PowerIconView extends View {
                     invalidate();
                 }
             });
-            selectAlertColor = selectColor;
+            normalColor = lowColor;
             valueAnimator.start();
         } else {
             Log.d(TAG, "停止充电：" + valueAnimator);
-            selectAlertColor = 0xffe04d4d;
+            normalColor = 0xffe04d4d;
             if (valueAnimator != null)
                 valueAnimator.end();
             value = (float) data;
@@ -95,7 +100,7 @@ public class PowerIconView extends View {
         Paint paint = new Paint();
         paint.setStrokeWidth(1);
         paint.setAntiAlias(true);
-        paint.setColor(fillColor);
+        paint.setColor(bgColor);
         paint.setStyle(Paint.Style.FILL);
 
         Path path = new Path();
@@ -132,7 +137,7 @@ public class PowerIconView extends View {
         Paint paint = new Paint();
         paint.setStrokeWidth(1);
         paint.setAntiAlias(true);
-        paint.setColor(value <= lowValue ? selectAlertColor : selectColor);
+        paint.setColor(value <= lowValue ? lowColor : normalColor);
         paint.setStyle(Paint.Style.FILL);
         Path path = new Path();
         path.moveTo(borderWidth, borderWidth + corner / 2);
