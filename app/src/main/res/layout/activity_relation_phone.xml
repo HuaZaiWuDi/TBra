@@ -21,6 +21,9 @@
             android:elevation="1dp"
             android:translationZ="2dp"
             app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:rightText="编辑"
+            app:rightTextColor="@color/font_6A6F7B"
+            app:rightTextSize="12sp"
             app:title="关联手机号"
             app:titleColor="@color/line_333845"
             app:titleSize="16sp"/>
@@ -30,9 +33,11 @@
 
 
     <android.support.v7.widget.CardView
+        android:id="@+id/layout_notPhone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="14dp"
+        android:visibility="gone"
         app:cardCornerRadius="8dp"
         app:cardElevation="6dp">
 
@@ -64,5 +69,90 @@
 
 
     </android.support.v7.widget.CardView>
+
+
+    <LinearLayout
+        android:id="@+id/layout_relationPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="19dp"
+            android:text="关联手机号设置上限为3个， \n开启的关联手机号将会在告警时收到短信提醒"
+            android:textColor="@color/font_6A6F7B"
+            android:textSize="12sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+        <TextView
+            android:id="@+id/tv_addPhone_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@mipmap/ic_btn"
+            android:gravity="center"
+            android:text="添加关联手机号"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_editName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+        <com.vondear.rxtools.view.layout.RxEditText
+            android:id="@+id/edit_nickName"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/tv_cancel"
+            android:paddingLeft="28dp"
+            android:textColor="@color/font_475669"
+            android:textSize="13sp"
+            tools:text="张三"/>
+
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="78dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/tv_complete"
+            android:background="#BBC2C9"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/tv_complete"
+            android:layout_width="78dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="#007AFF"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/white"/>
+
+
+    </RelativeLayout>
 
 </LinearLayout>

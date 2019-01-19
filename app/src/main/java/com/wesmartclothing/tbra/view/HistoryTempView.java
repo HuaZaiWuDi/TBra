@@ -7,6 +7,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -22,8 +24,11 @@ import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
+import com.wesmartclothing.tbra.tools.MapSortUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -95,6 +100,17 @@ public class HistoryTempView extends LinearLayout {
     private int currentTime = 0;
     private Gson gson = new Gson();
     private List<PointDataBean> mPointDataBeans;
+    private Map<String, Integer> errorPointMap = new HashMap<>();
+    private OnErrorPointListener mOnErrorPointListener;
+
+    public interface OnErrorPointListener {
+
+        void errorPoint(Map<String, Integer> errorPoints);
+    }
+
+    public void setOnErrorPointListener(OnErrorPointListener onErrorPointListener) {
+        mOnErrorPointListener = onErrorPointListener;
+    }
 
     public HistoryTempView(Context context) {
         this(context, null);
@@ -139,6 +155,7 @@ public class HistoryTempView extends LinearLayout {
         setShow(true);
         currentTime = 0;
         mSeekbar.setMax(list.size());
+        mSeekbar.setProgress(0);
         RxTextUtils.getBuilder(RxFormat.setSec2MS(currentTime))
                 .append("/" + RxFormat.setSec2MS(list.size()))
                 .setForegroundColor(Color.parseColor("#99FFFFFF"))
@@ -163,6 +180,9 @@ public class HistoryTempView extends LinearLayout {
                 setPlay(true);
             }
         });
+
+        scaleAnimation.setDuration(500L);
+        scaleAnimation.setInterpolator(new CycleInterpolator(0.5F));
     }
 
     MyTimer mMyTimer = new MyTimer(speed, new MyTimerListener() {
@@ -191,6 +211,9 @@ public class HistoryTempView extends LinearLayout {
 
     private void showPoint(List<JsonDataBean> pointlist) {
         for (JsonDataBean bean : pointlist) {
+            if (bean.getWarningFlag() == 1) {
+                errorPointMap.merge(bean.getNodeName(), 1, Integer::sum);
+            }
             switch (bean.getNodeName()) {
                 case "L01":
                     textTopDrawable(mTvL1, bean.getWarningFlag());
@@ -242,18 +265,41 @@ public class HistoryTempView extends LinearLayout {
                     break;
             }
         }
+        if (mOnErrorPointListener != null) {
+            //排序
+            errorPointMap = MapSortUtil.sortMapByValue(errorPointMap, true);
+            mOnErrorPointListener.errorPoint(errorPointMap);
+        }
+
     }
 
     private void textTopDrawable(TextView textView, int flag) {
         Drawable drawable = ContextCompat.getDrawable(mTvL1.getContext(),
                 flag == 0 ? R.mipmap.ic_circle_green : flag == 1 ? R.mipmap.ic_cricle_red : R.mipmap.ic_cricle_yellow);
         textView.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+
+        if (flag == 1)
+            doAnim(textView);
     }
 
     private void textBottomDrawable(TextView textView, int flag) {
         Drawable drawable = ContextCompat.getDrawable(mTvL1.getContext(),
                 flag == 0 ? R.mipmap.ic_circle_green : flag == 1 ? R.mipmap.ic_cricle_red : R.mipmap.ic_cricle_yellow);
         textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, drawable);
+
+        if (flag == 1) {
+            doAnim(textView);
+        }
+    }
+
+    ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 1.3f, 1f, 1.3f);
+
+    private void doAnim(TextView view) {
+//        if (view.getAnimation() == null) {
+//            view.setAnimation(scaleAnimation);
+//        }
+//        view.getAnimation().start();
+
     }
 
 
@@ -290,6 +336,7 @@ public class HistoryTempView extends LinearLayout {
 
     public void pause() {
         setPlay(false);
+
     }
 
 

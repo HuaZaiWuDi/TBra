@@ -11,4 +11,9 @@
     <string name="password_not_same">两次输入的密码不一致</string>
     <string name="settingPasswordSuccess">密码设置成功</string>
     <string name="ok">确定</string>
+
+    <string name="agreement">
+        \t\t\t感谢您使用威觅产品！为了让您更加放心的使用威觅产品及服务，请您务必仔细阅读，充分理解协议中的条款内容后再点击同意，以便您能够更好的行使个人权利及保护个人信息。\n\t\t\t【注意】如果您不同意以下协议或其中任何条款约定，您可以单击不同意，暂停使用威觅的产品和服务。如您点击同意即表示您已阅读并同意《威觅注册协议》与《法律声明及隐私权政策》。
+    </string>
+
 </resources>

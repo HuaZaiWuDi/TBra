@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.login.RegisterActivity">
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        app:cardElevation="6dp">
+
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:translationZ="2dp"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:rightText="标记已读"
+            app:rightTextColor="@color/font_6A6F7B"
+            app:rightTextSize="12sp"
+            app:title="消息列表"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+
+    </android.support.v7.widget.CardView>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smartRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="14dp"
+            android:overScrollMode="never"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</LinearLayout>

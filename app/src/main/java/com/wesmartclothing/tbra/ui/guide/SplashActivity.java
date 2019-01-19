@@ -60,6 +60,27 @@ public class SplashActivity extends BaseActivity {
             return;
         }
 //        initUserInfo();
+
+//        CustomDialog.show(mContext, R.layout.dialog_agreement, rootView -> {
+//            rootView.findViewById(R.id.tv_agreement)
+//                    .setOnClickListener(view -> {
+//                        //协议1
+//                    });
+//            rootView.findViewById(R.id.tv_agreement2)
+//                    .setOnClickListener(view -> {
+//                        //协议2
+//                    });
+//            rootView.findViewById(R.id.img_agree)
+//                    .setOnClickListener(view -> {
+//                        CustomDialog.unloadAllDialog();
+//                    });
+//            rootView.findViewById(R.id.img_unAgree)
+//                    .setOnClickListener(view -> {
+//                        CustomDialog.unloadAllDialog();
+//                    });
+//        });
+
+
     }
 
     //获取用户信息

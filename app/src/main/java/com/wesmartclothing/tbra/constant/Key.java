@@ -10,6 +10,9 @@ package com.wesmartclothing.tbra.constant;
  */
 public interface Key {
 
+
+    long CACHE_TIME_OUT = 7 * 24 * 60 * 60 * 1000;//一周
+
     String BUNDLE_OTHER_LOGIN_INFO = "BUNDLE_OTHER_LOGIN_INFO";//第三方登录用户信息
 
     String LoginType_WEXIN = "WeChat";

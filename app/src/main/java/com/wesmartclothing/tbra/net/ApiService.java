@@ -3,7 +3,6 @@ package com.wesmartclothing.tbra.net;
 import com.vondear.rxtools.utils.net.HttpResult;
 import com.wesmartclothing.tbra.entity.AddSingleDataBean;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
-import com.wesmartclothing.tbra.entity.EmptyBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
@@ -15,6 +14,7 @@ import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
 import com.wesmartclothing.tbra.entity.SingleHistoryPointBean;
 import com.wesmartclothing.tbra.entity.UserCenterBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
+import com.wesmartclothing.tbra.entity.WarningRecordBean;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public interface ApiService {
      * 添加单次或多次监测数据信息
      */
     @POST("singleData/addSingleData")
-    Observable<HttpResult<EmptyBean>> addSingleData(@Body AddSingleDataBean bean);
+    Observable<HttpResult<Integer>> addSingleData(@Body AddSingleDataBean bean);
 
 
     /**
@@ -103,6 +103,30 @@ public interface ApiService {
     @POST("user/userInfo")
     Observable<HttpResult<UserInfoBean>> userInfo();
 
+
+    /**
+     * 查询用户告警信息列表
+     */
+    @FormUrlEncoded
+    @POST(" user/warningInfo")
+    Observable<HttpResult<WarningRecordBean>> warningInfo(
+            @Field("pageNum") int pageNum,
+            @Field("pageSize") int pageSize
+    );
+
+
+    /**
+     * 告警信息已读
+     */
+    @POST("user/warningInfoReaded")
+    Observable<HttpResult<Integer>> warningInfoReaded(@Body WarningRecordBean.ListBean bean);
+
+
+    /**
+     * 告警信息全部已读
+     */
+    @POST("user/warningInfoReadedAll")
+    Observable<HttpResult<Integer>> warningInfoReadedAll();
 
     ///////////////////////////////////////////////////////////////////////////
     // 登录
@@ -237,6 +261,33 @@ public interface ApiService {
     @POST("relateAccount/addRelateAccount")
     Observable<HttpResult<String>> addRelateAccount(@Body RelateAccountListBean.ListBean Bean);
 
+
+    /**
+     * 获取通知账号信息
+     */
+    @POST("relateAccount/relateAccountList")
+    Observable<HttpResult<RelateAccountListBean>> relateAccountList();
+
+
+    /**
+     * 开启或关闭通知账号信息
+     */
+    @POST("relateAccount/openOrClose")
+    Observable<HttpResult<String>> openOrClose(@Body RelateAccountListBean.ListBean Bean);
+
+
+    /**
+     * 移除通知账号信息
+     */
+    @POST("relateAccount/removeRelateAccount")
+    Observable<HttpResult<String>> removeRelateAccount(@Body RelateAccountListBean.ListBean Bean);
+
+
+    /**
+     * 修改通知账号信息
+     */
+    @POST("relateAccount/editRelateAccount")
+    Observable<HttpResult<String>> editRelateAccount(@Body RelateAccountListBean.ListBean Bean);
 
     ///////////////////////////////////////////////////////////////////////////
     // 用户告警规则信息

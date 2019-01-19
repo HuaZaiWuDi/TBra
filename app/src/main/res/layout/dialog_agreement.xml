@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.vondear.rxtools.view.layout.RxLinearLayout
+        android:layout_width="331dp"
+        android:layout_height="543dp"
+        android:orientation="vertical"
+        app:background_normal="@color/white"
+        app:corner_radius="8dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="19dp"
+            android:text="服务协议及隐私权政策"
+            android:textColor="@color/font_475669"
+            android:textSize="19sp"/>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="293dp"
+            android:layout_height="439dp"
+            android:layout_gravity="center_horizontal"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginRight="10dp"
+                android:lineSpacingExtra="15dp"
+                android:text="@string/agreement"
+                android:textColor="@color/font_6A6F7B"
+                android:textSize="12sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_agreement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="260dp"
+                android:text="《威觅注册协议》"
+                android:textColor="@color/font_475669"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_agreement2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13dp"
+                android:layout_marginTop="285dp"
+                android:text="《法律声明及隐私权政策》"
+                android:textColor="@color/font_475669"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+
+            <ImageView
+                android:id="@+id/img_unAgree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@mipmap/bg_btn_unagree"/>
+
+            <ImageView
+                android:id="@+id/img_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:src="@mipmap/bg_btn_agree"/>
+
+
+        </android.support.v7.widget.CardView>
+
+
+    </com.vondear.rxtools.view.layout.RxLinearLayout>
+
+
+</LinearLayout>

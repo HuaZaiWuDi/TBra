@@ -17,6 +17,7 @@ import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.SingleHistoryPointBean;
+import com.wesmartclothing.tbra.entity.SingleSelectBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 import com.zchu.rxcache.stategy.CacheStrategy;
@@ -58,7 +59,7 @@ public class HistoryMonitorActivity extends BaseActivity {
                 lifecycleSubject,
                 "unusualPointData" + lastetType + pointName,
                 SingleHistoryPointBean.class,
-                CacheStrategy.firstCacheTimeout(5 * 60 * 1000)
+                CacheStrategy.firstCache()
         )
                 .compose(RxComposeTools.showDialog(mContext))
                 .subscribe(new RxNetSubscriber<SingleHistoryPointBean>() {
@@ -83,13 +84,28 @@ public class HistoryMonitorActivity extends BaseActivity {
 
     private void initRecycler() {
         mRecyclerPoint.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        BaseQuickAdapter adapter = new BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_point) {
-
+        mRecyclerPoint.setTag(0);
+        BaseQuickAdapter adapter = new BaseQuickAdapter<SingleSelectBean, BaseViewHolder>(R.layout.item_point) {
             @Override
-            protected void convert(BaseViewHolder helper, String item) {
-                helper.setText(R.id.tv_point, item);
+            protected void convert(BaseViewHolder helper, SingleSelectBean item) {
+                helper.setText(R.id.tv_point, item.getText())
+                        .setBackgroundRes(R.id.tv_point, item.isSelect() ?
+                                R.mipmap.bg_btn : R.drawable.shape_gray_circle_42);
             }
         };
+
+        adapter.setOnItemClickListener((adapter1, view, position) -> {
+            int lastIndex = (int) mRecyclerPoint.getTag();
+            if (position != lastIndex) {
+                SingleSelectBean lastItem = (SingleSelectBean) adapter.getItem(lastIndex);
+                SingleSelectBean curItem = (SingleSelectBean) adapter.getItem(position);
+                lastItem.setSelect(false);
+                curItem.setSelect(true);
+                adapter.setData(lastIndex, lastItem);
+                adapter.setData(position, curItem);
+                mRecyclerPoint.setTag(position);
+            }
+        });
 
         mRecyclerPoint.setAdapter(adapter);
     }

@@ -235,8 +235,17 @@ public class RelateAccountListBean {
         private String contactName;
         private String contactPhone;
         private long createTime;
-        private int usingFlag;
+        private String gid;
+        private int usingFlag;//启用标识。0-关闭，1-启用
         private String verifyCode;
+
+        public String getGid() {
+            return gid;
+        }
+
+        public void setGid(String gid) {
+            this.gid = gid;
+        }
 
         public String getContactName() {
             return contactName;

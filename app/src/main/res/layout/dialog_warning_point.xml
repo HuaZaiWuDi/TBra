@@ -8,7 +8,7 @@
 
     <com.vondear.rxtools.view.layout.RxRelativeLayout
         android:layout_width="331dp"
-        android:layout_height="469dp"
+        android:layout_height="wrap_content"
         app:background_normal="@color/white"
         app:corner_radius="8dp">
 
@@ -131,7 +131,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="337dp"
             android:layout_marginLeft="19dp"
             android:layout_marginTop="220dp"
             android:layout_marginRight="19dp"
@@ -146,16 +146,32 @@
                 android:layout_margin="12dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="异常点位："
+                android:text="异常点位分布"
                 android:textColor="@color/font_6A6F7B"
                 android:textSize="12sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="41dp"
+                android:layout_marginRight="14dp"
+                android:background="@color/line_C3C5CA"/>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:layout_marginTop="41dp">
+
+            </android.support.v7.widget.RecyclerView>
 
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_WaringPoint"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="28dp">
+                android:layout_marginTop="98dp">
 
             </android.support.v7.widget.RecyclerView>
 

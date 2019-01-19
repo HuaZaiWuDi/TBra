@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.vondear.rxtools.interfaces.onEditTextChangeListener;
+import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRegUtils;
@@ -18,12 +19,12 @@ import com.vondear.rxtools.view.layout.RxTextView;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.entity.RelateAccountListBean;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.tools.RxComposeTools;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class EditPhoneActivity extends BaseActivity {
 
@@ -42,6 +43,7 @@ public class EditPhoneActivity extends BaseActivity {
 
 
     private String nickName, phone, code;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +120,8 @@ public class EditPhoneActivity extends BaseActivity {
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().sendCode(phone, null),
                 lifecycleSubject)
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode));
-                    }
-                })
+                .doOnSubscribe(disposable ->
+                        RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode)))
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String s) {
@@ -145,6 +143,41 @@ public class EditPhoneActivity extends BaseActivity {
                 });
     }
 
+    private void addRelationPhone() {
+        if (!RxRegUtils.isMobileExact(phone)) {
+            RxToast.warning(getString(R.string.phoneError));
+            return;
+        }
+        if (!RxRegUtils.isVCode(code)) {
+            RxToast.warning(getString(R.string.VCodeError));
+            return;
+        }
+        RelateAccountListBean.ListBean mListBean = new RelateAccountListBean.ListBean();
+        mListBean.setContactPhone(phone);
+        mListBean.setUsingFlag(1);
+        mListBean.setVerifyCode(code);
+        mListBean.setContactName(nickName);
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().addRelateAccount(mListBean),
+                lifecycleSubject
+        )
+                .compose(RxComposeTools.showDialog(mContext))
+                .subscribe(new RxNetSubscriber<String>() {
+                    @Override
+                    protected void _onNext(String s) {
+                        RxBus.getInstance().post(mListBean);
+                        onBackPressed();
+                    }
+
+                    @Override
+                    protected void _onError(String error, int code) {
+                        super._onError(error, code);
+                        RxToast.normal(error);
+                    }
+                });
+    }
+
+
     @Override
     public void initNetData() {
 
@@ -162,6 +195,7 @@ public class EditPhoneActivity extends BaseActivity {
                 getVCode();
                 break;
             case R.id.tv_addPhone:
+                addRelationPhone();
                 break;
         }
     }

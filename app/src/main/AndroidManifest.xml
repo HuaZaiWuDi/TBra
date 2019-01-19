@@ -191,6 +191,16 @@
 
         <activity android:name=".ui.main.home.HistoryMonitorActivity">
         </activity>
+        <activity android:name=".ui.main.mine.MessageActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.WarningRecordActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.relationphone.AddRelationPhoneActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.WarningSettingActivity">
+        </activity>
+        <activity android:name=".ui.main.home.ErrorPointActivity">
+        </activity>
     </application>
 
 </manifest>

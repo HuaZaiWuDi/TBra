@@ -11,6 +11,7 @@ import com.tmall.ultraviewpager.UltraViewPager;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.model.timer.MyTimer;
 import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRandom;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxManager;
@@ -25,8 +26,8 @@ import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.tools.CheckTempErrorUtil;
 import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
+import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
-import com.wesmartclothing.tbra.view.PowerIconView;
 import com.wesmartclothing.tbra.view.TimingMonitorView;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
@@ -52,7 +53,7 @@ public class MonitorFragment extends BaseAcFragment {
     @BindView(R.id.tv_deviceName)
     TextView mTvDeviceName;
     @BindView(R.id.powerIcon)
-    PowerIconView mPowerIcon;
+    BatteryView mPowerIcon;
     @BindView(R.id.tv_switchDevice)
     TextView mTvSwitchDevice;
     @BindView(R.id.tv_bindDevice)
@@ -131,16 +132,19 @@ public class MonitorFragment extends BaseAcFragment {
 
 
     @Override
-    public void onResume() {
+    protected void onVisible() {
+        super.onVisible();
         testTimer.startTimer();
-        super.onResume();
+        RxLogUtils.d("【MonitorFragment】onVisible");
     }
 
     @Override
-    public void onPause() {
+    protected void onInvisible() {
+        RxLogUtils.d("【MonitorFragment】onInvisible");
+        super.onInvisible();
         testTimer.stopTimer();
-        super.onPause();
     }
+
 
     private void initViewPage() {
         imgs.clear();
@@ -222,6 +226,7 @@ public class MonitorFragment extends BaseAcFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_switchDevice:
+                RxActivityUtils.skipActivity(mContext,ScanDeviceActivity.class);
                 break;
             case R.id.tv_bindDevice:
                 if (!BleTools.getBleManager().isBlueEnable()) {

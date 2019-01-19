@@ -69,13 +69,13 @@
 
                 </android.support.v7.widget.RecyclerView>
 
-                <com.vondear.rxtools.view.layout.RxRelativeLayout
+                <com.wesmartclothing.tbra.view.HistoryTempView
                     android:layout_width="302dp"
                     android:layout_height="156dp"
                     app:background_normal="@color/colortheme"
                     app:corner_radius="6dp">
 
-                </com.vondear.rxtools.view.layout.RxRelativeLayout>
+                </com.wesmartclothing.tbra.view.HistoryTempView>
 
                 <View
                     android:layout_width="match_parent"

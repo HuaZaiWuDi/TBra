@@ -149,9 +149,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -164,9 +164,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -185,9 +185,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -200,9 +200,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -221,9 +221,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -236,9 +236,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -257,9 +257,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -272,9 +272,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -293,9 +293,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -308,9 +308,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -329,9 +329,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -344,9 +344,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -365,9 +365,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -380,9 +380,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
@@ -401,9 +401,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_5F8DFF"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -416,15 +416,14 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="35.6"
                 android:textColor="@color/color_FE5FA9"
-                android:textSize="10sp"/>
+                android:textSize="10sp"
+                tools:text="35.6"/>
 
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

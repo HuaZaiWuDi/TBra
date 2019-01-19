@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.utils.SPUtils;
@@ -30,6 +32,7 @@ import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.net.ServiceAPI;
 import com.wesmartclothing.tbra.ui.main.home.HomeFragment;
+import com.wesmartclothing.tbra.ui.main.mine.MessageActivity;
 import com.wesmartclothing.tbra.ui.main.mine.MineFragment;
 import com.wesmartclothing.tbra.ui.main.monitor.MonitorFragment;
 
@@ -37,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
@@ -49,6 +53,8 @@ public class MainActivity extends BaseActivity {
     RelativeLayout mLayoutTitle;
     @BindView(R.id.tv_tip)
     TextView mTvTip;
+    @BindView(R.id.img_message)
+    ImageView mImgMessage;
 
 
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
@@ -192,15 +198,12 @@ public class MainActivity extends BaseActivity {
             position = index;
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
-//            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 
             if (!toFragment.isAdded()) {    // 先判断是否被add过
                 transaction.hide(fromFragment).add(R.id.frameLayout, toFragment)
-                        .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
                         .commitAllowingStateLoss(); // 隐藏当前的fragment，add下一个到Activity中
             } else {
                 transaction.hide(fromFragment).show(toFragment)
-                        .setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out)
                         .commitAllowingStateLoss(); // 隐藏当前的fragment，显示下一个
             }
         }
@@ -244,4 +247,8 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    @OnClick(R.id.img_message)
+    public void onViewClicked() {
+        RxActivityUtils.skipActivity(mContext, MessageActivity.class);
+    }
 }

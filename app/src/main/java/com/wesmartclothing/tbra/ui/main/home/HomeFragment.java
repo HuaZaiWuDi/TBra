@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
@@ -29,6 +30,7 @@ import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
+import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
@@ -40,8 +42,8 @@ import com.wesmartclothing.tbra.entity.SinglePointBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.tools.MapSortUtil;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
+import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
-import com.wesmartclothing.tbra.view.PowerIconView;
 import com.zchu.rxcache.RxCache;
 import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
@@ -54,7 +56,6 @@ import java.util.StringJoiner;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
@@ -73,7 +74,7 @@ public class HomeFragment extends BaseAcFragment {
     @BindView(R.id.tv_seeMore)
     TextView mTvSeeMore;
     @BindView(R.id.img_battery)
-    PowerIconView mImgBattery;
+    BatteryView mImgBattery;
     @BindView(R.id.reportCommonTabLayout)
     CommonTabLayout mCommonTabLayout;
     @BindView(R.id.reportRecyclerView)
@@ -82,7 +83,8 @@ public class HomeFragment extends BaseAcFragment {
     HistoryTempView mHistoryTempView;
     @BindView(R.id.commonTabLayout)
     CommonTabLayout mTitleCommonTabLayout;
-    Unbinder unbinder;
+    @BindView(R.id.errorRecyclerView)
+    RecyclerView mErrorRecyclerView;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -92,7 +94,7 @@ public class HomeFragment extends BaseAcFragment {
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTitleTabItems = new ArrayList<>();
     private List<PointDataBean> pointDatalist;
-    private BaseQuickAdapter adapter;
+    private BaseQuickAdapter adapter, errorPointAdapter;
 
     @Override
     public int layoutId() {
@@ -108,7 +110,38 @@ public class HomeFragment extends BaseAcFragment {
         initTitleTab();
         initTab();
         initRecyclerView();
-        mImgBattery.setValue(10f);
+        initErrorPoint();
+        bleConnectState(BleTools.getInstance().isConnected());
+
+    }
+
+    private void bleConnectState(boolean isConnected) {
+        mTvConnectState.setText(isConnected ? "设备已连接" : "设备未连接");
+//        mImgBattery.setVisibility(isConnected ? View.VISIBLE : View.INVISIBLE);
+        mImgBattery.setBatteryValue(50);
+    }
+
+    private void initErrorPoint() {
+        mErrorRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 8));
+        errorPointAdapter = new BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_error_point) {
+
+            @Override
+            protected void convert(BaseViewHolder helper, String item) {
+                helper.setText(R.id.tv_errorPoint, item)
+                        .setTextColor(R.id.tv_errorPoint, ContextCompat.getColor(mActivity,
+                                helper.getAdapterPosition() >= 3 ? R.color.font_C3C5CA : R.color.colortheme));
+            }
+        };
+        mErrorRecyclerView.setAdapter(errorPointAdapter);
+
+        mHistoryTempView.setOnErrorPointListener(errorPoints -> {
+            for (String key : errorPoints.keySet()) {
+                RxLogUtils.d("异常点位：key" + key + "--value:" + errorPoints.get(key));
+            }
+            List<String> errorPoint = new ArrayList<>(errorPoints.keySet());
+            errorPointAdapter.setNewData(errorPoint);
+        });
+
     }
 
     private void initRecyclerView() {
@@ -201,7 +234,7 @@ public class HomeFragment extends BaseAcFragment {
                 lifecycleSubject,
                 position == 0 ? "weekDataList" : "monthDataList",
                 ReportDataBean.class,
-                CacheStrategy.firstCacheTimeout(7 * 24 * 60 * 60 * 1000)
+                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT)
         )
 //                .compose(RxComposeTools.showDialog(mContext))
                 .subscribe(new RxSubscriber<ReportDataBean>() {
@@ -221,7 +254,7 @@ public class HomeFragment extends BaseAcFragment {
                         "latestSingleData" + tag,
                         new TypeToken<List<PointDataBean>>() {
                         }.getType(),
-                        CacheStrategy.firstCacheTimeout(7 * 24 * 60 * 60 * 1000)))//保存数据一周
+                        CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT)))//保存数据一周
                 .map(new CacheResult.MapFunc<>())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
@@ -303,7 +336,7 @@ public class HomeFragment extends BaseAcFragment {
         mTvWarningCount.setText(errorTotal + "");
         mTvWarningPoint.setText(errorMap.size() + "");
 
-        errorMap = MapSortUtil.sortMapByValue(errorMap);
+        errorMap = MapSortUtil.sortMapByValue(errorMap, true);
 
         Object[] keys = errorMap.keySet().toArray();
         StringJoiner joiner = new StringJoiner("、");
@@ -333,21 +366,28 @@ public class HomeFragment extends BaseAcFragment {
 
 
     @Override
-    public void onPause() {
-        mHistoryTempView.pause();
-        super.onPause();
+    protected void onVisible() {
+        super.onVisible();
     }
 
+    @Override
+    protected void onInvisible() {
+        mHistoryTempView.pause();
+        super.onInvisible();
+    }
 
     @OnClick({R.id.tv_seeMore})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_seeMore:
                 if (pointDatalist == null) return;
-                CustomDialog.show(mContext, R.layout.dialog_warning_point, rootView -> initWarningDialogData(rootView));
+                Bundle bundle = new Bundle();
+                bundle.putString(Key.BUNDLE_LATEST_TYPE, ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
+                RxActivityUtils.skipActivity(mContext, ErrorPointActivity.class, bundle);
                 break;
             default:
                 break;
         }
     }
+
 }

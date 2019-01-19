@@ -1,15 +1,25 @@
 package com.wesmartclothing.tbra.ui.main.mine;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.net.RxManager;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
+import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.layout.RxImageView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
+import com.wesmartclothing.tbra.entity.UserCenterBean;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.ui.main.mine.relationphone.RelationPhoneActivity;
+import com.zchu.rxcache.stategy.CacheStrategy;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -82,8 +92,40 @@ public class MineFragment extends BaseAcFragment {
 
     @Override
     public void initNetData() {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().userCenter(),
+                lifecycleSubject,
+                "userCenter",
+                UserCenterBean.class,
+                CacheStrategy.firstRemote()
+        ).subscribe(new RxNetSubscriber<UserCenterBean>() {
+            @Override
+            protected void _onNext(UserCenterBean bean) {
+                setTextView(bean);
+            }
 
+            @Override
+            protected void _onError(String error, int code) {
+                super._onError(error, code);
+                RxToast.normal(error);
+            }
+        });
     }
+
+    private void setTextView(UserCenterBean bean) {
+        RxTextUtils.getBuilder("使用天数\n")
+                .append(bean.getTotalDays() + "")
+                .setForegroundColor(ContextCompat.getColor(mContext, R.color.font_475669))
+                .setProportion(1.6f)
+                .into(mTvUseCount);
+
+        RxTextUtils.getBuilder("警告天数\n")
+                .append(bean.getWarningDays() + "")
+                .setForegroundColor(ContextCompat.getColor(mContext, R.color.font_475669))
+                .setProportion(1.6f)
+                .into(mTvWarningCount);
+    }
+
 
     @Override
     public void initRxBus2() {
@@ -97,16 +139,21 @@ public class MineFragment extends BaseAcFragment {
             case R.id.img_userImg:
                 break;
             case R.id.img_message:
+                RxActivityUtils.skipActivity(mContext, MessageActivity.class);
                 break;
             case R.id.img_setting:
+                RxActivityUtils.skipActivity(mContext, SettingActivity.class);
                 break;
             case R.id.layout_device:
                 break;
             case R.id.layout_warningSetting:
+                RxActivityUtils.skipActivity(mContext, WarningSettingActivity.class);
                 break;
             case R.id.layout_warningRecord:
+                RxActivityUtils.skipActivity(mContext, WarningRecordActivity.class);
                 break;
             case R.id.layout_relationPhone:
+                RxActivityUtils.skipActivity(mContext, RelationPhoneActivity.class);
                 break;
             case R.id.layout_feedback:
                 break;

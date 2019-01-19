@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="134dp"
             android:layout_margin="14dp"
-            android:nestedScrollingEnabled="false"
+            android:nestedScrollingEnabled="true"
             tools:background="@color/red">
 
         </com.tmall.ultraviewpager.UltraViewPager>
@@ -68,14 +68,14 @@
                         android:textColor="@color/font_475669"
                         android:textSize="12sp"/>
 
-                    <com.wesmartclothing.tbra.view.PowerIconView
+                    <com.wesmartclothing.tbra.view.BatteryView
                         android:id="@+id/powerIcon"
-                        android:layout_width="22dp"
-                        android:layout_height="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="8dp"
                         android:layout_toRightOf="@+id/tv_deviceName"
-                        android:visibility="gone"/>
+                        />
 
 
                     <TextView

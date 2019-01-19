@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.vondear.rxtools.model.lifecycyle.LifeCycleEvent;
 import com.vondear.rxtools.utils.RxKeyboardUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
-import com.vondear.rxtools.view.TipDialog;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -102,7 +101,6 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         lifecycleSubject.onNext(LifeCycleEvent.ATTACH);
         super.onAttach(context);
         mContext = mActivity = getActivity();
-        initDialog();
     }
 
     @Override
@@ -111,15 +109,9 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public TipDialog tipDialog;
-
 
     public void setTGA(String TGA) {
         this.TGA = TGA;
-    }
-
-    private void initDialog() {
-        tipDialog = new TipDialog(mActivity);
     }
 
 
@@ -132,8 +124,6 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         RxLogUtils.d("setUserVisibleHint：" + isVisibleToUser);
-        RxLogUtils.d("isPrepared：" + isPrepared);
-        RxLogUtils.d("isFirstLoad：" + isFirstLoad);
         if (getUserVisibleHint()) {
             isVisible = true;
             if (isPrepared) {
@@ -182,8 +172,10 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
     public void onResume() {
         RxLogUtils.i(TGA + "：onResume");
         lifecycleSubject.onNext(LifeCycleEvent.RESUME);
-        isVisible = true;
-        lazyLoad();
+
+        if (isPrepared) {
+            onVisible();
+        }
         super.onResume();
     }
 
@@ -209,9 +201,6 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         if (unbinder != null) {
             unbinder.unbind();
         }
-        if (tipDialog != null) {
-            tipDialog.dismiss();
-        }
         RxLogUtils.i(TGA + "：onDestroyView");
         lifecycleSubject.onNext(LifeCycleEvent.DESTROY_VIEW);
 
@@ -230,7 +219,6 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
     public void onDetach() {
         RxLogUtils.i(TGA + "：onDetach");
         lifecycleSubject.onNext(LifeCycleEvent.DETACH);
-        tipDialog.dismiss();
         RxKeyboardUtils.hideSoftInput(mActivity);
         super.onDetach();
         mActivity = null;
@@ -238,10 +226,12 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
 
 
     protected void onVisible() {
+        isVisible = true;
         lazyLoad();
     }
 
     protected void onInvisible() {
+        isVisible = false;
     }
 
     public boolean isVisibled() {

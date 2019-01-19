@@ -32,20 +32,18 @@
                 android:id="@+id/tv_connectState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="19dp"
                 android:layout_toLeftOf="@+id/img_battery"
                 android:text="设备已连接"
                 android:textColor="@color/colortheme"
                 android:textSize="12sp"/>
 
-            <com.wesmartclothing.tbra.view.PowerIconView
+            <com.wesmartclothing.tbra.view.BatteryView
                 android:id="@+id/img_battery"
-                android:layout_marginBottom="2dp"
-                android:layout_width="22dp"
-                android:layout_height="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:layout_marginRight="25dp"
                 />
 
@@ -190,7 +188,7 @@
             android:id="@+id/reportRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
+            android:nestedScrollingEnabled="true"/>
 
     </LinearLayout>
 
