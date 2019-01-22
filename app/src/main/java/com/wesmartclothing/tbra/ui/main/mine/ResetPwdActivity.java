@@ -12,7 +12,6 @@ import com.vondear.rxtools.utils.RxEncryptUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRegUtils;
 import com.vondear.rxtools.utils.RxUtils;
-import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -23,13 +22,12 @@ import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.LoginSuccessUtils;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class ResetPwdActivity extends BaseActivity {
 
@@ -199,12 +197,7 @@ public class ResetPwdActivity extends BaseActivity {
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().sendCode(phone, null),
                 lifecycleSubject)
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode));
-                    }
-                })
+                .doOnSubscribe(disposable -> RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode)))
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String s) {

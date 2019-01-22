@@ -201,6 +201,7 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         if (unbinder != null) {
             unbinder.unbind();
         }
+        onInvisible();
         RxLogUtils.i(TGA + "：onDestroyView");
         lifecycleSubject.onNext(LifeCycleEvent.DESTROY_VIEW);
 

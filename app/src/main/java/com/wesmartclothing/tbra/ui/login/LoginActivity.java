@@ -26,7 +26,6 @@ import com.vondear.rxtools.utils.RxRegUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.utils.StatusBarUtils;
-import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
@@ -41,6 +40,7 @@ import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.entity.LoginResult;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.LoginSuccessUtils;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 

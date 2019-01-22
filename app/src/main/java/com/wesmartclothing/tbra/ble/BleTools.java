@@ -4,10 +4,12 @@ import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
+import android.support.annotation.IntRange;
 import android.util.Log;
 
 import com.clj.fastble.BleManager;
 import com.clj.fastble.callback.BleIndicateCallback;
+import com.clj.fastble.callback.BleMtuChangedCallback;
 import com.clj.fastble.callback.BleNotifyCallback;
 import com.clj.fastble.callback.BleReadCallback;
 import com.clj.fastble.callback.BleRssiCallback;
@@ -16,9 +18,10 @@ import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.data.BleScanState;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.utils.HexUtil;
+import com.vondear.rxtools.utils.net.ExplainException;
+import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.ble.listener.BleCallBack;
-import com.wesmartclothing.tbra.ble.listener.BleChartChangeCallBack;
 import com.wesmartclothing.tbra.ble.listener.BleOpenNotifyCallBack;
 import com.wesmartclothing.tbra.ble.listener.SynDataCallBack;
 import com.wesmartclothing.tbra.constant.BLEKey;
@@ -59,7 +62,7 @@ public class BleTools {
     }
 
     private BleCallBack mBleCallBack;
-    private BleChartChangeCallBack bleChartChange;
+    private RxSubscriber subscriber;
     private SynDataCallBack mSynDataCallBack;
     private byte[] bytes;
     private final int reWriteCount = 2;    //重连次数
@@ -112,19 +115,20 @@ public class BleTools {
         @Override
         public void run() {
             Log.e(TAG, "重新写");
-            write(bytes, bleChartChange);
+            write(bytes, subscriber);
         }
     };
 
-    public void write(final byte[] bytes, final BleChartChangeCallBack bleChartChange) {
+    public <T> void write(final byte[] bytes, final RxSubscriber<T> subscriber) {
         if (bleDevice == null || !bleManager.isConnected(bleDevice)) {
             Log.e(TAG, "未连接");
             return;
         }
         this.bytes = bytes;
-        this.bleChartChange = bleChartChange;
+        this.subscriber = subscriber;
         if (currentCount > reWriteCount) {
             Log.e(TAG, "写失败--次数：" + currentCount);
+            if (subscriber != null) subscriber.onError(new ExplainException("写入失败", -2));
             currentCount = 0;
         } else {
             TimeOut.postDelayed(reWrite, timeOut);
@@ -170,17 +174,9 @@ public class BleTools {
             public void onReadFailure(BleException exception) {
                 TimeOut.removeCallbacks(reWrite);
                 Log.e(TAG, "读失败:" + exception);
-                write(bytes, bleChartChange);
+                write(bytes, subscriber);
             }
         });
-    }
-
-    public void setBleCallBack(BleCallBack bleCallBack) {
-        mBleCallBack = bleCallBack;
-    }
-
-    public void setSynDataCallBack(SynDataCallBack synDataCallBack) {
-        mSynDataCallBack = synDataCallBack;
     }
 
 
@@ -211,20 +207,12 @@ public class BleTools {
             @Override
             public void onCharacteristicChanged(byte[] data) {
                 Log.d(TAG, "蓝牙数据更新:" + HexUtil.encodeHexStr(data));
-                //notify数据
-                if (mBleCallBack != null && data[2] == 0x07)
-                    mBleCallBack.onNotify(data);
 
                 //命令数据
-                if (bleChartChange != null && data[2] == bytes[2]) {
+                if (subscriber != null && data[3] == bytes[3]) {
                     currentCount = 0;
-                    bleChartChange.callBack(data);
+                    subscriber.onNext(data);
                     TimeOut.removeCallbacks(reWrite);
-                }
-
-                //同步数据
-                if (mSynDataCallBack != null && data[2] == 0x06) {
-                    mSynDataCallBack.data(data);
                 }
             }
         });
@@ -257,8 +245,8 @@ public class BleTools {
                 TimeOut.removeCallbacks(reWrite);
                 currentCount = 0;
                 Log.d(TAG, "数据正确");
-                if (bleChartChange != null)
-                    bleChartChange.callBack(data);
+                if (subscriber != null)
+                    subscriber.onNext(data);
             }
         });
     }
@@ -328,5 +316,10 @@ public class BleTools {
         return BluetoothAdapter.checkBluetoothAddress(Mac);
     }
 
+    public void setMTU(@IntRange(from = 23, to = 512) int mtu, BleMtuChangedCallback callback) {
+        if (bleDevice != null) {
+            getBleManager().setMtu(bleDevice, mtu, callback);
+        }
+    }
 
 }

@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
-import com.vondear.rxtools.utils.SPUtils;
-import com.vondear.rxtools.utils.net.RxManager;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
@@ -13,10 +12,13 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
 import com.zchu.rxcache.stategy.CacheStrategy;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Jack
@@ -51,36 +53,22 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void initNetData() {
-        RxActivityUtils.skipActivityAndFinish(mActivity, MainActivity.class);
+        RxActivityUtils.skipActivity(mActivity, MainActivity.class);
 
-
-        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
-            SPUtils.put(SPKey.SP_GUIDE, true);
+//        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
+//            SPUtils.put(SPKey.SP_GUIDE, true);
 //            RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);
-            return;
-        }
+//            return;
+//        }
 //        initUserInfo();
 
-//        CustomDialog.show(mContext, R.layout.dialog_agreement, rootView -> {
-//            rootView.findViewById(R.id.tv_agreement)
-//                    .setOnClickListener(view -> {
-//                        //协议1
-//                    });
-//            rootView.findViewById(R.id.tv_agreement2)
-//                    .setOnClickListener(view -> {
-//                        //协议2
-//                    });
-//            rootView.findViewById(R.id.img_agree)
-//                    .setOnClickListener(view -> {
-//                        CustomDialog.unloadAllDialog();
-//                    });
-//            rootView.findViewById(R.id.img_unAgree)
-//                    .setOnClickListener(view -> {
-//                        CustomDialog.unloadAllDialog();
-//                    });
-//        });
 
-
+        byte[] bytes1 = {0x34, 0x30, 0x30, 0x30};
+        try {
+            RxLogUtils.d("解码：" + new String(bytes1, "ascii"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     //获取用户信息
@@ -115,6 +103,11 @@ public class SplashActivity extends BaseActivity {
                 });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     public void initRxBus2() {

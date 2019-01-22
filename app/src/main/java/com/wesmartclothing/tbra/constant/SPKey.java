@@ -31,4 +31,7 @@ public interface SPKey {
      */
     String SP_WARNING_RULE = "SP_WARNING_RULE";
 
+
+    String SP_SAVE_TEMP_DATA = "SP_SAVE_TEMP_DATA";
+
 }

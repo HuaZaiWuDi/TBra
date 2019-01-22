@@ -4,22 +4,34 @@ import java.util.List;
 
 /**
  * @Package com.wesmartclothing.tbra.entity
- * @FileName AddSingleDataBean
- * @Date 2019/1/3 16:04
+ * @FileName AddTempDataBean
+ * @Date 2019/1/22 14:00
  * @Author JACK
  * @Describe TODO
  * @Project tbra
  */
-public class AddSingleDataBean {
+public class AddTempDataBean {
 
 
     /**
-     * collectTime : 2019-01-03T08:01:30.099Z
+     * yyyy-MM-dd hh:mm:ss
+     * <p>
+     * collectTime : 2019-01-22T05:57:46.309Z
      * dataList : [{"nodeName":"string","nodeTemp":0,"warningFlag":0}]
+     * userId : string
      */
 
     private String collectTime;
     private List<DataListBean> dataList;
+    private int index;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
 
     public String getCollectTime() {
         return collectTime;
@@ -45,7 +57,7 @@ public class AddSingleDataBean {
          */
 
         private String nodeName;
-        private int nodeTemp;
+        private double nodeTemp;
         private int warningFlag;
 
         public String getNodeName() {
@@ -56,11 +68,11 @@ public class AddSingleDataBean {
             this.nodeName = nodeName;
         }
 
-        public int getNodeTemp() {
+        public double getNodeTemp() {
             return nodeTemp;
         }
 
-        public void setNodeTemp(int nodeTemp) {
+        public void setNodeTemp(double nodeTemp) {
             this.nodeTemp = nodeTemp;
         }
 
@@ -71,5 +83,24 @@ public class AddSingleDataBean {
         public void setWarningFlag(int warningFlag) {
             this.warningFlag = warningFlag;
         }
+
+
+        @Override
+        public String toString() {
+            return "DataListBean{" +
+                    "nodeName='" + nodeName + '\'' +
+                    ", nodeTemp=" + nodeTemp +
+                    ", warningFlag=" + warningFlag +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "AddTempDataBean{" +
+                "collectTime='" + collectTime + '\'' +
+                ", dataList=" + dataList +
+                ", index=" + index +
+                '}';
     }
 }

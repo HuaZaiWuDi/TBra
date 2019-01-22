@@ -1,5 +1,7 @@
 package com.wesmartclothing.tbra.service;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -97,7 +99,20 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+        initAlarm();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void initAlarm() {
+        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent("Broadcast");
+        intent.putExtra("msg", "Alarm");
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 111, intent, 0);
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 1000, pendingIntent);
+
     }
 
     @Override

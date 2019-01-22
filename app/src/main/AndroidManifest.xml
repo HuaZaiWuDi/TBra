@@ -201,6 +201,8 @@
         </activity>
         <activity android:name=".ui.main.home.ErrorPointActivity">
         </activity>
+        <activity android:name=".ui.guide.GuideActivity">
+        </activity>
     </application>
 
 </manifest>

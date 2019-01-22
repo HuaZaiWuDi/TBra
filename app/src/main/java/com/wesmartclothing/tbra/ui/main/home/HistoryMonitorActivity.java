@@ -9,7 +9,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.mikephil.charting.charts.LineChart;
 import com.vondear.rxtools.utils.RxLogUtils;
-import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -19,6 +18,7 @@ import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.SingleHistoryPointBean;
 import com.wesmartclothing.tbra.entity.SingleSelectBean;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 import com.zchu.rxcache.stategy.CacheStrategy;
 

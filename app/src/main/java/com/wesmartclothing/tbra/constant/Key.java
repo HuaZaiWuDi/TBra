@@ -25,4 +25,7 @@ public interface Key {
 
     //异常点的名字
     String BUNDLE_POINT_NAME = "BUNDLE_POINT_NAME";
+
+    String BUNDLE_WEB_URL = "BUNDLE_WEB_URL";
+
 }

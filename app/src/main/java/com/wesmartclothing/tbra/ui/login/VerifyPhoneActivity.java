@@ -9,7 +9,6 @@ import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRegUtils;
 import com.vondear.rxtools.utils.RxUtils;
-import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -22,6 +21,7 @@ import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.entity.LoginResult;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.LoginSuccessUtils;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 

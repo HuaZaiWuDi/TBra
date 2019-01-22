@@ -5,8 +5,8 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.view.RxTitle;
-import com.vondear.rxtools.view.layout.RxTextView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 
@@ -26,7 +26,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.layout_clearCache)
     CardView mLayoutClearCache;
     @BindView(R.id.tv_logout)
-    RxTextView mTvLogout;
+    TextView mTvLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,7 @@ public class SettingActivity extends BaseActivity {
             case R.id.layout_account:
                 break;
             case R.id.layout_resetPwd:
+                RxActivityUtils.skipActivity(mContext, ResetPwdActivity.class);
                 break;
             case R.id.layout_clearCache:
                 break;

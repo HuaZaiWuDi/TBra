@@ -1,7 +1,7 @@
 package com.wesmartclothing.tbra.net;
 
 import com.vondear.rxtools.utils.net.HttpResult;
-import com.wesmartclothing.tbra.entity.AddSingleDataBean;
+import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
@@ -49,7 +49,7 @@ public interface ApiService {
      * 添加单次或多次监测数据信息
      */
     @POST("singleData/addSingleData")
-    Observable<HttpResult<Integer>> addSingleData(@Body AddSingleDataBean bean);
+    Observable<HttpResult<Integer>> addSingleData(@Body List<AddTempDataBean> bean);
 
 
     /**

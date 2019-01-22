@@ -10,7 +10,6 @@ import com.kongzue.dialog.v2.BottomMenu;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.SPUtils;
-import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -23,6 +22,7 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 
 import java.util.ArrayList;

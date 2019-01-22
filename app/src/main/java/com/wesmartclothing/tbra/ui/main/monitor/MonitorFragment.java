@@ -14,7 +14,6 @@ import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRandom;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
-import com.vondear.rxtools.utils.net.RxManager;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
@@ -24,6 +23,7 @@ import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.CheckTempErrorUtil;
 import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
 import com.wesmartclothing.tbra.view.BatteryView;
@@ -226,7 +226,7 @@ public class MonitorFragment extends BaseAcFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_switchDevice:
-                RxActivityUtils.skipActivity(mContext,ScanDeviceActivity.class);
+                RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
                 break;
             case R.id.tv_bindDevice:
                 if (!BleTools.getBleManager().isBlueEnable()) {
