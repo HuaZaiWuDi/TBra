@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="19dp"
                 android:layout_toLeftOf="@+id/img_battery"
-                android:text="设备已连接"
+                android:text="设备未连接"
                 android:textColor="@color/colortheme"
                 android:textSize="12sp"/>
 
@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="25dp"
+                android:visibility="invisible"
                 />
 
         </RelativeLayout>

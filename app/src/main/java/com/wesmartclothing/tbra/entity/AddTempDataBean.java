@@ -22,8 +22,8 @@ public class AddTempDataBean {
      */
 
     private String collectTime;
-    private List<DataListBean> dataList;
-    private int index;
+    private List<JsonDataBean> dataList;
+    private Integer index;
 
     public int getIndex() {
         return index;
@@ -41,66 +41,12 @@ public class AddTempDataBean {
         this.collectTime = collectTime;
     }
 
-    public List<DataListBean> getDataList() {
+    public List<JsonDataBean> getDataList() {
         return dataList;
     }
 
-    public void setDataList(List<DataListBean> dataList) {
+    public void setDataList(List<JsonDataBean> dataList) {
         this.dataList = dataList;
     }
 
-    public static class DataListBean {
-        /**
-         * nodeName : string
-         * nodeTemp : 0
-         * warningFlag : 0
-         */
-
-        private String nodeName;
-        private double nodeTemp;
-        private int warningFlag;
-
-        public String getNodeName() {
-            return nodeName;
-        }
-
-        public void setNodeName(String nodeName) {
-            this.nodeName = nodeName;
-        }
-
-        public double getNodeTemp() {
-            return nodeTemp;
-        }
-
-        public void setNodeTemp(double nodeTemp) {
-            this.nodeTemp = nodeTemp;
-        }
-
-        public int getWarningFlag() {
-            return warningFlag;
-        }
-
-        public void setWarningFlag(int warningFlag) {
-            this.warningFlag = warningFlag;
-        }
-
-
-        @Override
-        public String toString() {
-            return "DataListBean{" +
-                    "nodeName='" + nodeName + '\'' +
-                    ", nodeTemp=" + nodeTemp +
-                    ", warningFlag=" + warningFlag +
-                    '}';
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "AddTempDataBean{" +
-                "collectTime='" + collectTime + '\'' +
-                ", dataList=" + dataList +
-                ", index=" + index +
-                '}';
-    }
 }

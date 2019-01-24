@@ -94,7 +94,7 @@ public class HistoryTempView extends LinearLayout {
     public static final int MODE_DYNAMIC = 0;
     public static final int MODE_STATIC = 1;
 
-    private int showMode = MODE_DYNAMIC;
+    private int showMode = MODE_STATIC;
     private long speed = 1000;
     private boolean isPlay = false, isShow = false;
     private int currentTime = 0;

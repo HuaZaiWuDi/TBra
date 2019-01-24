@@ -17,16 +17,16 @@ public class DeviceBatteryInfoBean {
      * 02：charging(充电状态)
      * 03：full charged(充满状态)
      */
-    int batteryState;
+    Integer batteryState;
 
     //电池电量百分比0~100(uint：%)
-    int batteryValue;
+    Integer batteryValue;
 
     //电池电压0~0xFFFF(uint：mV)
-    long batteryVoltage;
+    Integer batteryVoltage;
 
     //电池温度0~0xFFFF(uint：0.1K)
-    int batteryTemperature;
+    Integer batteryTemperature;
 
 
     public int getBatteryState() {
@@ -45,11 +45,11 @@ public class DeviceBatteryInfoBean {
         this.batteryValue = batteryValue;
     }
 
-    public long getBatteryVoltage() {
+    public int getBatteryVoltage() {
         return batteryVoltage;
     }
 
-    public void setBatteryVoltage(long batteryVoltage) {
+    public void setBatteryVoltage(int batteryVoltage) {
         this.batteryVoltage = batteryVoltage;
     }
 

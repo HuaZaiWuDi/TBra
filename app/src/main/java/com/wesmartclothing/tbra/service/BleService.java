@@ -1,9 +1,8 @@
 package com.wesmartclothing.tbra.service;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothGatt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,13 +10,25 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
 
+import com.clj.fastble.callback.BleMtuChangedCallback;
+import com.clj.fastble.callback.BleScanAndConnectCallback;
+import com.clj.fastble.data.BleDevice;
+import com.clj.fastble.exception.BleException;
+import com.clj.fastble.scan.BleScanRuleConfig;
 import com.vondear.rxtools.activity.ActivityLifecycleImpl;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxNetUtils;
 import com.vondear.rxtools.utils.RxSystemBroadcastUtil;
+import com.vondear.rxtools.utils.SPUtils;
+import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
+import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.SPKey;
+import com.wesmartclothing.tbra.entity.AddTempDataBean;
+import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 
@@ -101,19 +112,96 @@ public class BleService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
 
-        initAlarm();
+        reConnectDevice();
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void initAlarm() {
-        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent("Broadcast");
-        intent.putExtra("msg", "Alarm");
+    private void reConnectDevice() {
+        final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
+//                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
+//                .setDeviceName(true, BLEKey.DEVICE_NAME)
+                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE))
+                .setScanTimeOut(-1)
+                .build();
+        BleTools.getBleManager().initScanRule(bleConfig);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 111, intent, 0);
-        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, 1000, pendingIntent);
+        BleTools.getBleManager().scanAndConnect(new BleScanAndConnectCallback() {
+            @Override
+            public void onScanFinished(BleDevice scanResult) {
+                RxLogUtils.d("扫描结束：");
+            }
+
+            @Override
+            public void onStartConnect() {
+                RxLogUtils.d("开始连接：");
+            }
+
+            @Override
+            public void onConnectFail(BleDevice bleDevice, BleException exception) {
+                RxLogUtils.d("连接失败：");
+                RxBus.getInstance().post(new ConnectStateBus(false));
+            }
+
+            @Override
+            public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
+                RxLogUtils.d("连接成功：");
+                BleTools.getInstance().stopScan();
+                connectSuccess();
+
+            }
+
+            @Override
+            public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
+                RxLogUtils.d("断开连接：");
+                RxBus.getInstance().post(new ConnectStateBus(false));
+            }
+
+            @Override
+            public void onScanStarted(boolean success) {
+                RxLogUtils.d("开启扫描：" + success);
+            }
+
+            @Override
+            public void onScanning(BleDevice bleDevice) {
+                RxLogUtils.d("正在扫描：" + bleDevice.getMac());
+            }
+        });
+    }
+
+    private void connectSuccess() {
+        BleTools.getInstance().openNotify(() -> {
+            BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
+                @Override
+                public void onSetMTUFailure(BleException exception) {
+
+                }
+
+                @Override
+                public void onMtuChanged(int mtu) {
+                    BleAPI.syncTime(new RxSubscriber<byte[]>() {
+                        @Override
+                        protected void _onNext(byte[] bytes) {
+                            BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
+                                @Override
+                                protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
+//                                    RxBus.getInstance().post(new ConnectStateBus(true));
+                                    BleAPI.getTempData(0, 10, new RxSubscriber<AddTempDataBean>() {
+                                        @Override
+                                        protected void _onNext(AddTempDataBean addTempDataBean) {
+
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
 
     }
+
 
     @Override
     public void onDestroy() {

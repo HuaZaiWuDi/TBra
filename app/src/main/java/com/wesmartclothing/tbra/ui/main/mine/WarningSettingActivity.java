@@ -24,6 +24,7 @@ import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class WarningSettingActivity extends BaseActivity {
     TextView mTvComplete;
 
     private float defaultTemp = 2f;
-    private WarningRuleBean mWarningRuleBean = new WarningRuleBean();
+    private WarningRuleBean mWarningRuleBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,23 @@ public class WarningSettingActivity extends BaseActivity {
 
     @Override
     public void initNetData() {
-
+        //优先缓存，因为大部分情况下都是本地已经有数据了
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().userRuleDetail(),
+                lifecycleSubject,
+                "userRuleDetail",
+                WarningRuleBean.class,
+                CacheStrategy.firstCache()
+        )
+                .subscribe(new RxNetSubscriber<WarningRuleBean>() {
+                    @Override
+                    protected void _onNext(WarningRuleBean warningRuleBean) {
+                        mWarningRuleBean = warningRuleBean;
+                        mRulerTemp.initViewParam((float) mWarningRuleBean.getTempNum(), 0f, 4f, 1);
+                        mTvType.setText(mWarningRuleBean.getPointType().equals("1") ? "单点累计异常次数" : "多点累计异常次数");
+                        mEditFrequency.setText(mWarningRuleBean.getBaseNum() + "");
+                    }
+                });
     }
 
     @Override
@@ -117,7 +134,11 @@ public class WarningSettingActivity extends BaseActivity {
                 list.add("单点累计异常次数");
                 list.add("多点累计异常次数");
                 BottomMenu.show((AppCompatActivity) mContext, list,
-                        (text, index) -> mWarningRuleBean.setPointType((index + 1) + ""), true);
+                        (text, index) -> {
+                            mWarningRuleBean.setPointType((index + 1) + "");
+                            mTvType.setText(mWarningRuleBean.getPointType().equals("1") ? "单点累计异常次数" : "多点累计异常次数");
+                        }, true);
+
                 break;
             case R.id.tv_complete:
                 int stringToInt = RxDataUtils.stringToInt(mEditFrequency.getText().toString());

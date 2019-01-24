@@ -122,6 +122,8 @@ public class BleTools {
     public <T> void write(final byte[] bytes, final RxSubscriber<T> subscriber) {
         if (bleDevice == null || !bleManager.isConnected(bleDevice)) {
             Log.e(TAG, "未连接");
+            if (subscriber != null)
+                subscriber.onError(new Exception("蓝牙未连接"));
             return;
         }
         this.bytes = bytes;

@@ -36,24 +36,24 @@ public class RelateAccountListBean {
      * total : 0
      */
 
-    private int endRow;
-    private int firstPage;
-    private boolean hasNextPage;
-    private boolean hasPreviousPage;
-    private boolean isFirstPage;
-    private boolean isLastPage;
-    private int lastPage;
-    private int navigateFirstPage;
-    private int navigateLastPage;
-    private int navigatePages;
-    private int nextPage;
-    private int pageNum;
-    private int pageSize;
-    private int pages;
-    private int prePage;
-    private int size;
-    private int startRow;
-    private int total;
+    private Integer endRow;
+    private Integer firstPage;
+    private Boolean hasNextPage;
+    private Boolean hasPreviousPage;
+    private Boolean isFirstPage;
+    private Boolean isLastPage;
+    private Integer lastPage;
+    private Integer navigateFirstPage;
+    private Integer navigateLastPage;
+    private Integer navigatePages;
+    private Integer nextPage;
+    private Integer pageNum;
+    private Integer pageSize;
+    private Integer pages;
+    private Integer prePage;
+    private Integer size;
+    private Integer startRow;
+    private Integer total;
     private List<ListBean> list;
     private List<Integer> navigatepageNums;
 

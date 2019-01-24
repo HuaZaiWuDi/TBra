@@ -37,27 +37,27 @@ public class SingleDataDetailBean {
      * warningFlag : 1
      */
 
-    private int avgTemp;
+    private Integer avgTemp;
     private String collectTime;
-    private long createTime;
-    private int createUser;
+    private Long createTime;
+    private Integer createUser;
     private String gid;
     private String jsonData;
-    private int leftUnusual;
-    private int leftUsual;
-    private int maxTemp;
-    private int minTemp;
-    private int rightUnusual;
-    private int rightUsual;
-    private int status;
-    private int totalPoints;
-    private int unusualNum;
+    private Integer leftUnusual;
+    private Integer leftUsual;
+    private Integer maxTemp;
+    private Integer minTemp;
+    private Integer rightUnusual;
+    private Integer rightUsual;
+    private Integer status;
+    private Integer totalPoints;
+    private Integer unusualNum;
     private String unusualPoints;
-    private long updateTime;
-    private int usualNum;
-    private int warnMax;
-    private int warnMin;
-    private int warningFlag;
+    private Long updateTime;
+    private Integer usualNum;
+    private Integer warnMax;
+    private Integer warnMin;
+    private Integer warningFlag;
 
     public int getAvgTemp() {
         return avgTemp;

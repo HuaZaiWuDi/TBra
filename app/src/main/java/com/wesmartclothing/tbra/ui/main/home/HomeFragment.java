@@ -1,6 +1,7 @@
 package com.wesmartclothing.tbra.ui.main.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,17 +17,19 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.gson.reflect.TypeToken;
+import com.kongzue.dialog.v2.CustomDialog;
 import com.kongzue.dialog.v2.WaitDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
-import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
@@ -34,8 +37,10 @@ import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.ReportDataBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.tools.AddTempData;
 import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.zchu.rxcache.RxCache;
@@ -48,6 +53,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * @Package com.wesmartclothing.tbra.ui.main.home
@@ -102,14 +108,52 @@ public class HomeFragment extends BaseAcFragment {
         initTab();
         initRecyclerView();
         initErrorPoint();
-        bleConnectState(BleTools.getInstance().isConnected());
 
     }
 
     private void bleConnectState(boolean isConnected) {
         mTvConnectState.setText(isConnected ? "设备已连接" : "设备未连接");
-//        mImgBattery.setVisibility(isConnected ? View.VISIBLE : View.INVISIBLE);
+        mImgBattery.setVisibility(isConnected ? View.VISIBLE : View.INVISIBLE);
         mImgBattery.setBatteryValue(50);
+        if (isConnected) {
+            new AddTempData(new RxSubscriber<Integer>() {
+
+                //开始
+                @Override
+                public void onSubscribe(Disposable d) {
+                    super.onSubscribe(d);
+                    RxLogUtils.d("开始");
+                    CustomDialog.show(mContext, R.layout.dialog_data_sync);
+                    new Handler().postDelayed(() -> {
+                        CustomDialog.unloadAllDialog();
+                    }, 3000);
+                }
+
+                //进度
+                @Override
+                protected void _onNext(Integer integer) {
+                    RxLogUtils.d("进度：" + integer);
+                    if (integer == 100) {
+                        RxLogUtils.d("蓝牙数据获取完成：");
+                    }
+                }
+
+                //上传完成
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+                    RxLogUtils.d("上传完成");
+                    clearHistoryData();
+                }
+
+                //异常
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    RxLogUtils.d("异常");
+                }
+            }).uploadCacheOrBleData();
+        }
     }
 
     private void initErrorPoint() {
@@ -126,9 +170,6 @@ public class HomeFragment extends BaseAcFragment {
         mErrorRecyclerView.setAdapter(errorPointAdapter);
 
         mHistoryTempView.setOnErrorPointListener(errorPoints -> {
-            for (String key : errorPoints.keySet()) {
-                RxLogUtils.d("异常点位：key" + key + "--value:" + errorPoints.get(key));
-            }
             List<String> errorPoint = new ArrayList<>(errorPoints.keySet());
             errorPointAdapter.setNewData(errorPoint);
         });
@@ -187,7 +228,14 @@ public class HomeFragment extends BaseAcFragment {
 
     @Override
     public void initRxBus2() {
-
+        RxBus.getInstance().register2(ConnectStateBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<ConnectStateBus>() {
+                    @Override
+                    protected void _onNext(ConnectStateBus connectStateBus) {
+                        bleConnectState(connectStateBus.isConnect());
+                    }
+                });
     }
 
 

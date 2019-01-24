@@ -12,15 +12,17 @@ import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.model.timer.MyTimer;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
-import com.vondear.rxtools.utils.RxRandom;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
+import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -91,20 +93,27 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initViews() {
         initViewPage();
-//        bleConnectState(BleTools.getInstance().isConnected());
+        bleConnectState(BleTools.getInstance().isConnected());
     }
 
     private void bleConnectState(boolean isConnected) {
-        mLayoutDeviceEmpty.setVisibility(View.VISIBLE);
-        mTvBindDevice.setText("去连接");
+
+
         if (!isConnected) {//未连接
             mPowerIcon.setVisibility(View.GONE);
             mTvSwitchDevice.setText("连接设备\t\t>>");
             mTvDeviceName.setText("设备名字：-\t-");
+            mTvBindDevice.setText("去连接");
+            mLayoutDeviceEmpty.setVisibility(View.VISIBLE);
+            if (BleTools.getInstance().isConnected())
+                myTimer.stopTimer();
         } else {//已连接
+            mLayoutDeviceEmpty.setVisibility(View.GONE);
             mTvSwitchDevice.setText("切换设备\t\t>>");
             mPowerIcon.setVisibility(View.VISIBLE);
             mTvDeviceName.setText("设备名字：" + BleTools.getInstance().getBleDevice().getMac());
+            if (BleTools.getInstance().isConnected())
+                myTimer.startTimer();
         }
     }
 
@@ -128,13 +137,22 @@ public class MonitorFragment extends BaseAcFragment {
 //                        }
                     }
                 });
+
+        RxBus.getInstance().register2(ConnectStateBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<ConnectStateBus>() {
+                    @Override
+                    protected void _onNext(ConnectStateBus connectStateBus) {
+                        bleConnectState(connectStateBus.isConnect());
+                    }
+                });
     }
 
 
     @Override
     protected void onVisible() {
         super.onVisible();
-        testTimer.startTimer();
+        myTimer.startTimer();
         RxLogUtils.d("【MonitorFragment】onVisible");
     }
 
@@ -142,7 +160,7 @@ public class MonitorFragment extends BaseAcFragment {
     protected void onInvisible() {
         RxLogUtils.d("【MonitorFragment】onInvisible");
         super.onInvisible();
-        testTimer.stopTimer();
+        myTimer.stopTimer();
     }
 
 
@@ -172,29 +190,29 @@ public class MonitorFragment extends BaseAcFragment {
             @Override
             protected void _onNext(WarningRuleBean warningRuleBean) {
                 mWarningRuleBean = warningRuleBean;
-                testTimer.startTimer();
+                if (BleTools.getInstance().isConnected())
+                    myTimer.startTimer();
             }
         });
     }
 
-    MyTimer testTimer = new MyTimer(5000, () -> {
-
-        byte[] bytes = new byte[16];
-        for (int i = 0; i < 16; i++) {
-            bytes[i] = (byte) RxRandom.getRandom(30, 45);
-        }
-        checkTemp(bytes);
+    private MyTimer myTimer = new MyTimer(5000, 5000, () -> {
+        BleAPI.getTimingBraInfo(new RxSubscriber<AddTempDataBean>() {
+            @Override
+            protected void _onNext(AddTempDataBean addTempDataBean) {
+                checkTemp(addTempDataBean);
+            }
+        });
     });
 
 
-    private void checkTemp(byte[] data) {
-        if (data.length != 16) return;
+    private void checkTemp(AddTempDataBean data) {
+        if (data == null) return;
         if (mWarningRuleBean == null) return;
         List<Double> tempLists = new ArrayList<>();
-        List<JsonDataBean> jsonDataBeans = new ArrayList<>();
-        for (byte b : data) {
-            if (CheckTempErrorUtil.isValidTemperature(b)) {
-                tempLists.add((double) b);
+        for (JsonDataBean bean : data.getDataList()) {
+            if (CheckTempErrorUtil.isValidTemperature(bean.getNodeTemp())) {
+                tempLists.add(bean.getNodeTemp());
             }
         }
         //标准温度
@@ -202,11 +220,12 @@ public class MonitorFragment extends BaseAcFragment {
         //标准温度的区间
         double[] normTemps = {normTemp - mWarningRuleBean.getTempNum(), normTemp + mWarningRuleBean.getTempNum()};
 
-        for (int i = 0; i < data.length; i++) {
-            double temp = data[i];
+
+        for (JsonDataBean bean : data.getDataList()) {
+            double nodeTemp = bean.getNodeTemp();
             int flag = 0;
-            if (CheckTempErrorUtil.isValidTemperature(data[i])) {
-                if (temp <= normTemps[1] && temp >= normTemps[0]) {
+            if (CheckTempErrorUtil.isValidTemperature(nodeTemp)) {
+                if (nodeTemp <= normTemps[1] && nodeTemp >= normTemps[0]) {
                     flag = 0;
                 } else {
                     flag = 1;
@@ -214,11 +233,12 @@ public class MonitorFragment extends BaseAcFragment {
             } else {
                 flag = -1;
             }
-            JsonDataBean dataBean = new JsonDataBean((i % 2 == 0 ? "L0" : "R0") + (i / 2 + 1), data[i], flag);
-            jsonDataBeans.add(dataBean);
+            bean.setWarningFlag(flag);
         }
-        mHistoryTempView.setTimingData(jsonDataBeans);
-        mTimingMonitorView.updateUI(jsonDataBeans);
+
+        mHistoryTempView.setTimingData(data.getDataList());
+        mTimingMonitorView.updateUI(data.getDataList());
+        mLayoutDeviceEmpty.setVisibility(View.GONE);
     }
 
 

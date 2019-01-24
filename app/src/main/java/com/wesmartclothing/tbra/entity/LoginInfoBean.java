@@ -17,7 +17,7 @@ public class LoginInfoBean {
      * token : eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI5ZGJmNTRjMDlkNDE0YmE4YTA3Y2I5MDE3NTExZDY2NCIsImlhdCI6MTUyNjcwMDIzNCwiZXhwIjoxNTQyNTk3ODM0LCJzdWIiOiJ1c2VyIn0.E27o7o31N54aoHV5aGz_m1PrWw4W16MNdOr7UMZjgZA
      */
 
-    private boolean success;
+    private Boolean success;
     private String userId;
     private String token;
 

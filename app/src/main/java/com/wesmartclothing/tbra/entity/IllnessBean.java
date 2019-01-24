@@ -26,9 +26,9 @@ public class IllnessBean {
 
     private String illnessName;
     private String illnessValue;
-    private int sort;
-    private int status;
-    private boolean click = false;
+    private Integer sort;
+    private Integer status;
+    private Boolean click = false;
 
 
     public boolean isClick() {

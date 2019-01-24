@@ -183,7 +183,7 @@ public class TimingMonitorView extends LinearLayout {
                 true,
                 150f
         ));
-        mMBarChart.getDescription().setEnabled(false);
+        mMBarChart.getDescription().setText("暂时没有数据");
         mMBarChart.getLegend().setEnabled(false);
         mMBarChart.setHighlightFullBarEnabled(false);
         mMBarChart.setScaleEnabled(false);
@@ -209,7 +209,7 @@ public class TimingMonitorView extends LinearLayout {
 
 
         //初始化线条
-        mLineChart.getDescription().setEnabled(false);
+        mLineChart.getDescription().setText("");
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setScaleEnabled(false);
         mLineChart.setViewPortOffsets(0, 0, 0, 0);

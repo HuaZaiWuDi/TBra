@@ -242,13 +242,14 @@ public interface ApiService {
      * 绑定设备信息
      */
     @POST("device/bindDevice")
-    Observable<HttpResult<String>> saveUserInfo(@Body BindDeviceBean Bean);
+    Observable<HttpResult<String>> bindDevice(@Body BindDeviceBean Bean);
+
 
     /**
-     * 移除绑定设备
+     * 获取设备信息
      */
-    @POST("device/removeDeviceBind")
-    Observable<HttpResult<String>> saveUserInfo(@Body GidBean Bean);
+    @POST("device/deviceInfoList")
+    Observable<HttpResult<String>> deviceInfoList(@Body GidBean Bean);
 
 
     ///////////////////////////////////////////////////////////////////////////

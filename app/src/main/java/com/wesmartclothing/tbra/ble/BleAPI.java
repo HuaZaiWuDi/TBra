@@ -7,6 +7,7 @@ import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
+import com.wesmartclothing.tbra.entity.JsonDataBean;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -190,10 +191,10 @@ public class BleAPI {
                         (int) bytes[11] + ":" + (int) bytes[12];
                 dataBean.setCollectTime(dateStr);
                 dataBean.setIndex(ByteUtil.bytesToIntD2(new byte[]{bytes[4], bytes[5]}));
-                List<AddTempDataBean.DataListBean> dataList = new ArrayList<>();
+                List<JsonDataBean> dataList = new ArrayList<>();
                 dataBean.setDataList(dataList);
                 for (int i = 13; i < bytes.length; i = i + 2) {
-                    AddTempDataBean.DataListBean bean = new AddTempDataBean.DataListBean();
+                    JsonDataBean bean = new JsonDataBean();
                     if (i < (13 + 16)) {
                         bean.setNodeName("L0" + ((i - 13) / 2 + 1));
                     } else {
@@ -245,17 +246,20 @@ public class BleAPI {
 
     /**
      * 清除温度信息
-     *
-     * @param subscriber
      */
-    public static void clearTempData(RxSubscriber<byte[]> subscriber) {
+    public static void clearTempData() {
         byte[] bytes = new byte[20];
 
         bytes[1] = 0x01;
         bytes[3] = 0x07;
 
         RxLogUtils.d("【清除温度信息】", HexUtil.encodeHexStr(bytes));
-        BleTools.getInstance().write(bytes, subscriber);
+        BleTools.getInstance().write(bytes, new RxSubscriber<byte[]>() {
+            @Override
+            protected void _onNext(byte[] bytes) {
+
+            }
+        });
     }
 
     /**
@@ -310,10 +314,10 @@ public class BleAPI {
                         (int) bytes[11] + ":" + (int) bytes[12];
                 dataBean.setCollectTime(dateStr);
                 dataBean.setIndex(ByteUtil.bytesToIntD2(new byte[]{bytes[4], bytes[5]}));
-                List<AddTempDataBean.DataListBean> dataList = new ArrayList<>();
+                List<JsonDataBean> dataList = new ArrayList<>();
                 dataBean.setDataList(dataList);
                 for (int i = 13; i < bytes.length; i = i + 2) {
-                    AddTempDataBean.DataListBean bean = new AddTempDataBean.DataListBean();
+                    JsonDataBean bean = new JsonDataBean();
                     if (i < (13 + 16)) {
                         bean.setNodeName("L0" + ((i - 13) / 2 + 1));
                     } else {

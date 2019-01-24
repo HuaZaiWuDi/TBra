@@ -38,27 +38,27 @@ public class PointDataBean {
      * warningFlag : 0
      */
 
-    private double avgTemp;
-    private long collectTime;
-    private long createTime;
+    private Double avgTemp;
+    private Long collectTime;
+    private Long createTime;
     private String createUser;
     private String gid;
-    private int leftUnusual;
-    private int leftUsual;
-    private double maxTemp;
-    private double minTemp;
-    private int rightUnusual;
-    private int rightUsual;
-    private int status;
-    private int totalPoints;
-    private int unusualNum;
-    private long updateTime;
+    private Integer leftUnusual;
+    private Integer leftUsual;
+    private Double maxTemp;
+    private Double minTemp;
+    private Integer rightUnusual;
+    private Integer rightUsual;
+    private Integer status;
+    private Integer totalPoints;
+    private Integer unusualNum;
+    private Long updateTime;
     private String updateUser;
     private String userId;
-    private int usualNum;
-    private double warnMax;
-    private double warnMin;
-    private int warningFlag;
+    private Integer usualNum;
+    private Double warnMax;
+    private Double warnMin;
+    private Integer warningFlag;
     private String jsonData;
     private String unusualPoints;
 

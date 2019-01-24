@@ -1,11 +1,11 @@
 package com.wesmartclothing.tbra.ui.main.mine;
 
 import android.bluetooth.BluetoothGatt;
+import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -16,10 +16,13 @@ import com.clj.fastble.callback.BleScanCallback;
 import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
-import com.kongzue.dialog.v2.BottomMenu;
 import com.kongzue.dialog.v2.TipDialog;
 import com.kongzue.dialog.v2.WaitDialog;
+import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
+import com.vondear.rxtools.utils.SPUtils;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.wesmartclothing.tbra.R;
@@ -27,13 +30,15 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.BLEKey;
-import com.wesmartclothing.tbra.entity.AddTempDataBean;
-import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
-import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
-import com.wesmartclothing.tbra.tools.AddTempData;
+import com.wesmartclothing.tbra.constant.SPKey;
+import com.wesmartclothing.tbra.entity.BindDeviceBean;
+import com.wesmartclothing.tbra.entity.DeviceConnectBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.service.LocationIntentService;
 import com.wesmartclothing.tbra.tools.BLEUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,8 +53,9 @@ public class ScanDeviceActivity extends BaseActivity {
     @BindView(R.id.tv_btn)
     TextView mTvBtn;
 
-
     BaseQuickAdapter adapter;
+    private BindDeviceBean deviceBean = new BindDeviceBean();
+    private int position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,33 +74,54 @@ public class ScanDeviceActivity extends BaseActivity {
 
     @Override
     public void initViews() {
+        startService(new Intent(this, LocationIntentService.class));
         initTitle(mRxTitle);
         initRecyclerView();
     }
 
     private void initRecyclerView() {
         mDeviceRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new BaseQuickAdapter<BleDevice, BaseViewHolder>(R.layout.item_scan_deivce) {
+        adapter = new BaseQuickAdapter<DeviceConnectBean, BaseViewHolder>(R.layout.item_scan_deivce) {
             @Override
-            protected void convert(BaseViewHolder helper, BleDevice item) {
+            protected void convert(BaseViewHolder helper, DeviceConnectBean item) {
+                BleDevice bleDevice = item.getBleDevice();
+                String deviceDetail = bleDevice.getName() + "\t" +
+                        bleDevice.getMac().substring(12, bleDevice.getMac().length()) + "\n" +
+                        "距离：" + BLEUtil.rssi2Distance(bleDevice.getRssi(), 2) + "米";
 
-                String deviceDetail = item.getName() + "\t" +
-                        item.getMac().substring(12, item.getMac().length()) + "\n" +
-                        "距离：" + BLEUtil.rssi2Distance(item.getRssi(), 2) + "米";
-
-                helper.setText(R.id.tv_deviceDetails, deviceDetail);
-
+                helper.setText(R.id.tv_deviceDetails, deviceDetail)
+                        .setText(R.id.tv_deviceState, item.isConnect() ? "已连接" : "连接");
             }
         };
         adapter.bindToRecyclerView(mDeviceRecyclerView);
         adapter.setEmptyView(R.layout.layout_empty_device);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                connectDevice(((BleDevice) adapter.getItem(position)).getMac());
-            }
-        });
+        mDeviceRecyclerView.setTag(-1);
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+                    this.position = position;
+                    connectDevice(((DeviceConnectBean) adapter.getItem(position)).getBleDevice().getMac());
+                }
+        );
     }
+
+    private void connectDevice() {
+        int lastPosition = (int) mDeviceRecyclerView.getTag();
+        if (lastPosition != position) {
+            //之前的item
+            if (lastPosition >= 0) {
+                DeviceConnectBean lastItem = (DeviceConnectBean) adapter.getItem(lastPosition);
+                lastItem.setConnect(!lastItem.isConnect());
+                adapter.setData(lastPosition, lastItem);
+            }
+
+            //当前的item
+            DeviceConnectBean currentItem = (DeviceConnectBean) adapter.getItem(position);
+            currentItem.setConnect(!currentItem.isConnect());
+            adapter.setData(position, currentItem);
+
+            mDeviceRecyclerView.setTag(position);
+        }
+    }
+
 
     @Override
     public void initNetData() {
@@ -103,7 +130,18 @@ public class ScanDeviceActivity extends BaseActivity {
 
     @Override
     public void initRxBus2() {
-
+        RxBus.getInstance().register2(Address.class)
+                .compose(RxComposeUtils.<Address>bindLife(lifecycleSubject))
+                .subscribe(new RxNetSubscriber<Address>() {
+                    @Override
+                    protected void _onNext(Address address) {
+                        if (address != null) {
+                            deviceBean.setProvince(address.getAdminArea());
+                            deviceBean.setCity(address.getLocality());
+                            deviceBean.setCountry("中国");
+                        }
+                    }
+                });
     }
 
     @OnClick(R.id.tv_btn)
@@ -140,7 +178,12 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             public void onScanning(BleDevice bleDevice) {
                 RxLogUtils.d("正在扫描：" + bleDevice.getMac());
-                adapter.addData(bleDevice);
+                DeviceConnectBean firstItem = (DeviceConnectBean) adapter.getItem(0);
+                if (firstItem != null && firstItem.getBleDevice().getRssi() < bleDevice.getRssi()) {
+                    adapter.addData(0, new DeviceConnectBean(bleDevice));
+                } else {
+                    adapter.addData(new DeviceConnectBean(bleDevice));
+                }
             }
         });
     }
@@ -157,11 +200,19 @@ public class ScanDeviceActivity extends BaseActivity {
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 WaitDialog.dismiss();
                 TipDialog.show(mContext, "连接失败", TipDialog.TYPE_ERROR);
+                startScan();
+                RxBus.getInstance().post(new ConnectStateBus(false));
             }
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 WaitDialog.dismiss();
+                SPUtils.put(SPKey.SP_BIND_DEVICE, bleDevice.getMac());
+                connectDevice();
+                bindDevice(bleDevice.getMac());
+                BleTools.getInstance().stopScan();
+
+
                 TipDialog.show(mContext, "连接成功", TipDialog.TYPE_FINISH);
                 BleTools.getInstance().openNotify(() -> {
                     BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
@@ -172,9 +223,15 @@ public class ScanDeviceActivity extends BaseActivity {
 
                         @Override
                         public void onMtuChanged(int mtu) {
-
+                            BleAPI.syncTime(new RxSubscriber<byte[]>() {
+                                @Override
+                                protected void _onNext(byte[] bytes) {
+                                    RxBus.getInstance().post(new ConnectStateBus(true));
+                                }
+                            });
                         }
                     });
+
                 });
             }
 
@@ -182,80 +239,26 @@ public class ScanDeviceActivity extends BaseActivity {
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
                 WaitDialog.dismiss();
                 TipDialog.show(mContext, "断开连接", TipDialog.TYPE_ERROR);
+                RxBus.getInstance().post(new ConnectStateBus(false));
             }
         });
     }
 
+    private void bindDevice(String macAddress) {
+        deviceBean.setMacAddr(macAddress);
 
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-        List<String> strings = Arrays.asList("绑定用户ID", "解绑用户ID", "获取设备信息",
-                "获取电池信息", "获取数据采集头", "同步时间", "获取智能内衣采集信息集", "获取全部数据");
-        BottomMenu.show((AppCompatActivity) mActivity, strings, (text, index) -> {
-            switch (index) {
-                case 0:
-                    BleAPI.bindUserId("12345678", new RxSubscriber<byte[]>() {
-                        @Override
-                        protected void _onNext(byte[] bytes) {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().bindDevice(deviceBean),
+                lifecycleSubject
+        ).subscribe(new RxNetSubscriber<String>() {
+            @Override
+            protected void _onNext(String s) {
 
-                        }
-                    });
-                    break;
-                case 1:
-                    BleAPI.removeUserId(new RxSubscriber<byte[]>() {
-                        @Override
-                        protected void _onNext(byte[] bytes) {
-
-                        }
-                    });
-                    break;
-                case 2:
-                    BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
-                        @Override
-                        protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
-
-                        }
-                    });
-                    break;
-                case 3:
-                    BleAPI.getBattery(new RxSubscriber<DeviceBatteryInfoBean>() {
-                        @Override
-                        protected void _onNext(DeviceBatteryInfoBean deviceBatteryInfoBean) {
-
-                        }
-                    });
-                    break;
-                case 4:
-                    BleAPI.getTempCount(new RxSubscriber<Integer>() {
-                        @Override
-                        protected void _onNext(Integer integer) {
-
-                        }
-                    });
-                    break;
-                case 5:
-                    BleAPI.syncTime(new RxSubscriber<byte[]>() {
-                        @Override
-                        protected void _onNext(byte[] bytes) {
-
-                        }
-                    });
-                    break;
-                case 6:
-                    BleAPI.getTimingBraInfo(new RxSubscriber<AddTempDataBean>() {
-                        @Override
-                        protected void _onNext(AddTempDataBean addTempDataBean) {
-
-                        }
-                    });
-                    break;
-                case 7:
-                    new AddTempData().addAllTempData();
-                    break;
             }
         });
+
     }
+
 
     @Override
     protected void onDestroy() {

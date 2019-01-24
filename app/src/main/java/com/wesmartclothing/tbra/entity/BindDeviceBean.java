@@ -33,15 +33,15 @@ public class BindDeviceBean {
     private String deviceName;
     private String deviceNo;
     private String firmwareVersion;
-    private long lastOnline;
-    private int linkStatus;
+    private Long lastOnline;
+    private Integer linkStatus;
     private String macAddr;
     private String mcuVersion;
-    private int onlineDuration;
+    private Integer onlineDuration;
     private String productId;
     private String productName;
     private String province;
-    private long wakeTime;
+    private Long wakeTime;
 
     public String getCity() {
         return city;

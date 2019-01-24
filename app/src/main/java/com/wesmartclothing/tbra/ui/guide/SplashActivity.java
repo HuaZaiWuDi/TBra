@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
-import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
@@ -14,11 +13,10 @@ import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.BleService;
+import com.wesmartclothing.tbra.tools.AddTempData;
 import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
 import com.zchu.rxcache.stategy.CacheStrategy;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author Jack
@@ -62,13 +60,12 @@ public class SplashActivity extends BaseActivity {
 //        }
 //        initUserInfo();
 
+//        otherSetting();
+    }
 
-        byte[] bytes1 = {0x34, 0x30, 0x30, 0x30};
-        try {
-            RxLogUtils.d("解码：" + new String(bytes1, "ascii"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+
+    private void otherSetting() {
+        new AddTempData(null).uploadCacheOrBleData();
     }
 
     //获取用户信息
