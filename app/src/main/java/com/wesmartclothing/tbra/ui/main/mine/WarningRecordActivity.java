@@ -6,19 +6,24 @@ import android.support.v7.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.constant.Key;
+import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.WarningRecordBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.wesmartclothing.tbra.ui.main.home.ErrorPointActivity;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.List;
@@ -139,13 +144,21 @@ public class WarningRecordActivity extends BaseActivity {
         if (bean.getReadState() == 1) return;
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().warningInfoReaded(bean),
-                lifecycleSubject
-
-        ).subscribe(new RxNetSubscriber<Integer>() {
+                lifecycleSubject,
+                "warningInfoReaded" + bean.getGid(),
+                new TypeToken<List<PointDataBean>>() {
+                }.getType(),
+                CacheStrategy.firstCache()
+        ).subscribe(new RxNetSubscriber<List<PointDataBean>>() {
             @Override
-            protected void _onNext(Integer unReadCount) {
+            protected void _onNext(List<PointDataBean> pointDataLists) {
                 bean.setReadState(1);
                 adapter.setData(position, bean);
+
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Key.BUNDLE_LATEST_TYPE, "warningInfoReaded" + bean.getGid());
+                RxActivityUtils.skipActivity(mContext, ErrorPointActivity.class, bundle);
             }
         });
     }

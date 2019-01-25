@@ -28,4 +28,5 @@ public interface Key {
 
     String BUNDLE_WEB_URL = "BUNDLE_WEB_URL";
 
+    String BUNDLE_CAN_SKIP = "BUNDLE_CAN_SKIP";
 }

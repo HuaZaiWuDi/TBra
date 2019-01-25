@@ -31,10 +31,8 @@ public class LoginSuccessUtils {
         SPUtils.put(SPKey.SP_UserId, bean.getUserId());
         SPUtils.put(SPKey.SP_token, bean.getToken());
 
-
         initUserInfo(lifecycleSubject);
     }
-
 
     //获取用户信息
     public void initUserInfo(BehaviorSubject<LifeCycleEvent> lifecycleSubject) {
@@ -48,7 +46,6 @@ public class LoginSuccessUtils {
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfo) {
-
                         if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
                         } else if (userInfo.getAge() == 0) {
@@ -56,7 +53,6 @@ public class LoginSuccessUtils {
                         } else {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), MainActivity.class);
                         }
-
                     }
 
                     @Override

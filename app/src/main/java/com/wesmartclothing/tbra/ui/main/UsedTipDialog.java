@@ -6,19 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.kongzue.dialog.listener.OnMenuItemClickListener;
 import com.kongzue.dialog.v2.BottomMenu;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.vondear.rxtools.model.lifecycyle.LifeCycleEvent;
 import com.vondear.rxtools.utils.RxDataUtils;
-import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.layout.RxEditText;
 import com.vondear.rxtools.view.wheelhorizontal.utils.DrawUtil;
 import com.vondear.rxtools.view.wheelhorizontal.view.DecimalScaleRulerView;
 import com.wesmartclothing.tbra.R;
-import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -57,24 +54,14 @@ public class UsedTipDialog {
             @Override
             public void onBind(View rootView) {
                 rootView.findViewById(R.id.tv_complete)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog1.doDismiss();
-                            }
-                        });
+                        .setOnClickListener(view -> dialog1.doDismiss());
             }
         });
         dialog2 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_wear_bra_tip, null), new CustomDialog.BindView() {
             @Override
             public void onBind(View rootView) {
                 rootView.findViewById(R.id.tv_complete)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog2.doDismiss();
-                            }
-                        });
+                        .setOnClickListener(view -> dialog2.doDismiss());
             }
         });
         dialog3 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_power_setting, null), new CustomDialog.BindView() {
@@ -104,12 +91,8 @@ public class UsedTipDialog {
                     List<String> list = new ArrayList<>();
                     list.add("单点累计异常次数");
                     list.add("多点累计异常次数");
-                    BottomMenu.show((AppCompatActivity) mContext, list, new OnMenuItemClickListener() {
-                        @Override
-                        public void onClick(String text, int index) {
-                            mWarningRuleBean.setPointType((index + 1) + "");
-                        }
-                    }, true);
+                    BottomMenu.show((AppCompatActivity) mContext, list, (text, index) ->
+                            mWarningRuleBean.setPointType((index + 1) + ""), true);
                 });
 
         mWarningRuleBean.setTempNum(defaultTemp);
@@ -132,7 +115,6 @@ public class UsedTipDialog {
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String bean) {
-                        SPUtils.put(SPKey.SP_WARNING_RULE, true);
                         CustomDialog.unloadAllDialog();
                     }
 

@@ -2,7 +2,6 @@ package com.wesmartclothing.tbra.ui.main.mine.relationphone;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -23,6 +22,7 @@ import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.SwitchView;
+import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.layout.RxEditText;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;

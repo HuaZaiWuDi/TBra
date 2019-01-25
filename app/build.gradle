@@ -84,7 +84,7 @@ dependencies {
 
     debugImplementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.jackUtil:RxTools:1.1.4'
+    implementation 'com.jackUtil:RxTools:1.1.5'
     //友盟社会分享
     implementation 'com.umeng.umsdk:share-core:6.9.4'
     implementation 'com.umeng.umsdk:share-qq:6.9.4'
@@ -97,9 +97,6 @@ dependencies {
     //BUGly
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
-
-    //https://github.com/kongzue/Dialog
-    implementation 'com.kongzue.dialog:dialog:2.4.5'
 
     //蓝牙库
     implementation 'com.clj.fastble:FastBleLib:2.3.2'
@@ -123,8 +120,8 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    implementation "com.daimajia.swipelayout:library:1.2.0@aar"
-
+    implementation 'com.kongzue.dialog:dialog:2.4.7'
     implementation 'com.tencent.sonic:sdk:3.1.0'
+
 
 }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,7 +16,6 @@ import com.vondear.rxtools.model.lifecycyle.LifeCycleEvent;
 import com.vondear.rxtools.utils.RxScreenAdapter;
 import com.vondear.rxtools.utils.StatusBarUtils;
 import com.vondear.rxtools.view.RxTitle;
-import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.app.APP;
 import com.wesmartclothing.tbra.ui.guide.SplashActivity;
 
@@ -100,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBase {
     public void initStatusBar() {
 //        //屏幕沉浸
         StatusBarUtils.from(mActivity)
-                .setStatusBarColor(ContextCompat.getColor(mContext, R.color.white))
+                .setTransparentStatusbar(true)
                 .setLightStatusBar(true)
                 .process();
     }

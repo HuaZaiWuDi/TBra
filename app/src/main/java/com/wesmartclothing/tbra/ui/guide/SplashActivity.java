@@ -1,9 +1,9 @@
 package com.wesmartclothing.tbra.ui.guide;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
@@ -12,11 +12,15 @@ import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
-import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.tools.AddTempData;
 import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
+import com.wesmartclothing.tbra.ui.login.InvitationCodeActivity;
+import com.wesmartclothing.tbra.ui.login.LoginActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
+import com.wesmartclothing.tbra.ui.main.home.ReportActivity;
 import com.zchu.rxcache.stategy.CacheStrategy;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Jack
@@ -46,20 +50,23 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void initViews() {
-        startService(new Intent(mContext, BleService.class));
     }
 
     @Override
     public void initNetData() {
-        RxActivityUtils.skipActivity(mActivity, MainActivity.class);
+
+        RxActivityUtils.skipActivityAndFinish(mContext, ReportActivity.class);
 
 //        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
 //            SPUtils.put(SPKey.SP_GUIDE, true);
 //            RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);
 //            return;
 //        }
+//        if (RxDataUtils.isNullString(SPUtils.getString(SPKey.SP_UserId, ""))) {
+//            RxActivityUtils.skipActivityAndFinish(mActivity, LoginActivity.class);
+//            return;
+//        }
 //        initUserInfo();
-
 //        otherSetting();
     }
 
@@ -77,15 +84,14 @@ public class SplashActivity extends BaseActivity {
                 UserInfoBean.class,
                 CacheStrategy.firstRemote()
         )
-//                .timeout(3, TimeUnit.SECONDS)
+                .timeout(3, TimeUnit.SECONDS)
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfo) {
 
-//                        if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
-//                            RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
-//                        } else
-                        if (userInfo.getAge() == 0) {
+                        if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
+                            RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
+                        } else if (userInfo.getAge() == 0) {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InputInfoActivity.class);
                         } else {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), MainActivity.class);
@@ -95,7 +101,7 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     protected void _onError(String error, int code) {
                         RxToast.error(error);
-
+                        RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
                     }
                 });
     }

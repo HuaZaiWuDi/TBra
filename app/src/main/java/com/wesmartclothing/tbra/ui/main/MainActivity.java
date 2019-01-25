@@ -1,6 +1,7 @@
 package com.wesmartclothing.tbra.ui.main;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flyco.tablayout.CommonTabLayout;
@@ -19,22 +19,29 @@ import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxAnimationUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxUtils;
-import com.vondear.rxtools.utils.SPUtils;
-import com.vondear.rxtools.utils.StatusBarUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
+import com.vondear.rxtools.view.cardview.CardView;
+import com.vondear.rxtools.view.layout.RxImageView;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
+import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.ServiceAPI;
+import com.wesmartclothing.tbra.service.BleService;
+import com.wesmartclothing.tbra.tools.GlideImageLoader;
 import com.wesmartclothing.tbra.ui.main.home.HomeFragment;
 import com.wesmartclothing.tbra.ui.main.mine.MessageActivity;
 import com.wesmartclothing.tbra.ui.main.mine.MineFragment;
 import com.wesmartclothing.tbra.ui.main.monitor.MonitorFragment;
+import com.zchu.rxcache.RxCache;
+import com.zchu.rxcache.data.CacheResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,25 +57,21 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.commonTabLayout)
     CommonTabLayout mCommonTabLayout;
     @BindView(R.id.layoutTitle)
-    RelativeLayout mLayoutTitle;
+    CardView mLayoutTitle;
     @BindView(R.id.tv_tip)
     TextView mTvTip;
     @BindView(R.id.img_message)
     ImageView mImgMessage;
+    @BindView(R.id.tv_title)
+    TextView mTvTitle;
+    @BindView(R.id.img_userImg)
+    RxImageView mImgUserImg;
 
 
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
     private List<Fragment> mFragments = new ArrayList<>();
     private int position = 1;
 
-    @Override
-    public void initStatusBar() {
-//        super.initStatusBar();
-        StatusBarUtils.from(mActivity)
-                .setTransparentStatusbar(true)
-                .setLightStatusBar(true)
-                .process();
-    }
 
     @Override
     public int layoutId() {
@@ -101,17 +104,21 @@ public class MainActivity extends BaseActivity {
         setDefaultFragment();
         initSystemConfig();
 
-        //初次进入提示用户穿戴设备及设置警告规则
-        if (!SPUtils.getBoolean(SPKey.SP_WARNING_RULE, false)) {
-            new UsedTipDialog(mContext, lifecycleSubject);
-        }
-
+        startService(new Intent(mContext, BleService.class));
     }
 
 
     @Override
     public void initNetData() {
-
+        RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .map(new CacheResult.MapFunc<>())
+                .subscribe(new RxNetSubscriber<UserInfoBean>() {
+                    @Override
+                    protected void _onNext(UserInfoBean userInfoBean) {
+                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
+                    }
+                });
     }
 
     @Override
@@ -169,12 +176,19 @@ public class MainActivity extends BaseActivity {
     }
 
     private void switchPage(int position) {
-        mLayoutTitle.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
+//        mLayoutTitle.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
+        if (position == 2) {
+            RxAnimationUtils.animateHeight(RxUtils.dp2px(105), 0, mLayoutTitle);
+        } else if (mLayoutTitle.getHeight() == 0) {
+            RxAnimationUtils.animateHeight(0, RxUtils.dp2px(105), mLayoutTitle);
+        }
+
         switch (position) {
             case 0:
-
+                mTvTitle.setText("监测");
                 break;
             case 1:
+                mTvTitle.setText("首页");
                 break;
             default:
                 break;

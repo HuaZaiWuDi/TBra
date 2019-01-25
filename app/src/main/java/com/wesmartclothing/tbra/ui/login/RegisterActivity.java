@@ -23,13 +23,10 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
-import com.wesmartclothing.tbra.tools.LoginSuccessUtils;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -42,7 +39,7 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.tv_pwd)
     RxTextView mTvPwd;
     @BindView(R.id.tv_register)
-    RxTextView mTvRegister;
+    TextView mTvRegister;
     @BindView(R.id.tv_agreement)
     TextView mTvAgreement;
     @BindView(R.id.rxTitle)
@@ -51,13 +48,10 @@ public class RegisterActivity extends BaseActivity {
     RxEditText mEditPhone;
 
 
-    private String phone, code, password;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
 
     @Override
@@ -127,12 +121,7 @@ public class RegisterActivity extends BaseActivity {
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().sendCode(phone, null),
                 lifecycleSubject)
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode));
-                    }
-                })
+                .doOnSubscribe(disposable -> RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode)))
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String s) {
@@ -203,7 +192,7 @@ public class RegisterActivity extends BaseActivity {
                     protected void _onNext(LoginInfoBean s) {
                         RxLogUtils.d("验证码：" + s);
                         RxToast.success("注册成功");
-                        new LoginSuccessUtils(s, lifecycleSubject);
+                        onBackPressed();
                     }
 
                     @Override

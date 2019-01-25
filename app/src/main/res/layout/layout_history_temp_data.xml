@@ -240,8 +240,23 @@
         tools:ignore="MissingConstraints"/>
 
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seekbar"
+    <!--<android.support.v7.widget.AppCompatSeekBar-->
+    <!--android:id="@+id/seekbar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="20dp"-->
+    <!--android:maxHeight="2dp"-->
+    <!--android:nestedScrollingEnabled="true"-->
+    <!--android:progressDrawable="@drawable/bg_seekbar"-->
+    <!--android:thumbTint="@color/white"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--/>-->
+
+
+    <com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar
+        android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -252,7 +267,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:rcBackgroundColor="#E5E9F2"
+        app:rcProgressColor="#7FFF2D55"
         />
+
 
     <ImageView
         android:id="@+id/img_left"

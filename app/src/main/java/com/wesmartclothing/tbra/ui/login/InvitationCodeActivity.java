@@ -7,6 +7,7 @@ import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.interfaces.onEditTextChangeListener;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRegUtils;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -95,15 +96,16 @@ public class InvitationCodeActivity extends BaseActivity {
                     @Override
                     protected void _onNext(Boolean b) {
                         if (b) {
-                            RxCache.getDefault().load(SPKey.SP_UserInfo, UserInfoBean.class)
+                            RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
                                     .map(new CacheResult.MapFunc())
+                                    .compose(RxComposeUtils.bindLife(lifecycleSubject))
                                     .subscribe(new RxNetSubscriber<UserInfoBean>() {
                                         @Override
                                         protected void _onNext(UserInfoBean mUserInfo) {
                                             if (mUserInfo != null && mUserInfo.getAge() == 0) {
-                                                RxActivityUtils.skipActivityAndFinish(mActivity, InputInfoActivity.class);
+                                                RxActivityUtils.skipActivity(mActivity, InputInfoActivity.class);
                                             } else {
-                                                RxActivityUtils.skipActivityAndFinish(mActivity, MainActivity.class);
+                                                RxActivityUtils.skipActivity(mActivity, MainActivity.class);
                                             }
                                         }
                                     });

@@ -9,18 +9,19 @@
     tools:context=".ui.login.RegisterActivity">
 
 
-    <android.support.v7.widget.CardView
+    <com.vondear.rxtools.view.cardview.CardView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        app:cardElevation="6dp">
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
+        >
 
 
         <com.vondear.rxtools.view.RxTitle
             android:id="@+id/rxTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="1dp"
-            android:translationZ="2dp"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
             app:leftIcon="@drawable/ic_arrow_back_black_24dp"
             app:rightText="标记已读"
             app:rightTextColor="@color/font_6A6F7B"
@@ -30,7 +31,7 @@
             app:titleSize="16sp"/>
 
 
-    </android.support.v7.widget.CardView>
+    </com.vondear.rxtools.view.cardview.CardView>
 
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -42,7 +43,6 @@
             android:id="@+id/recyclerWarning"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="14dp"
             android:overScrollMode="never"/>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

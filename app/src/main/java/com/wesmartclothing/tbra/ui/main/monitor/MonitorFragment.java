@@ -1,7 +1,7 @@
 package com.wesmartclothing.tbra.ui.main.monitor;
 
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,9 +11,11 @@ import com.tmall.ultraviewpager.UltraViewPager;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.model.timer.MyTimer;
 import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
+import com.vondear.rxtools.view.cardview.CardView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
@@ -27,6 +29,7 @@ import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.CheckTempErrorUtil;
+import com.wesmartclothing.tbra.ui.main.UsedTipDialog;
 import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
 import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
@@ -38,7 +41,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * @Package com.wesmartclothing.tbra.ui.main.testing
@@ -70,10 +72,8 @@ public class MonitorFragment extends BaseAcFragment {
     LinearLayout mLayoutMonitorEmpty;
     @BindView(R.id.historyTempView)
     HistoryTempView mHistoryTempView;
-    Unbinder unbinder;
 
 
-    private List<String> imgs = new ArrayList<>();
     private WarningRuleBean mWarningRuleBean;
 
     public static MonitorFragment getInstance() {
@@ -97,16 +97,13 @@ public class MonitorFragment extends BaseAcFragment {
     }
 
     private void bleConnectState(boolean isConnected) {
-
-
         if (!isConnected) {//未连接
             mPowerIcon.setVisibility(View.GONE);
             mTvSwitchDevice.setText("连接设备\t\t>>");
             mTvDeviceName.setText("设备名字：-\t-");
             mTvBindDevice.setText("去连接");
             mLayoutDeviceEmpty.setVisibility(View.VISIBLE);
-            if (BleTools.getInstance().isConnected())
-                myTimer.stopTimer();
+            myTimer.stopTimer();
         } else {//已连接
             mLayoutDeviceEmpty.setVisibility(View.GONE);
             mTvSwitchDevice.setText("切换设备\t\t>>");
@@ -152,7 +149,8 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     protected void onVisible() {
         super.onVisible();
-        myTimer.startTimer();
+        if (BleTools.getInstance().isConnected())
+            myTimer.startTimer();
         RxLogUtils.d("【MonitorFragment】onVisible");
     }
 
@@ -165,7 +163,7 @@ public class MonitorFragment extends BaseAcFragment {
 
 
     private void initViewPage() {
-        imgs.clear();
+        List<String> imgs = new ArrayList<>();
         imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=87077840f66f6c7607074ad9d7681e80&imgtype=0&src=http%3A%2F%2Fpic.kekenet.com%2F2017%2F0323%2F24621490236152.png");
         imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=d7b02b4c46569e0197f5949164433c52&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Flarge%2F574ddb5egw1eqosahw1m6j20pa0g00w3.jpg");
         imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=53404ec533a940868fef1c0793cc8a5d&imgtype=0&src=http%3A%2F%2Fwerkstette.dk%2Fwp-content%2Fuploads%2F2015%2F09%2FEntertainment_Weekly_Photographer_Marc_Hom_British_Actor_Charlie_Hunnam_as_King_Arthur_Retouch_Werkstette10-770x841.jpg");
@@ -189,6 +187,11 @@ public class MonitorFragment extends BaseAcFragment {
         ).subscribe(new RxSubscriber<WarningRuleBean>() {
             @Override
             protected void _onNext(WarningRuleBean warningRuleBean) {
+                if (warningRuleBean == null || RxDataUtils.isNullString(warningRuleBean.getPointType())) {
+                    RxLogUtils.d("未设置告警规则");
+                    new UsedTipDialog(mContext, lifecycleSubject);
+                    return;
+                }
                 mWarningRuleBean = warningRuleBean;
                 if (BleTools.getInstance().isConnected())
                     myTimer.startTimer();
@@ -220,7 +223,6 @@ public class MonitorFragment extends BaseAcFragment {
         //标准温度的区间
         double[] normTemps = {normTemp - mWarningRuleBean.getTempNum(), normTemp + mWarningRuleBean.getTempNum()};
 
-
         for (JsonDataBean bean : data.getDataList()) {
             double nodeTemp = bean.getNodeTemp();
             int flag = 0;
@@ -250,12 +252,12 @@ public class MonitorFragment extends BaseAcFragment {
                 break;
             case R.id.tv_bindDevice:
                 if (!BleTools.getBleManager().isBlueEnable()) {
-                    CustomDialog.show(mContext, R.layout.dialog_default, rootView ->
+                    CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->
                             rootView.findViewById(R.id.tv_complete)
                                     .setOnClickListener(view1 -> {
                                         CustomDialog.unloadAllDialog();
                                         BleTools.getBleManager().enableBluetooth();
-                                    })).setCanCancel(true);
+                                    })).setCanCancel(true).showDialog();
                 } else {
                     //去绑定或者连接
                     RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);

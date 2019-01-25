@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<com.vondear.rxtools.view.cardview.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:swipe="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="95dp"
-    android:layout_marginLeft="14dp"
-    android:layout_marginRight="14dp"
-    android:layout_marginBottom="14dp"
+    android:layout_height="110dp"
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp"
+    app:cardShadowColorEnd="#006A6F7B"
+    app:cardShadowColorStart="#1A6A6F7B"
     >
 
     <com.daimajia.swipe.SwipeLayout
@@ -90,4 +89,4 @@
 
     </com.daimajia.swipe.SwipeLayout>
 
-</android.support.v7.widget.CardView>
+</com.vondear.rxtools.view.cardview.CardView>

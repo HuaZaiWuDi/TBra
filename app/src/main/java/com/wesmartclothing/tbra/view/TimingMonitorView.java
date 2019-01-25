@@ -209,13 +209,12 @@ public class TimingMonitorView extends LinearLayout {
 
 
         //初始化线条
-        mLineChart.getDescription().setText("");
+        mLineChart.getDescription().setText("暂时没有数据");
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setScaleEnabled(false);
         mLineChart.setViewPortOffsets(0, 0, 0, 0);
 
         mLineChart.getAxisLeft().setEnabled(false);
-
 
         mLineChart.getAxisRight().setEnabled(false);
 

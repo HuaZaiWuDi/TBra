@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.home.ReportActivity">
+
+    <com.vondear.rxtools.view.cardview.CardView
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B">
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
+            android:elevation="1dp"
+            android:translationZ="2dp"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="监测周报"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+    </com.vondear.rxtools.view.cardview.CardView>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="19dp"
+                android:text="异常数据"
+                android:textColor="@color/font_475669"
+                android:textSize="19sp"/>
+
+
+            <com.vondear.rxtools.view.cardview.CardView
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="6dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
+
+                <TextView
+                    android:id="@+id/tv_monitorTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="监测时段："
+                    android:textColor="@color/font_6A6F7B"
+                    android:textSize="12sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="38dp"
+                    android:background="@color/line_C3C5CA"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="39dp"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_warningPoint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/font_6A6F7B"
+                            android:textSize="13sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="采集次数"
+                            android:textColor="@color/font_6A6F7B"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_warningCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#FB726D"
+                            android:textSize="13sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="异常次数"
+                            android:textColor="@color/font_6A6F7B"
+                            android:textSize="12sp"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </com.vondear.rxtools.view.cardview.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="异常点位分布"
+                android:textColor="@color/font_475669"
+                android:textSize="19sp"/>
+
+            <com.vondear.rxtools.view.cardview.CardView
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="6dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
+
+                <TextView
+                    android:id="@+id/tv_pointDistribution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="异常频次分布"
+                    android:textColor="@color/font_6A6F7B"
+                    android:textSize="12sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="38dp"
+                    android:background="@color/line_C3C5CA"/>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="123dp"
+                    android:layout_marginTop="61dp">
+
+
+                    <com.vondear.rxtools.view.roundprogressbar.RoundProgressBar
+                        android:id="@+id/pro_errorTotal"
+                        android:layout_width="123dp"
+                        android:layout_height="123dp"
+                        android:layout_centerHorizontal="true"
+                        app:pro_background_color="#F3A39F"
+                        app:pro_progress_color="#FFFB726D"
+                        app:pro_stroke_round_cap="false"
+                        app:pro_stroke_width="19dp"
+                        app:pro_type="type_circle"
+                        app:pro_value="50"
+                        tools:visibility="invisible"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_leftProportion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="11dp"
+                        android:layout_toLeftOf="@+id/pro_errorTotal"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="L 72.5%"/>
+
+
+                    <TextView
+                        android:id="@+id/tv_rightProportion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@+id/pro_errorTotal"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="R 72.5%"/>
+
+
+                    <TextView
+                        android:id="@+id/tv_errorTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:text="异常总数\n16次"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="13sp"
+                        android:textStyle="bold"/>
+
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:layout_width="158dp"
+                    android:layout_height="158dp"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    tools:background="@color/c"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_leftCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="L 31次"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pie_left"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        tools:background="@color/gray">
+
+                    </com.github.mikephil.charting.charts.PieChart>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="158dp"
+                    android:layout_height="158dp"
+                    android:layout_gravity="bottom|right"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    tools:background="@color/c">
+
+                    <TextView
+                        android:id="@+id/rightCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="L 31次"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pie_right"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        tools:background="@color/gray">
+                    </com.github.mikephil.charting.charts.PieChart>
+
+
+                </LinearLayout>
+
+
+            </com.vondear.rxtools.view.cardview.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="异常点位"
+                android:textColor="@color/font_475669"
+                android:textSize="19sp"/>
+
+            <com.vondear.rxtools.view.cardview.CardView
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="6dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_pointDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:text="异常点位分布详情"
+                        android:textColor="@color/font_6A6F7B"
+                        android:textSize="12sp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/line_C3C5CA"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerPoint"
+                        android:layout_width="match_parent"
+                        android:layout_height="76dp"
+                        >
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <com.wesmartclothing.tbra.view.HistoryTempView
+                        android:layout_width="302dp"
+                        android:layout_height="156dp"
+                        app:background_normal="@color/colortheme"
+                        app:corner_radius="6dp">
+
+                    </com.wesmartclothing.tbra.view.HistoryTempView>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerPointDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                    </android.support.v7.widget.RecyclerView>
+
+                </LinearLayout>
+
+
+            </com.vondear.rxtools.view.cardview.CardView>
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

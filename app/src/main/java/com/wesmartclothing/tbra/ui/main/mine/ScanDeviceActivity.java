@@ -1,11 +1,13 @@
 package com.wesmartclothing.tbra.ui.main.mine;
 
+import android.Manifest;
 import android.bluetooth.BluetoothGatt;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -16,8 +18,13 @@ import com.clj.fastble.callback.BleScanCallback;
 import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
+import com.kongzue.dialog.v2.CustomDialog;
+import com.kongzue.dialog.v2.MessageDialog;
 import com.kongzue.dialog.v2.TipDialog;
 import com.kongzue.dialog.v2.WaitDialog;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
@@ -30,6 +37,7 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.BLEKey;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.DeviceConnectBean;
@@ -38,6 +46,7 @@ import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.LocationIntentService;
 import com.wesmartclothing.tbra.tools.BLEUtil;
+import com.wesmartclothing.tbra.ui.main.MainActivity;
 
 import java.util.List;
 
@@ -56,6 +65,7 @@ public class ScanDeviceActivity extends BaseActivity {
     BaseQuickAdapter adapter;
     private BindDeviceBean deviceBean = new BindDeviceBean();
     private int position = 0;
+    private WaitDialog waitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +79,18 @@ public class ScanDeviceActivity extends BaseActivity {
 
     @Override
     public void initBundle(Bundle bundle) {
-
+        if (bundle.getBoolean(Key.BUNDLE_CAN_SKIP)) {
+            mRxTitle.setRightTextVisibility(true);
+            mRxTitle.setLeftIconVisibility(false);
+            mRxTitle.setRightTextOnClickListener(view -> {
+                RxActivityUtils.skipActivity(mContext, MainActivity.class);
+            });
+        }
     }
 
     @Override
     public void initViews() {
+        mRxTitle.setRightTextVisibility(false);
         startService(new Intent(this, LocationIntentService.class));
         initTitle(mRxTitle);
         initRecyclerView();
@@ -150,6 +167,30 @@ public class ScanDeviceActivity extends BaseActivity {
     }
 
     private void startScan() {
+        //判断是否有权限
+        new RxPermissions(mActivity)
+                .requestEach(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .compose(RxComposeUtils.<Permission>bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<Permission>() {
+                    @Override
+                    protected void _onNext(Permission aBoolean) {
+                        RxLogUtils.e("是否开启了权限：" + aBoolean);
+                        if (!aBoolean.granted) {
+                            MessageDialog.show(mContext, "提示", "未开启定位权限无法搜索到蓝牙设备");
+                        }
+                    }
+                });
+
+        if (!BleTools.getBleManager().isBlueEnable()) {
+            CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->
+                    rootView.findViewById(R.id.tv_complete)
+                            .setOnClickListener(view1 -> {
+                                CustomDialog.unloadAllDialog();
+                                BleTools.getBleManager().enableBluetooth();
+                            })).setCanCancel(true).showDialog();
+            return;
+        }
+
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
                 .setDeviceName(true, BLEKey.DEVICE_NAME)
@@ -162,7 +203,6 @@ public class ScanDeviceActivity extends BaseActivity {
             public void onScanFinished(List<BleDevice> scanResultList) {
                 RxLogUtils.d("扫描结果:" + scanResultList.size());
                 if (scanResultList.isEmpty()) {
-
                 }
             }
 
@@ -193,7 +233,7 @@ public class ScanDeviceActivity extends BaseActivity {
         BleTools.getBleManager().connect(mac, new BleGattCallback() {
             @Override
             public void onStartConnect() {
-                WaitDialog.show(mContext, "正在连接");
+                waitDialog = WaitDialog.show(mContext, "正在连接");
             }
 
             @Override
@@ -206,32 +246,45 @@ public class ScanDeviceActivity extends BaseActivity {
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                WaitDialog.dismiss();
                 SPUtils.put(SPKey.SP_BIND_DEVICE, bleDevice.getMac());
-                connectDevice();
-                bindDevice(bleDevice.getMac());
                 BleTools.getInstance().stopScan();
 
-
                 TipDialog.show(mContext, "连接成功", TipDialog.TYPE_FINISH);
-                BleTools.getInstance().openNotify(() -> {
-                    BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
-                        @Override
-                        public void onSetMTUFailure(BleException exception) {
+                BleTools.getInstance().openNotify(new RxSubscriber<Boolean>() {
+                    @Override
+                    protected void _onNext(Boolean aBoolean) {
+                        BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
+                            @Override
+                            public void onSetMTUFailure(BleException exception) {
+                                waitDialog.setText("连接异常，正在重连");
+                                BleTools.getInstance().disConnect();
+                                connectDevice(mac);
+                            }
 
-                        }
+                            @Override
+                            public void onMtuChanged(int mtu) {
+                                RxLogUtils.d("连接成功");
 
-                        @Override
-                        public void onMtuChanged(int mtu) {
-                            BleAPI.syncTime(new RxSubscriber<byte[]>() {
-                                @Override
-                                protected void _onNext(byte[] bytes) {
-                                    RxBus.getInstance().post(new ConnectStateBus(true));
-                                }
-                            });
-                        }
-                    });
+                                BleAPI.syncTime(new RxSubscriber<byte[]>() {
+                                    @Override
+                                    protected void _onNext(byte[] bytes) {
+                                        WaitDialog.dismiss();
+                                        connectDevice();
+                                        bindDevice(bleDevice.getMac());
+                                        RxBus.getInstance().post(new ConnectStateBus(true));
+                                    }
+                                });
+                            }
+                        });
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        waitDialog.setText("连接异常，正在重连");
+                        BleTools.getInstance().disConnect();
+                        connectDevice(mac);
+                    }
                 });
             }
 
@@ -263,7 +316,6 @@ public class ScanDeviceActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         BleTools.getInstance().stopScan();
-        BleTools.getBleManager().destroy();
         BleTools.getBleManager().removeConnectGattCallback(BleTools.getInstance().getBleDevice());
         super.onDestroy();
     }

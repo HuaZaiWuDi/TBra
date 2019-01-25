@@ -9,47 +9,56 @@
     tools:context=".ui.main.MainActivity">
 
 
-    <RelativeLayout
+    <com.vondear.rxtools.view.cardview.CardView
         android:id="@+id/layoutTitle"
         android:layout_width="match_parent"
         android:layout_height="105dp"
         android:background="@color/white"
-        android:elevation="6dp"
-        android:paddingLeft="26dp"
-        android:paddingRight="26dp"
-        android:paddingBottom="18dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
         >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="26dp"
+            android:paddingRight="26dp"
+            android:paddingBottom="18dp">
 
-        <com.vondear.rxtools.view.layout.RxImageView
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            android:layout_alignParentBottom="true"
-            app:icon_src_normal="@mipmap/ic_launcher"
-            app:is_circle="true"/>
-
-
-        <TextView
-            android:layout_width="194dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="@string/navMonitor"
-            android:textColor="@color/font_222222"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            <com.vondear.rxtools.view.layout.RxImageView
+                android:id="@+id/img_userImg"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_alignParentBottom="true"
+                app:icon_src_normal="@mipmap/ic_launcher"
+                app:is_circle="true"/>
 
 
-        <ImageView
-            android:id="@+id/img_message"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:background="@mipmap/ic_message"/>
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="194dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="@string/navMonitor"
+                android:textColor="@color/font_222222"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
-    </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/img_message"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@mipmap/ic_message"/>
+
+        </RelativeLayout>
+
+
+    </com.vondear.rxtools.view.cardview.CardView>
 
 
     <FrameLayout

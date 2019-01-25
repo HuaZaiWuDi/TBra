@@ -119,7 +119,7 @@ public interface ApiService {
      * 告警信息已读
      */
     @POST("user/warningInfoReaded")
-    Observable<HttpResult<Integer>> warningInfoReaded(@Body WarningRecordBean.ListBean bean);
+    Observable<HttpResult<List<PointDataBean>>> warningInfoReaded(@Body WarningRecordBean.ListBean bean);
 
 
     /**

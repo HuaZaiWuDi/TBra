@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.kongzue.dialog.v2.BottomMenu;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.vondear.rxtools.utils.RxDataUtils;
-import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -19,7 +18,6 @@ import com.vondear.rxtools.view.wheelhorizontal.utils.DrawUtil;
 import com.vondear.rxtools.view.wheelhorizontal.view.DecimalScaleRulerView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
-import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -113,7 +111,6 @@ public class WarningSettingActivity extends BaseActivity {
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String bean) {
-                        SPUtils.put(SPKey.SP_WARNING_RULE, true);
                         CustomDialog.unloadAllDialog();
                     }
 

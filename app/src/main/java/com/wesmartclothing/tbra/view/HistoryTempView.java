@@ -4,14 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -21,6 +19,7 @@ import com.vondear.rxtools.model.timer.MyTimerListener;
 import com.vondear.rxtools.utils.RxFormatValue;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
+import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
@@ -44,6 +43,9 @@ import butterknife.OnClick;
  * @Project tbra
  */
 public class HistoryTempView extends LinearLayout {
+
+    public static final int MODE_DYNAMIC = 0;
+    public static final int MODE_STATIC = 1;
 
 
     @BindView(R.id.tv_L1)
@@ -78,8 +80,8 @@ public class HistoryTempView extends LinearLayout {
     TextView mTvR1;
     @BindView(R.id.tv_R8)
     TextView mTvR8;
-    @BindView(R.id.seekbar)
-    AppCompatSeekBar mSeekbar;
+    //    @BindView(R.id.seekbar)
+//    AppCompatSeekBar mSeekbar;
     @BindView(R.id.img_left)
     ImageView mImgLeft;
     @BindView(R.id.img_play_pause)
@@ -90,9 +92,8 @@ public class HistoryTempView extends LinearLayout {
     TextView mTvPlayTime;
     @BindView(R.id.tv_playSpeed)
     TextView mTvPlaySpeed;
-
-    public static final int MODE_DYNAMIC = 0;
-    public static final int MODE_STATIC = 1;
+    @BindView(R.id.progress)
+    RxRoundProgressBar mProgress;
 
     private int showMode = MODE_STATIC;
     private long speed = 1000;
@@ -154,8 +155,8 @@ public class HistoryTempView extends LinearLayout {
         //视频模式，动态播放
         setShow(true);
         currentTime = 0;
-        mSeekbar.setMax(list.size());
-        mSeekbar.setProgress(0);
+        mProgress.setMax(list.size());
+        mProgress.setProgress(0);
         RxTextUtils.getBuilder(RxFormat.setSec2MS(currentTime))
                 .append("/" + RxFormat.setSec2MS(list.size()))
                 .setForegroundColor(Color.parseColor("#99FFFFFF"))
@@ -163,23 +164,23 @@ public class HistoryTempView extends LinearLayout {
         mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(speed / 1000, 1) + "倍");
 
 //        setPlay(true);
-
-        mSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                currentTime = Math.max(0, Math.min(i, list.size() - 1));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                setPlay(false);
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                setPlay(true);
-            }
-        });
+//
+//        mSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                currentTime = Math.max(0, Math.min(i, list.size() - 1));
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                setPlay(false);
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                setPlay(true);
+//            }
+//        });
 
         scaleAnimation.setDuration(500L);
         scaleAnimation.setInterpolator(new CycleInterpolator(0.5F));
@@ -193,7 +194,8 @@ public class HistoryTempView extends LinearLayout {
             showPoint(pointlist);
             currentTime++;
 
-            mSeekbar.setProgress(currentTime, true);
+//            mSeekbar.setProgress(currentTime, true);
+            mProgress.setProgress(currentTime, false);
             RxTextUtils.getBuilder(RxFormat.setSec2MS(currentTime))
                     .append("/" + RxFormat.setSec2MS(mPointDataBeans.size()))
                     .setForegroundColor(Color.parseColor("#99FFFFFF"))
@@ -305,7 +307,8 @@ public class HistoryTempView extends LinearLayout {
 
     public void setShow(boolean show) {
         isShow = show;
-        mSeekbar.setVisibility(isShow ? VISIBLE : GONE);
+//        mSeekbar.setVisibility(isShow ? VISIBLE : GONE);
+        mProgress.setVisibility(isShow ? VISIBLE : GONE);
         mImgLeft.setVisibility(isShow ? VISIBLE : GONE);
         mImgPlayPause.setVisibility(isShow ? VISIBLE : GONE);
         mImgRight.setVisibility(isShow ? VISIBLE : GONE);
@@ -339,6 +342,9 @@ public class HistoryTempView extends LinearLayout {
 
     }
 
+    public List<PointDataBean> getPointDataBeans() {
+        return mPointDataBeans;
+    }
 
     @OnClick({R.id.img_left, R.id.img_play_pause, R.id.img_right, R.id.parent})
     public void onViewClicked(View view) {

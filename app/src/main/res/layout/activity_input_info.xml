@@ -9,33 +9,36 @@
     tools:context=".ui.login.InputInfoActivity">
 
 
-    <android.support.v7.widget.CardView
+    <com.vondear.rxtools.view.cardview.CardView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        app:cardElevation="6dp">
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
+        >
 
 
         <com.vondear.rxtools.view.RxTitle
             android:id="@+id/rxTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="1dp"
-            android:translationZ="2dp"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
             app:leftIcon="@drawable/ic_arrow_back_black_24dp"
             app:title="个人信息验证"
             app:titleColor="@color/line_333845"
             app:titleSize="16sp"/>
 
 
-    </android.support.v7.widget.CardView>
+    </com.vondear.rxtools.view.cardview.CardView>
 
 
-    <android.support.v7.widget.CardView
+    <com.vondear.rxtools.view.cardview.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="14dp"
+        android:layout_margin="6dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="6dp">
+        app:cardElevation="6dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B">
 
         <TextView
             android:layout_width="wrap_content"
@@ -182,7 +185,7 @@
             android:textSize="12sp"/>
 
 
-    </android.support.v7.widget.CardView>
+    </com.vondear.rxtools.view.cardview.CardView>
 
 
 </LinearLayout>

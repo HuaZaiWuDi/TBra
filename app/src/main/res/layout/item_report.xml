@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<com.vondear.rxtools.view.cardview.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="237dp"
-    android:layout_height="110dp"
-    android:layout_marginLeft="7dp"
-    android:layout_marginTop="14dp"
-    android:layout_marginRight="7dp"
-    android:layout_marginBottom="14dp"
+    android:layout_width="245dp"
+    android:layout_height="125dp"
     app:cardCornerRadius="4dp"
     app:cardElevation="6dp"
+    app:cardShadowColorEnd="#006A6F7B"
+    app:cardShadowColorStart="#1A6A6F7B"
     app:contentPadding="10dp">
 
 
@@ -46,4 +44,4 @@
         android:layout_gravity="right"
         tools:src="@mipmap/ic_complete_pink"/>
 
-</android.support.v7.widget.CardView>
+</com.vondear.rxtools.view.cardview.CardView>

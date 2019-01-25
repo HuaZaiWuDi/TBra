@@ -28,16 +28,18 @@
     </com.github.florent37.arclayout.ArcLayout>
 
 
-    <android.support.v7.widget.CardView
+    <com.vondear.rxtools.view.cardview.CardView
         android:id="@+id/layout_userInfo"
         android:layout_width="match_parent"
-        android:layout_height="201dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="104dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginBottom="14dp"
+        android:layout_height="220dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="98dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="6dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="6dp">
+        app:cardElevation="6dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B">
 
 
         <LinearLayout
@@ -118,7 +120,7 @@
         </LinearLayout>
 
 
-    </android.support.v7.widget.CardView>
+    </com.vondear.rxtools.view.cardview.CardView>
 
     <com.vondear.rxtools.view.layout.RxImageView
         android:id="@+id/img_userImg"
@@ -170,18 +172,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <com.vondear.rxtools.view.cardview.CardView
                 android:id="@+id/layout_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -224,18 +227,19 @@
                     android:tint="#C2C4CA"/>
 
 
-            </android.support.v7.widget.CardView>
+            </com.vondear.rxtools.view.cardview.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <com.vondear.rxtools.view.cardview.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
 
 
                 <View
@@ -361,18 +365,18 @@
                         android:tint="#C2C4CA"/>
 
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </com.vondear.rxtools.view.cardview.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <com.vondear.rxtools.view.cardview.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginRight="14dp"
-                android:layout_marginBottom="14dp"
-
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
                 app:cardCornerRadius="8dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
 
 
                 <View
@@ -499,7 +503,7 @@
                         android:tint="#C2C4CA"/>
 
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </com.vondear.rxtools.view.cardview.CardView>
 
         </LinearLayout>
 

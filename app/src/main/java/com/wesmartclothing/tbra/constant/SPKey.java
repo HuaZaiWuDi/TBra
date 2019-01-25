@@ -31,14 +31,21 @@ public interface SPKey {
      */
     String SP_WARNING_RULE = "SP_WARNING_RULE";
 
-
     /**
      * 保存温度数据到本地
      */
     String SP_SAVE_TEMP_DATA = "SP_SAVE_TEMP_DATA";
 
-
+    /**
+     * 绑定设备MAC
+     */
     String SP_BIND_DEVICE = "SP_BIND_DEVICE";
 
+    /**
+     * 上传数据的最后下标
+     */
     String SP_LAST_INDEX = "SP_LAST_INDEX";
+
+
+
 }

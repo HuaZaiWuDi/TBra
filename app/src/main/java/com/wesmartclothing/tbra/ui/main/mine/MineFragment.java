@@ -2,7 +2,6 @@ package com.wesmartclothing.tbra.ui.main.mine;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -10,15 +9,22 @@ import android.widget.TextView;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
+import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.layout.RxImageView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
+import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.UserCenterBean;
+import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.tools.GlideImageLoader;
 import com.wesmartclothing.tbra.ui.main.mine.relationphone.RelationPhoneActivity;
+import com.zchu.rxcache.RxCache;
+import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import butterknife.BindView;
@@ -110,6 +116,18 @@ public class MineFragment extends BaseAcFragment {
                 RxToast.normal(error);
             }
         });
+        RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .map(new CacheResult.MapFunc<>())
+                .subscribe(new RxNetSubscriber<UserInfoBean>() {
+                    @Override
+                    protected void _onNext(UserInfoBean userInfoBean) {
+                        mTvUserName.setText(userInfoBean.getUserName());
+                        mTvSign.setText(userInfoBean.getSignature());
+                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
+                    }
+                });
+
     }
 
     private void setTextView(UserCenterBean bean) {

@@ -1,7 +1,6 @@
 package com.wesmartclothing.tbra.ui.guide;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -19,7 +18,6 @@ import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
-import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
 import com.wesmartclothing.tbra.ui.login.LoginActivity;
 
@@ -107,7 +105,6 @@ public class GuideActivity extends BaseActivity {
                 .subscribe(new RxSubscriber<Boolean>() {
                     @Override
                     protected void _onNext(Boolean aBoolean) {
-                        startService(new Intent(mContext, BleService.class));
                         RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
                     }
                 });

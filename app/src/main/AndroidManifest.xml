@@ -203,6 +203,8 @@
         </activity>
         <activity android:name=".ui.guide.GuideActivity">
         </activity>
+        <activity android:name=".ui.main.home.ReportActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -182,28 +182,24 @@ public class BleTools {
     }
 
 
-    public void openNotify(final BleOpenNotifyCallBack mBleOpenNotifyCallBack) {
+    public void openNotify(RxSubscriber<Boolean> notifySubscriber) {
         bleDevice = getBleDevice();
         if (bleDevice == null || !bleManager.isConnected(bleDevice)) {
             Log.e(TAG, "未连接");
+            notifySubscriber.onError(new ExplainException("未连接", -2));
             return;
         }
         getBleManager().notify(bleDevice, BLEKey.UUID_Servie, BLEKey.UUID_CHART_READ_NOTIFY, new BleNotifyCallback() {
             @Override
             public void onNotifySuccess() {
                 Log.d(TAG, "打开通知成功");
-                if (mBleOpenNotifyCallBack != null) mBleOpenNotifyCallBack.success();
+                if (notifySubscriber != null) notifySubscriber.onNext(true);
             }
 
             @Override
             public void onNotifyFailure(BleException exception) {
                 Log.e(TAG, "打开通知失败:" + exception.toString());
-                TimeOut.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        openNotify(mBleOpenNotifyCallBack);
-                    }
-                }, timeOut);
+                notifySubscriber.onError(new ExplainException("打开通知失败", -2));
             }
 
             @Override
@@ -317,6 +313,17 @@ public class BleTools {
     public static boolean checkMac(String Mac) {
         return BluetoothAdapter.checkBluetoothAddress(Mac);
     }
+
+    public void disConnect() {
+        if (getBleManager() != null && bleDevice != null)
+            getBleManager().disconnect(bleDevice);
+    }
+
+
+    public boolean isBind(String Mac) {
+        return BluetoothAdapter.checkBluetoothAddress(Mac);
+    }
+
 
     public void setMTU(@IntRange(from = 23, to = 512) int mtu, BleMtuChangedCallback callback) {
         if (bleDevice != null) {

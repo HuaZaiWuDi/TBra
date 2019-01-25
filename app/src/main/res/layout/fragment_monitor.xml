@@ -37,15 +37,17 @@
             android:textSize="19sp"/>
 
         <!--设备实时监测-->
-        <android.support.v7.widget.CardView
+        <com.vondear.rxtools.view.cardview.CardView
             android:id="@+id/layout_device"
             android:layout_width="match_parent"
             android:layout_height="248dp"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
             app:cardCornerRadius="4dp"
-            app:cardElevation="6dp">
+            app:cardElevation="6dp"
+            app:cardShadowColorEnd="#006A6F7B"
+            app:cardShadowColorStart="#1A6A6F7B">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,7 +149,7 @@
             </LinearLayout>
 
 
-        </android.support.v7.widget.CardView>
+        </com.vondear.rxtools.view.cardview.CardView>
 
 
         <TextView
@@ -160,14 +162,16 @@
             android:textSize="19sp"/>
 
 
-        <android.support.v7.widget.CardView
+        <com.vondear.rxtools.view.cardview.CardView
             android:layout_width="match_parent"
             android:layout_height="188dp"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="14dp"
-            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
             app:cardCornerRadius="4dp"
-            app:cardElevation="6dp">
+            app:cardElevation="6dp"
+            app:cardShadowColorEnd="#006A6F7B"
+            app:cardShadowColorStart="#1A6A6F7B">
 
 
             <com.wesmartclothing.tbra.view.TimingMonitorView
@@ -201,7 +205,7 @@
             </LinearLayout>
 
 
-        </android.support.v7.widget.CardView>
+        </com.vondear.rxtools.view.cardview.CardView>
 
     </LinearLayout>
 

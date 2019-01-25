@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.utils.StatusBarUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
+import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
 import com.vondear.rxtools.view.layout.RxEditText;
 import com.vondear.rxtools.view.layout.RxImageView;
@@ -43,6 +43,7 @@ import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.LoginSuccessUtils;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.wesmartclothing.tbra.ui.main.mine.ResetPwdActivity;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -50,8 +51,6 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public class LoginActivity extends BaseActivity {
 
@@ -113,7 +112,7 @@ public class LoginActivity extends BaseActivity {
         initTitleTab();
         initEditText();
         RxTextUtils.getBuilder("没有账号？")
-                .append("立即登录")
+                .append("立即注册")
                 .setForegroundColor(ContextCompat.getColor(mContext, R.color.font_475669))
                 .into(mTvRegister);
 
@@ -261,12 +260,7 @@ public class LoginActivity extends BaseActivity {
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().sendCode(phone, null),
                 lifecycleSubject)
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode));
-                    }
-                })
+                .doOnSubscribe(disposable -> RxUtils.countDown(mTvCode, 60, 1, getString(R.string.getVCode)))
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String s) {
@@ -359,20 +353,12 @@ public class LoginActivity extends BaseActivity {
         RxDialogSureCancel rxDialog = new RxDialogSureCancel(mContext)
                 .setContent("该手机号还未设置密码")
                 .setSure("设置密码")
-                .setSureListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //进入设置密码流程，跳转验证手机号
+                .setSureListener(v -> {
+                    //进入设置密码流程，跳转验证手机号
 //                        RxActivityUtils.skipActivity(mActivity, VerificationPhoneActivity.class);
-                    }
                 })
                 .setCancel("验证码登录")
-                .setCancelListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCommonTabLayout.setCurrentTab(1);
-                    }
-                });
+                .setCancelListener(v -> mCommonTabLayout.setCurrentTab(1));
         rxDialog.show();
     }
 
@@ -430,6 +416,7 @@ public class LoginActivity extends BaseActivity {
                 login();
                 break;
             case R.id.tv_forgetPwd:
+                RxActivityUtils.skipActivity(mContext, ResetPwdActivity.class);
                 break;
             case R.id.img_QQ:
                 media = SHARE_MEDIA.QQ;

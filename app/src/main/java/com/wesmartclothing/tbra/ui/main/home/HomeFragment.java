@@ -44,7 +44,6 @@ import com.wesmartclothing.tbra.tools.AddTempData;
 import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.zchu.rxcache.RxCache;
-import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
@@ -52,7 +51,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -108,7 +106,6 @@ public class HomeFragment extends BaseAcFragment {
         initTab();
         initRecyclerView();
         initErrorPoint();
-
     }
 
     private void bleConnectState(boolean isConnected) {
@@ -296,15 +293,12 @@ public class HomeFragment extends BaseAcFragment {
 
     private void getPointData(String tag) {
         RxManager.getInstance().doNetSubscribe(
-                NetManager.getApiService().latestSingleData(new RecordBean(tag))
-                , lifecycleSubject)
-                .compose(RxCache.getDefault().transformObservable(
-                        "latestSingleData" + tag,
-                        new TypeToken<List<PointDataBean>>() {
-                        }.getType(),
-                        CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT)))//保存数据一周
-                .map(new CacheResult.MapFunc<>())
-                .observeOn(AndroidSchedulers.mainThread())
+                NetManager.getBigFileService().latestSingleData(new RecordBean(tag))
+                , lifecycleSubject,
+                "latestSingleData" + tag,
+                new TypeToken<List<PointDataBean>>() {
+                }.getType(),
+                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT))
                 .doOnSubscribe(disposable -> {
                     if (!RxCache.getDefault().containsKey("latestSingleData" + tag)) {
                         WaitDialog.show(mContext, "正在加载");
@@ -314,6 +308,7 @@ public class HomeFragment extends BaseAcFragment {
                 .subscribe(new RxNetSubscriber<List<PointDataBean>>() {
                     @Override
                     protected void _onNext(List<PointDataBean> list) {
+                        System.gc();
                         RxLogUtils.d("当前线程：" + Thread.currentThread().getName());
                         pointDatalist = list;
                         mHistoryTempView.setData(list);
@@ -352,13 +347,14 @@ public class HomeFragment extends BaseAcFragment {
         super.onInvisible();
     }
 
+
     @OnClick({R.id.tv_seeMore})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_seeMore:
                 if (pointDatalist == null) return;
                 Bundle bundle = new Bundle();
-                bundle.putString(Key.BUNDLE_LATEST_TYPE, ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
+                bundle.putString(Key.BUNDLE_LATEST_TYPE, "latestSingleData" + ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
                 RxActivityUtils.skipActivity(mContext, ErrorPointActivity.class, bundle);
                 break;
             default:

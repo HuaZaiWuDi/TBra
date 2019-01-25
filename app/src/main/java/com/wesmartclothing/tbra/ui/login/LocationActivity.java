@@ -16,11 +16,12 @@ import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.LocationIntentService;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
-import com.wesmartclothing.tbra.ui.main.MainActivity;
+import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -107,10 +108,9 @@ public class LocationActivity extends BaseActivity {
                     protected void _onNext(String s) {
                         InputInfoActivity.sInfoBean = null;
                         //跳转扫描界面
-//                        Bundle bundle = new Bundle();
-//                        bundle.putBoolean(Key.BUNDLE_FORCE_BIND, false);
-//                        RxActivityUtils.skipActivity(mContext, AddDeviceActivity.class, bundle);
-                        RxActivityUtils.skipActivity(mContext, MainActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(Key.BUNDLE_CAN_SKIP, true);
+                        RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class, bundle);
                     }
 
                     @Override

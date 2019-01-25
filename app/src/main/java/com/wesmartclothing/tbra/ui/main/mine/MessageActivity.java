@@ -30,6 +30,7 @@ public class MessageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public int layoutId() {
         return R.layout.activity_message;

@@ -25,8 +25,8 @@ import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.BLEKey;
 import com.wesmartclothing.tbra.constant.SPKey;
-import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
@@ -44,15 +44,17 @@ public class BleService extends Service {
                     int state = intent.getExtras().getInt(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
                     if (state == BluetoothAdapter.STATE_OFF) {
                         BleTools.getInstance().stopScan();
+
                     } else if (state == BluetoothAdapter.STATE_ON) {
-                        initBle();
+                        scanConnectDevice();
                     } else if (state == BluetoothAdapter.STATE_TURNING_ON) {//正在开启蓝牙
                     }
                     RxBus.getInstance().post(new SystemBleOpenBus(state == BluetoothAdapter.STATE_ON));
                     break;
                 case RxSystemBroadcastUtil.SCREEN_ON:
                     RxLogUtils.d("亮屏");
-                    initBle();
+                    if (!BleTools.getInstance().isConnected())
+                        scanConnectDevice();
                     break;
                 case RxSystemBroadcastUtil.SCREEN_OFF:
                     RxLogUtils.d("息屏");
@@ -110,17 +112,15 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-
-        reConnectDevice();
+        scanConnectDevice();
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void reConnectDevice() {
+    private void scanConnectDevice() {
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
-//                .setDeviceName(true, BLEKey.DEVICE_NAME)
-                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE))
+                .setDeviceName(true, BLEKey.DEVICE_NAME)
+                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
                 .setScanTimeOut(-1)
                 .build();
         BleTools.getBleManager().initScanRule(bleConfig);
@@ -169,43 +169,51 @@ public class BleService extends Service {
     }
 
     private void connectSuccess() {
-        BleTools.getInstance().openNotify(() -> {
-            BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
-                @Override
-                public void onSetMTUFailure(BleException exception) {
+        BleTools.getInstance().openNotify(new RxSubscriber<Boolean>() {
+            @Override
+            protected void _onNext(Boolean aBoolean) {
+                BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
+                    @Override
+                    public void onSetMTUFailure(BleException exception) {
+                        errorReConnect();
+                    }
 
-                }
+                    @Override
+                    public void onMtuChanged(int mtu) {
+                        BleAPI.syncTime(new RxSubscriber<byte[]>() {
+                            @Override
+                            protected void _onNext(byte[] bytes) {
+                                BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
+                                    @Override
+                                    protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
+                                        RxBus.getInstance().post(new ConnectStateBus(true));
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
 
-                @Override
-                public void onMtuChanged(int mtu) {
-                    BleAPI.syncTime(new RxSubscriber<byte[]>() {
-                        @Override
-                        protected void _onNext(byte[] bytes) {
-                            BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
-                                @Override
-                                protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
-//                                    RxBus.getInstance().post(new ConnectStateBus(true));
-                                    BleAPI.getTempData(0, 10, new RxSubscriber<AddTempDataBean>() {
-                                        @Override
-                                        protected void _onNext(AddTempDataBean addTempDataBean) {
-
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                RxLogUtils.e(e.toString());
+                errorReConnect();
+            }
         });
-
-
     }
 
+
+    private void errorReConnect() {
+        BleTools.getInstance().disConnect();
+        scanConnectDevice();
+    }
 
     @Override
     public void onDestroy() {
         unregisterReceiver(mBroadcastReceiver);
+        BleTools.getBleManager().destroy();
         super.onDestroy();
     }
 

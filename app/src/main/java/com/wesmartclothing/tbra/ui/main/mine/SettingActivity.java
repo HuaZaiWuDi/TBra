@@ -1,14 +1,25 @@
 package com.wesmartclothing.tbra.ui.main.mine;
 
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kongzue.dialog.v2.SelectDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxFileUtils;
+import com.vondear.rxtools.utils.SPUtils;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
+import com.vondear.rxtools.view.cardview.CardView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.SPKey;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.wesmartclothing.tbra.ui.login.LoginActivity;
+import com.zchu.rxcache.RxCache;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -46,6 +57,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void initViews() {
         initTitle(mRxTitle);
+        mTvCacheSize.setText(RxFileUtils.getTotalCacheSize(mContext.getApplicationContext()));
     }
 
     @Override
@@ -58,6 +70,29 @@ public class SettingActivity extends BaseActivity {
 
     }
 
+
+    private void logout() {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().logout(),
+                lifecycleSubject
+        )
+                .compose(RxComposeTools.showDialog(mContext))
+                .subscribe(new RxNetSubscriber<String>() {
+                    @Override
+                    protected void _onNext(String s) {
+                        try {
+                            RxCache.getDefault().clear2();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        SPUtils.put(SPKey.SP_UserId, "");
+                        BleTools.getInstance().disConnect();
+                        RxActivityUtils.skipActivityAndFinishAll(mActivity, LoginActivity.class);
+                    }
+                });
+    }
+
+
     @OnClick({R.id.layout_account, R.id.layout_resetPwd, R.id.layout_clearCache, R.id.tv_logout})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -67,8 +102,15 @@ public class SettingActivity extends BaseActivity {
                 RxActivityUtils.skipActivity(mContext, ResetPwdActivity.class);
                 break;
             case R.id.layout_clearCache:
+                SelectDialog.show(mContext, "提示", "是否清除全部缓存", "清除", (dialog, i) -> {
+                    RxFileUtils.clearAllCache(mContext.getApplicationContext());
+                    mTvCacheSize.setText("0MB");
+                });
                 break;
             case R.id.tv_logout:
+                SelectDialog.show(mContext, "提示", "是否退出登录", "退出", (dialog, i) -> {
+                    logout();
+                });
                 break;
         }
     }

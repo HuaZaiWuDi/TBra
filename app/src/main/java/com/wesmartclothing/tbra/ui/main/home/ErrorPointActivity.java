@@ -12,7 +12,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
@@ -30,8 +29,6 @@ import com.wesmartclothing.tbra.entity.SingleSelectBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.MapSortUtil;
-import com.zchu.rxcache.RxCache;
-import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
@@ -40,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class ErrorPointActivity extends BaseActivity {
 
@@ -76,17 +72,13 @@ public class ErrorPointActivity extends BaseActivity {
     public void initBundle(Bundle bundle) {
         String latestType = bundle.getString(Key.BUNDLE_LATEST_TYPE);
         RxLogUtils.d("类型：" + latestType);
-        mRxTitle.setTag(latestType);
+//        mRxTitle.setTag(latestType);
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().latestSingleData(new RecordBean(latestType))
-                , lifecycleSubject)
-                .compose(RxCache.getDefault().transformObservable(
-                        "latestSingleData" + latestType,
-                        new TypeToken<List<PointDataBean>>() {
-                        }.getType(),
-                        CacheStrategy.onlyCache()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new CacheResult.MapFunc<>())
+                , lifecycleSubject, latestType,
+                new TypeToken<List<PointDataBean>>() {
+                }.getType(),
+                CacheStrategy.onlyCache())
                 .subscribe(new RxNetSubscriber<List<PointDataBean>>() {
                     @Override
                     protected void _onNext(List<PointDataBean> list) {
@@ -130,7 +122,6 @@ public class ErrorPointActivity extends BaseActivity {
                     RxFormat.setFormatDate(pointDatalist.get(pointDatalist.size() - 1).getCollectTime(), RxFormat.Date_Date2));
         mTvWarningCount.setText(errorTotal + "");
         mTvWarningPoint.setText(errorMap.size() + "");
-
     }
 
     @Override
@@ -183,12 +174,12 @@ public class ErrorPointActivity extends BaseActivity {
                         .setText(R.id.tv_temp, stringBuilder);
             }
         };
-        errorPointDetailAdapter.setOnItemClickListener((adapter1, view, position) -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(Key.BUNDLE_LATEST_TYPE, (String) mRxTitle.getTag());
-            bundle.putString(Key.BUNDLE_POINT_NAME, ((SinglePointBean) adapter1.getItem(position)).getPointName());
-            RxActivityUtils.skipActivity(mContext, HistoryMonitorActivity.class, bundle);
-        });
+//        errorPointDetailAdapter.setOnItemClickListener((adapter1, view, position) -> {
+//            Bundle bundle = new Bundle();
+//            bundle.putString(Key.BUNDLE_LATEST_TYPE, (String) mRxTitle.getTag());
+//            bundle.putString(Key.BUNDLE_POINT_NAME, ((SinglePointBean) adapter1.getItem(position)).getPointName());
+//            RxActivityUtils.skipActivity(mContext, HistoryMonitorActivity.class, bundle);
+//        });
 
         mRecyclerWarningPoint.setAdapter(errorPointDetailAdapter);
     }
