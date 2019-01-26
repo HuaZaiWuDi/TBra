@@ -17,7 +17,6 @@ import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.login.InvitationCodeActivity;
 import com.wesmartclothing.tbra.ui.login.LoginActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
-import com.wesmartclothing.tbra.ui.main.home.ReportActivity;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.concurrent.TimeUnit;
@@ -55,8 +54,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void initNetData() {
 
-        RxActivityUtils.skipActivityAndFinish(mContext, ReportActivity.class);
-
+        RxActivityUtils.skipActivityAndFinish(mContext, MainActivity.class);
+//
 //        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
 //            SPUtils.put(SPKey.SP_GUIDE, true);
 //            RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);

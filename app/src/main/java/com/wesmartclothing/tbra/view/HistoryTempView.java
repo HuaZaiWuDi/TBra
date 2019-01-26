@@ -6,8 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +23,7 @@ import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.tools.MapSortUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +45,7 @@ public class HistoryTempView extends LinearLayout {
 
     public static final int MODE_DYNAMIC = 0;
     public static final int MODE_STATIC = 1;
+    public static final int MODE_SINGLE = 2;
 
 
     @BindView(R.id.tv_L1)
@@ -145,6 +145,24 @@ public class HistoryTempView extends LinearLayout {
 
 
     /**
+     * 单点突出
+     */
+    public void setSingleMode(String pointName) {
+        showMode = MODE_SINGLE;
+        setShow(false);
+        showPoint(createPointData(pointName));
+    }
+
+    private List<JsonDataBean> createPointData(String pointName) {
+        List<JsonDataBean> jsonDataBeans = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            String point = i < 8 ? "L0" + (i + 1) : "R0" + (i - 7);
+            jsonDataBeans.add(new JsonDataBean(point, 0, pointName.equals(point) ? 1 : 0));
+        }
+        return jsonDataBeans;
+    }
+
+    /**
      * 动态播放
      *
      * @param list
@@ -181,9 +199,6 @@ public class HistoryTempView extends LinearLayout {
 //                setPlay(true);
 //            }
 //        });
-
-        scaleAnimation.setDuration(500L);
-        scaleAnimation.setInterpolator(new CycleInterpolator(0.5F));
     }
 
     MyTimer mMyTimer = new MyTimer(speed, new MyTimerListener() {
@@ -272,7 +287,6 @@ public class HistoryTempView extends LinearLayout {
             errorPointMap = MapSortUtil.sortMapByValue(errorPointMap, true);
             mOnErrorPointListener.errorPoint(errorPointMap);
         }
-
     }
 
     private void textTopDrawable(TextView textView, int flag) {
@@ -280,8 +294,13 @@ public class HistoryTempView extends LinearLayout {
                 flag == 0 ? R.mipmap.ic_circle_green : flag == 1 ? R.mipmap.ic_cricle_red : R.mipmap.ic_cricle_yellow);
         textView.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
 
-        if (flag == 1)
-            doAnim(textView);
+        if (flag == 1) {
+            textView.setScaleX(1.3f);
+            textView.setScaleY(1.3f);
+        } else {
+            textView.setScaleX(1f);
+            textView.setScaleY(1f);
+        }
     }
 
     private void textBottomDrawable(TextView textView, int flag) {
@@ -290,18 +309,12 @@ public class HistoryTempView extends LinearLayout {
         textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, drawable);
 
         if (flag == 1) {
-            doAnim(textView);
+            textView.setScaleX(1.3f);
+            textView.setScaleY(1.3f);
+        } else {
+            textView.setScaleX(1f);
+            textView.setScaleY(1f);
         }
-    }
-
-    ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 1.3f, 1f, 1.3f);
-
-    private void doAnim(TextView view) {
-//        if (view.getAnimation() == null) {
-//            view.setAnimation(scaleAnimation);
-//        }
-//        view.getAnimation().start();
-
     }
 
 
@@ -342,9 +355,6 @@ public class HistoryTempView extends LinearLayout {
 
     }
 
-    public List<PointDataBean> getPointDataBeans() {
-        return mPointDataBeans;
-    }
 
     @OnClick({R.id.img_left, R.id.img_play_pause, R.id.img_right, R.id.parent})
     public void onViewClicked(View view) {

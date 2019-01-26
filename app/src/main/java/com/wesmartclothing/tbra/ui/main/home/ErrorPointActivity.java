@@ -118,7 +118,7 @@ public class ErrorPointActivity extends BaseActivity {
             errorPointDetailAdapter.setNewData(errorMap.get(beans.get(0).getText()));
 
         if (!RxDataUtils.isEmpty(pointDatalist))
-            mTvMonitorTime.setText("监测时段\t" + RxFormat.setFormatDate(pointDatalist.get(0).getCollectTime(), RxFormat.Date_Date2) + "～" +
+            mTvMonitorTime.setText("监测时段\t\t\t\t\t" + RxFormat.setFormatDate(pointDatalist.get(0).getCollectTime(), RxFormat.Date_Date2) + "～" +
                     RxFormat.setFormatDate(pointDatalist.get(pointDatalist.size() - 1).getCollectTime(), RxFormat.Date_Date2));
         mTvWarningCount.setText(errorTotal + "");
         mTvWarningPoint.setText(errorMap.size() + "");

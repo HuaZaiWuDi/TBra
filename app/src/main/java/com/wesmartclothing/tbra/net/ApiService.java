@@ -6,10 +6,12 @@ import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
+import com.wesmartclothing.tbra.entity.MonthOrWeekPointsBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.RelateAccountListBean;
 import com.wesmartclothing.tbra.entity.ReportDataBean;
+import com.wesmartclothing.tbra.entity.ReportDetailBean;
 import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
 import com.wesmartclothing.tbra.entity.SingleHistoryPointBean;
 import com.wesmartclothing.tbra.entity.UserCenterBean;
@@ -344,14 +346,14 @@ public interface ApiService {
      * 每月的月报数据
      */
     @POST("dataRecord/monthInfo")
-    Observable<HttpResult<ReportDataBean>> monthInfo(@Body GidBean bean);
+    Observable<HttpResult<ReportDetailBean>> monthInfo(@Body GidBean bean);
 
 
     /**
      * 每周的周报数据
      */
     @POST("dataRecord/weekInfo")
-    Observable<HttpResult<ReportDataBean>> weekInfo(@Body GidBean bean);
+    Observable<HttpResult<ReportDetailBean>> weekInfo(@Body GidBean bean);
 
 
     /**
@@ -373,4 +375,10 @@ public interface ApiService {
     @POST("dataRecord/unusualData")
     Observable<HttpResult<WarningRuleBean>> unusualData(@Body RecordBean bean);
 
+
+    /**
+     * 每月或每周点位数据信息
+     */
+    @POST("dataRecord/monthOrWeekPointsInfo")
+    Observable<HttpResult<List<ReportDetailBean.PointsListBean>>> monthOrWeekPointsInfo(@Body MonthOrWeekPointsBean bean);
 }

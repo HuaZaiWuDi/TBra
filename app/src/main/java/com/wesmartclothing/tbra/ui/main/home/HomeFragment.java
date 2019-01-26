@@ -18,7 +18,6 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.gson.reflect.TypeToken;
 import com.kongzue.dialog.v2.CustomDialog;
-import com.kongzue.dialog.v2.WaitDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
@@ -41,6 +40,7 @@ import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.AddTempData;
+import com.wesmartclothing.tbra.tools.RxComposeTools;
 import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.zchu.rxcache.RxCache;
@@ -195,6 +195,13 @@ public class HomeFragment extends BaseAcFragment {
                         .setImageResource(R.id.img_complete, R.mipmap.ic_complete_pink);
             }
         };
+        adapter.setOnItemClickListener((adapter, view, position) -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt(Key.BUNDLE_REPORT_TYPE, mCommonTabLayout.getCurrentTab());
+            bundle.putString(Key.BUNDLE_GID_DATA, ((ReportDataBean.ListBean) adapter.getItem(position)).getGid());
+            RxActivityUtils.skipActivity(mContext, ReportActivity.class, bundle);
+        });
+
         mRecyclerView.setAdapter(adapter);
         new LinearSnapHelper().attachToRecyclerView(mRecyclerView);
     }
@@ -299,12 +306,7 @@ public class HomeFragment extends BaseAcFragment {
                 new TypeToken<List<PointDataBean>>() {
                 }.getType(),
                 CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT))
-                .doOnSubscribe(disposable -> {
-                    if (!RxCache.getDefault().containsKey("latestSingleData" + tag)) {
-                        WaitDialog.show(mContext, "正在加载");
-                    }
-                })
-                .doFinally(() -> WaitDialog.dismiss())
+                .compose(RxComposeTools.showDialog(mContext, "latestSingleData" + tag))
                 .subscribe(new RxNetSubscriber<List<PointDataBean>>() {
                     @Override
                     protected void _onNext(List<PointDataBean> list) {

@@ -58,7 +58,7 @@ public class MapSortUtil {
     }
 
 
-    public static Map<String, Integer> sortMapByValue(Map<String, Integer> oriMap) {
+    public static <T, V> Map<T, V> sortMapByValue(Map<T, V> oriMap) {
         return sortMapByValue(oriMap, false);
     }
 

@@ -5,9 +5,7 @@ import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.vondear.rxtools.utils.RxDeviceUtils;
-import com.vondear.rxtools.utils.SPUtils;
 import com.wesmartclothing.tbra.BuildConfig;
-import com.wesmartclothing.tbra.constant.SPKey;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -128,15 +126,15 @@ public class NetManager {
     //在请求头添加参数
     private static Interceptor NetInterceptor = chain -> {
         Request request = chain.request().newBuilder()
-                .header("userId", SPUtils.getString(SPKey.SP_UserId))
+//                .header("userId", SPUtils.getString(SPKey.SP_UserId))
 //                    .header("userId", "0b1be32d936640d1825e53198b172ab8")
-//                .header("userId", "4d974e25cebe4535bde4e23302ba0dd2")
+                .header("userId", "4d974e25cebe4535bde4e23302ba0dd2")
                 .header("version", RxDeviceUtils.getAppVersionName())
                 .header("phoneType", RxDeviceUtils.getBuildMANUFACTURER())
                 .header("system", "Android")
                 .header("macAddr", RxDeviceUtils.getAndroidId())
-                .header("token", SPUtils.getString(SPKey.SP_token)).build();
-//                .header("token", "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwYjFiZTMyZDkzNjY0MGQxODI1ZTUzMTk4YjE3MmFiOCIsImlhdCI6MTU0NzE3NzUxMiwiZXhwIjoxNTYyODE1OTEyLCJzdWIiOiJ1c2VyIn0.mve64-k8dKsj79ndsGsUuUCpEMeLO07lPS6O3_nSO7U").build();
+//                .header("token", SPUtils.getString(SPKey.SP_token)).build();
+                .header("token", "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwYjFiZTMyZDkzNjY0MGQxODI1ZTUzMTk4YjE3MmFiOCIsImlhdCI6MTU0NzE3NzUxMiwiZXhwIjoxNTYyODE1OTEyLCJzdWIiOiJ1c2VyIn0.mve64-k8dKsj79ndsGsUuUCpEMeLO07lPS6O3_nSO7U").build();
         return chain.proceed(request);
     };
 

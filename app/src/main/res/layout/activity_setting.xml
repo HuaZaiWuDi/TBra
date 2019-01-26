@@ -51,7 +51,8 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/ic_man"/>
 
 
         <TextView
@@ -96,7 +97,8 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/ic_key"/>
 
 
         <TextView
@@ -139,7 +141,8 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/ic_broom"/>
 
 
         <TextView

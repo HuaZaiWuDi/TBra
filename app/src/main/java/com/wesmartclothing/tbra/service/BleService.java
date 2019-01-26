@@ -20,13 +20,11 @@ import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxNetUtils;
 import com.vondear.rxtools.utils.RxSystemBroadcastUtil;
-import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.BLEKey;
-import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
@@ -120,7 +118,7 @@ public class BleService extends Service {
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
                 .setDeviceName(true, BLEKey.DEVICE_NAME)
-                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
+//                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
                 .setScanTimeOut(-1)
                 .build();
         BleTools.getBleManager().initScanRule(bleConfig);

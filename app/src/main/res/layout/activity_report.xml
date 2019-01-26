@@ -92,7 +92,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_warningPoint"
+                            android:id="@+id/tv_collectionCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -202,6 +202,8 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="11dp"
                         android:layout_toLeftOf="@+id/pro_errorTotal"
+                        android:gravity="center"
+                        android:lineSpacingExtra="4dp"
                         android:textColor="@color/font_6A6F7B"
                         android:textSize="13sp"
                         android:textStyle="bold"
@@ -215,6 +217,8 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="11dp"
                         android:layout_toRightOf="@+id/pro_errorTotal"
+                        android:gravity="center"
+                        android:lineSpacingExtra="4dp"
                         android:textColor="@color/font_6A6F7B"
                         android:textSize="13sp"
                         android:textStyle="bold"
@@ -227,10 +231,11 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
+                        android:lineSpacingExtra="4dp"
                         android:text="异常总数\n16次"
                         android:textColor="@color/font_6A6F7B"
                         android:textSize="13sp"
-                        android:textStyle="bold"/>
+                        />
 
 
                 </RelativeLayout>
@@ -241,6 +246,7 @@
                     android:layout_height="158dp"
                     android:layout_gravity="bottom"
                     android:gravity="center"
+                    android:nestedScrollingEnabled="true"
                     android:orientation="vertical"
                     tools:background="@color/c"
                     >
@@ -252,7 +258,8 @@
                         android:text="L 31次"
                         android:textColor="@color/font_6A6F7B"
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
 
 
                     <com.github.mikephil.charting.charts.PieChart
@@ -270,18 +277,25 @@
                     android:layout_height="158dp"
                     android:layout_gravity="bottom|right"
                     android:gravity="center"
+                    android:nestedScrollingEnabled="true"
                     android:orientation="vertical"
                     tools:background="@color/c">
+
 
                     <TextView
                         android:id="@+id/rightCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="L 31次"
+                        android:layout_below="@+id/tv_rightProportion"
+                        android:layout_marginLeft="11dp"
+                        android:layout_toRightOf="@+id/pro_errorTotal"
+                        android:gravity="center"
+                        android:lineSpacingExtra="4dp"
+                        android:text="31次"
                         android:textColor="@color/font_6A6F7B"
                         android:textSize="12sp"
-                        android:textStyle="bold"/>
-
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pie_right"
@@ -306,7 +320,7 @@
 
             <com.vondear.rxtools.view.cardview.CardView
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="10dp"
@@ -339,13 +353,16 @@
                         android:id="@+id/recyclerPoint"
                         android:layout_width="match_parent"
                         android:layout_height="76dp"
+                        android:nestedScrollingEnabled="true"
                         >
 
                     </android.support.v7.widget.RecyclerView>
 
                     <com.wesmartclothing.tbra.view.HistoryTempView
                         android:layout_width="302dp"
+                        android:id="@+id/historyTempView"
                         android:layout_height="156dp"
+                        android:layout_gravity="center_horizontal"
                         app:background_normal="@color/colortheme"
                         app:corner_radius="6dp">
 
@@ -355,6 +372,7 @@
                         android:id="@+id/recyclerPointDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         >
 
                     </android.support.v7.widget.RecyclerView>

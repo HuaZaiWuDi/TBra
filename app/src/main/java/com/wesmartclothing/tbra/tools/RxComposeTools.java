@@ -3,13 +3,10 @@ package com.wesmartclothing.tbra.tools;
 import android.content.Context;
 
 import com.kongzue.dialog.v2.WaitDialog;
+import com.zchu.rxcache.RxCache;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 
 /**
  * @Package com.wesmartclothing.tbra.tools
@@ -22,28 +19,24 @@ import io.reactivex.functions.Consumer;
 public class RxComposeTools {
 
     public static <T> ObservableTransformer<T, T> showDialog(final Context mContext) {
-        return new ObservableTransformer<T, T>() {
-            public ObservableSource<T> apply(Observable<T> observable) {
-                return observable.doOnSubscribe(new Consumer<Disposable>() {
-                    public void accept(Disposable disposable) throws Exception {
-                        WaitDialog.show(mContext, "正在加载");
-
-                    }
-                }).doFinally(new Action() {
-                    public void run() throws Exception {
-                        WaitDialog.dismiss();
-                    }
-                });
-            }
-        };
-    }
-
-    public static <T> ObservableTransformer<T, T> showDialog(final Context mContext, final String tip) {
-        return observable -> observable
-                .doOnSubscribe(disposable -> WaitDialog.show(mContext, tip))
+        return observable -> observable.doOnSubscribe(disposable ->
+                WaitDialog.show(mContext, "正在加载"))
                 .doFinally((Action) () -> {
                     WaitDialog.dismiss();
                 });
     }
+
+
+    public static <T> ObservableTransformer<T, T> showDialog(final Context mContext, String cacheKey) {
+        return observable -> observable.doOnSubscribe(disposable -> {
+            if (!RxCache.getDefault().containsKey(cacheKey)) {
+                WaitDialog.show(mContext, "正在加载");
+            }
+        })
+                .doFinally((Action) () -> {
+                    WaitDialog.dismiss();
+                });
+    }
+
 
 }
