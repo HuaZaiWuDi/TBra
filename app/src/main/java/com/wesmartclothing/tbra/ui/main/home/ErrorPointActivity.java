@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
+import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -85,6 +86,7 @@ public class ErrorPointActivity extends BaseActivity {
                         updateUI(list);
                     }
                 });
+
     }
 
     private void updateUI(List<PointDataBean> pointDatalist) {
@@ -105,7 +107,6 @@ public class ErrorPointActivity extends BaseActivity {
                 singlePointBeans.add(new SinglePointBean(bean.getCollectTime(), errorBean.getNodeName(), errorBean.getNodeTemp()));
             }
         }
-
         errorMap = MapSortUtil.sortMapByKey(errorMap);
         List<SingleSelectBean> beans = new ArrayList<>();
         for (String s : errorMap.keySet()) {
@@ -138,7 +139,15 @@ public class ErrorPointActivity extends BaseActivity {
             protected void convert(BaseViewHolder helper, SingleSelectBean item) {
                 helper.setText(R.id.tv_point, item.getText())
                         .setBackgroundRes(R.id.tv_point, item.isSelect() ?
-                                R.mipmap.bg_btn : R.drawable.shape_gray_circle_42);
+                                R.drawable.shape_theme_circle_42 : R.drawable.shape_gray_circle_42);
+                View view = helper.getView(R.id.tv_point);
+                if (item.isSelect()) {
+                    view.setScaleX(1.2f);
+                    view.setScaleY(1.2f);
+                } else {
+                    view.setScaleX(1f);
+                    view.setScaleY(1f);
+                }
             }
         };
         mRecyclerErrorPoint.setTag(0);

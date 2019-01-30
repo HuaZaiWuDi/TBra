@@ -3,10 +3,12 @@ package com.wesmartclothing.tbra.tools;
 import android.content.Context;
 
 import com.kongzue.dialog.v2.WaitDialog;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.zchu.rxcache.RxCache;
 
 import io.reactivex.ObservableTransformer;
 import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @Package com.wesmartclothing.tbra.tools
@@ -29,14 +31,20 @@ public class RxComposeTools {
 
     public static <T> ObservableTransformer<T, T> showDialog(final Context mContext, String cacheKey) {
         return observable -> observable.doOnSubscribe(disposable -> {
+            RxLogUtils.d("showDialog当前线程：" + Thread.currentThread().getName());
             if (!RxCache.getDefault().containsKey(cacheKey)) {
                 WaitDialog.show(mContext, "正在加载");
             }
         })
                 .doFinally((Action) () -> {
+                    RxLogUtils.d("showDialog2当前线程：" + Thread.currentThread().getName());
                     WaitDialog.dismiss();
                 });
     }
 
+
+    public static <T> ObservableTransformer<T, T> rxThreadHelper() {
+        return observable -> observable.subscribeOn(Schedulers.io()).observeOn(Schedulers.io());
+    }
 
 }

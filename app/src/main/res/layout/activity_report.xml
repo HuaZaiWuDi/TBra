@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
                 android:layout_marginTop="19dp"
-                android:text="异常数据"
+                android:text="监测指标"
                 android:textColor="@color/font_475669"
                 android:textSize="19sp"/>
 
@@ -103,7 +103,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="采集次数"
+                            android:text="采集天数"
                             android:textColor="@color/font_6A6F7B"
                             android:textSize="12sp"/>
 
@@ -143,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
-                android:text="异常点位分布"
+                android:text="异常统计"
                 android:textColor="@color/font_475669"
                 android:textSize="19sp"/>
 
@@ -190,7 +190,7 @@
                         app:pro_stroke_round_cap="false"
                         app:pro_stroke_width="19dp"
                         app:pro_type="type_circle"
-                        app:pro_value="50"
+                        app:pro_value="0"
                         tools:visibility="invisible"
                         />
 
@@ -232,7 +232,7 @@
                         android:layout_centerInParent="true"
                         android:gravity="center"
                         android:lineSpacingExtra="4dp"
-                        android:text="异常总数\n16次"
+                        android:text="异常总数\n0次"
                         android:textColor="@color/font_6A6F7B"
                         android:textSize="13sp"
                         />
@@ -314,7 +314,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
-                android:text="异常点位"
+                android:text="异常点位分布"
                 android:textColor="@color/font_475669"
                 android:textSize="19sp"/>
 
@@ -359,8 +359,8 @@
                     </android.support.v7.widget.RecyclerView>
 
                     <com.wesmartclothing.tbra.view.HistoryTempView
-                        android:layout_width="302dp"
                         android:id="@+id/historyTempView"
+                        android:layout_width="302dp"
                         android:layout_height="156dp"
                         android:layout_gravity="center_horizontal"
                         app:background_normal="@color/colortheme"

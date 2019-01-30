@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
@@ -170,6 +171,11 @@ public class HomeFragment extends BaseAcFragment {
             List<String> errorPoint = new ArrayList<>(errorPoints.keySet());
             errorPointAdapter.setNewData(errorPoint);
         });
+        mHistoryTempView.setOnSelectParentListener(() -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(Key.BUNDLE_LATEST_TYPE, ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
+            RxActivityUtils.skipActivity(mContext, HistoryMonitorActivity.class, bundle);
+        });
 
     }
 
@@ -305,13 +311,14 @@ public class HomeFragment extends BaseAcFragment {
                 "latestSingleData" + tag,
                 new TypeToken<List<PointDataBean>>() {
                 }.getType(),
-                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT))
+                CacheStrategy.firstCache()
+        )
                 .compose(RxComposeTools.showDialog(mContext, "latestSingleData" + tag))
                 .subscribe(new RxNetSubscriber<List<PointDataBean>>() {
                     @Override
                     protected void _onNext(List<PointDataBean> list) {
-                        System.gc();
                         RxLogUtils.d("当前线程：" + Thread.currentThread().getName());
+
                         pointDatalist = list;
                         mHistoryTempView.setData(list);
                     }
@@ -354,7 +361,7 @@ public class HomeFragment extends BaseAcFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_seeMore:
-                if (pointDatalist == null) return;
+                if (RxDataUtils.isEmpty(pointDatalist)) return;
                 Bundle bundle = new Bundle();
                 bundle.putString(Key.BUNDLE_LATEST_TYPE, "latestSingleData" + ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
                 RxActivityUtils.skipActivity(mContext, ErrorPointActivity.class, bundle);

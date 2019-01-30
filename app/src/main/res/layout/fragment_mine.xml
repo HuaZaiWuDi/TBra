@@ -210,12 +210,13 @@
 
                 <TextView
                     android:id="@+id/tv_deviceCount"
-                    android:layout_width="20dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|center_vertical"
                     android:layout_marginRight="35dp"
                     android:textColor="#475669"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    tools:text="123456546757568"/>
 
                 <ImageView
                     android:layout_width="12dp"

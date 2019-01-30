@@ -14,10 +14,21 @@ public class UserCenterBean {
     /**
      * totalDays : 0
      * warningDays : 0
+     * totalCount：0
      */
 
     private int totalDays;
     private int warningDays;
+    private int totalCount;
+
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
     public int getTotalDays() {
         return totalDays;

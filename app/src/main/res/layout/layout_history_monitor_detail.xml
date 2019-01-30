@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--图例-->
+    <LinearLayout
+        android:id="@+id/layout_legend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_margin="14dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            app:background_normal="@color/white"
+            app:corner_radius="5dp"
+            app:gradient_endColor="#4C9FFF"
+            app:gradient_startColor="#717DFF"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="10dp"
+            android:text="左侧"
+            android:textColor="@color/font_6A6F7B"
+            android:textSize="12sp"/>
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            app:background_normal="@color/white"
+            app:corner_radius="5dp"
+            app:gradient_endColor="#FF51A2"
+            app:gradient_startColor="#FD74B4"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="10dp"
+            android:text="右侧"
+            android:textColor="@color/font_6A6F7B"
+            android:textSize="12sp"/>
+
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            app:icon_src_normal="@mipmap/ic_legend"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="10dp"
+            android:text="温差"
+            android:textColor="@color/font_6A6F7B"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-\t-\t-"
+            android:textColor="@color/colortheme"
+            android:textSize="12sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="10dp"
+            android:text="标准"
+            android:textColor="@color/font_6A6F7B"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_temp"
+        android:layout_below="@+id/layout_legend"
+        tools:background="@color/gray"
+        >
+
+    </com.github.mikephil.charting.charts.LineChart>
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/mBarChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_temp"
+        android:layout_below="@+id/layout_legend"
+        >
+
+    </com.github.mikephil.charting.charts.BarChart>
+
+
+</RelativeLayout>

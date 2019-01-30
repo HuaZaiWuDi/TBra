@@ -103,8 +103,9 @@ public class APP extends Application {
                     .appVersion(2)
                     .diskDir(RxFileUtils.getCecheFolder(myApp, getString(R.string.appName) + "-cache"))
                     .diskConverter(new GsonDiskConverter())
-                    .diskMax((20 * 1024 * 1024))
-                    .memoryMax((20 * 1024 * 1024))
+                    .diskMax((100 * 1024 * 1024))
+                    .memoryMax(0)
+//                    .memoryMax((20 * 1024 * 1024))
                     .setDebug(false)
                     .build());
         } catch (Exception e) {

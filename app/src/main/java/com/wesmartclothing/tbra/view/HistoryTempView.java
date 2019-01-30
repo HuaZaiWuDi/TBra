@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vondear.rxtools.model.timer.MyTimer;
 import com.vondear.rxtools.model.timer.MyTimerListener;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxFormatValue;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
@@ -46,6 +47,20 @@ public class HistoryTempView extends LinearLayout {
     public static final int MODE_DYNAMIC = 0;
     public static final int MODE_STATIC = 1;
     public static final int MODE_SINGLE = 2;
+    public static final int MODE_DOUBLE = 3;
+
+    /**
+     * 倍速：0.5（2000）,1（1000）,1.5（666）,2（500）
+     */
+    public static final int SPEED_X0_5 = 0;
+    public static final int SPEED_X1 = 1;
+    public static final int SPEED_X1_5 = 2;
+    public static final int SPEED_X2 = 3;
+
+
+    public interface OnSelectParentListener {
+        void select();
+    }
 
 
     @BindView(R.id.tv_L1)
@@ -97,12 +112,14 @@ public class HistoryTempView extends LinearLayout {
 
     private int showMode = MODE_STATIC;
     private long speed = 1000;
+    private int modeSpeed = SPEED_X1;
     private boolean isPlay = false, isShow = false;
     private int currentTime = 0;
     private Gson gson = new Gson();
     private List<PointDataBean> mPointDataBeans;
     private Map<String, Integer> errorPointMap = new HashMap<>();
     private OnErrorPointListener mOnErrorPointListener;
+    private OnSelectParentListener mOnSelectParentListener;
 
     public interface OnErrorPointListener {
 
@@ -111,6 +128,10 @@ public class HistoryTempView extends LinearLayout {
 
     public void setOnErrorPointListener(OnErrorPointListener onErrorPointListener) {
         mOnErrorPointListener = onErrorPointListener;
+    }
+
+    public void setOnSelectParentListener(OnSelectParentListener onSelectParentListener) {
+        mOnSelectParentListener = onSelectParentListener;
     }
 
     public HistoryTempView(Context context) {
@@ -153,6 +174,7 @@ public class HistoryTempView extends LinearLayout {
         showPoint(createPointData(pointName));
     }
 
+
     private List<JsonDataBean> createPointData(String pointName) {
         List<JsonDataBean> jsonDataBeans = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
@@ -161,6 +183,26 @@ public class HistoryTempView extends LinearLayout {
         }
         return jsonDataBeans;
     }
+
+    private List<JsonDataBean> createDoublePointData(String pointName) {
+        List<JsonDataBean> jsonDataBeans = new ArrayList<>();
+        for (int i = 0; i < 16; i++) {
+            String point = i < 8 ? "L0" + (i + 1) : "R0" + (i - 7);
+            jsonDataBeans.add(new JsonDataBean(point, 0, point.endsWith(pointName) ? 1 : 0));
+        }
+        return jsonDataBeans;
+    }
+
+
+    /**
+     * 双点突出
+     */
+    public void setDoubleMode(String point) {
+        showMode = MODE_DOUBLE;
+        setShow(false);
+        showPoint(createDoublePointData(point));
+    }
+
 
     /**
      * 动态播放
@@ -327,15 +369,15 @@ public class HistoryTempView extends LinearLayout {
         mImgRight.setVisibility(isShow ? VISIBLE : GONE);
         mTvPlayTime.setVisibility(isShow ? VISIBLE : GONE);
         mTvPlaySpeed.setVisibility(isShow ? VISIBLE : GONE);
-        if (isPlay)
-            if (isShow) {
-                showTimer.startTimer();
-            } else {
-                showTimer.stopTimer();
-            }
+//        if (isPlay)
+//            if (isShow) {
+//                showTimer.startTimer();
+//            } else {
+//                showTimer.stopTimer();
+//            }
     }
 
-    MyTimer showTimer = new MyTimer(() -> setShow(false), 5000);
+//    MyTimer showTimer = new MyTimer(() -> setShow(false), 5000);
 
     private void setPlay(boolean play) {
         isPlay = play;
@@ -343,7 +385,7 @@ public class HistoryTempView extends LinearLayout {
             mMyTimer.setPeriodAndDelay(speed, 0);
             mMyTimer.startTimer();
             mImgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
-            showTimer.startTimer();
+//            showTimer.startTimer();
         } else {
             mMyTimer.stopTimer();
             mImgPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
@@ -352,45 +394,71 @@ public class HistoryTempView extends LinearLayout {
 
     public void pause() {
         setPlay(false);
+    }
 
+    private int setmodeSpeed(int modeSpeed) {
+        int speed = 1000;
+        switch (modeSpeed) {
+            case 0:
+                speed = 2000;
+                break;
+            case 1:
+                speed = 1000;
+                break;
+            case 2:
+                speed = 666;
+                break;
+            case 3:
+                speed = 500;
+                break;
+        }
+        return speed;
     }
 
 
     @OnClick({R.id.img_left, R.id.img_play_pause, R.id.img_right, R.id.parent})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.img_left:
-                speed += 200;
-                mImgRight.setAlpha(1f);
-                mImgRight.setEnabled(true);
-                mMyTimer.stopTimer();
-                mMyTimer.setPeriodAndDelay(speed, 0);
-                mMyTimer.startTimer();
-                mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(1000f / speed, 1) + "倍");
-                if (speed > 2000) {
-                    mImgLeft.setAlpha(0.6f);
-                    mImgLeft.setEnabled(false);
-                }
-                break;
-            case R.id.img_play_pause:
-                setPlay(!isPlay);
-                break;
             case R.id.img_right:
-                speed -= 200;
+                modeSpeed++;
+                speed = setmodeSpeed(modeSpeed);
                 mImgLeft.setAlpha(1f);
                 mImgLeft.setEnabled(true);
                 mMyTimer.stopTimer();
                 mMyTimer.setPeriodAndDelay(speed, 0);
                 mMyTimer.startTimer();
                 mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(1000f / speed, 1) + "倍");
-                if (speed < 500) {
+                if (modeSpeed >= SPEED_X2) {
                     mImgRight.setAlpha(0.6f);
                     mImgRight.setEnabled(false);
                 }
                 break;
+            case R.id.img_play_pause:
+                if (!RxDataUtils.isEmpty(mPointDataBeans))
+                    setPlay(!isPlay);
+                break;
+            case R.id.img_left:
+                modeSpeed--;
+                speed = setmodeSpeed(modeSpeed);
+                mImgRight.setAlpha(1f);
+                mImgRight.setEnabled(true);
+                mMyTimer.stopTimer();
+                mMyTimer.setPeriodAndDelay(speed, 0);
+                mMyTimer.startTimer();
+                mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(1000f / speed, 1) + "倍");
+                if (modeSpeed <= SPEED_X0_5) {
+                    mImgLeft.setAlpha(0.6f);
+                    mImgLeft.setEnabled(false);
+                }
+                break;
             case R.id.parent:
-                if (showMode == MODE_DYNAMIC)
-                    setShow(!isShow);
+                if (showMode == MODE_DYNAMIC) {
+//                    setShow(!isShow);
+                    if (mOnSelectParentListener != null && !RxDataUtils.isEmpty(mPointDataBeans)) {
+                        mOnSelectParentListener.select();
+                    }
+
+                }
                 break;
         }
     }

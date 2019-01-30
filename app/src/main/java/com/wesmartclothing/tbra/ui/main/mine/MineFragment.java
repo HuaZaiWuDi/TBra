@@ -8,7 +8,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
@@ -124,10 +126,14 @@ public class MineFragment extends BaseAcFragment {
                     protected void _onNext(UserInfoBean userInfoBean) {
                         mTvUserName.setText(userInfoBean.getUserName());
                         mTvSign.setText(userInfoBean.getSignature());
+                        if (!RxDataUtils.isEmpty(userInfoBean.getMacAddrList()))
+                            mTvDeviceCount.setText(userInfoBean.getMacAddrList().get(0));
                         GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
+                        if (!RxDataUtils.isEmpty(userInfoBean.getMacAddrList())) {
+                            mTvDeviceCount.setText(userInfoBean.getMacAddrList().get(0));
+                        }
                     }
                 });
-
     }
 
     private void setTextView(UserCenterBean bean) {
@@ -137,11 +143,17 @@ public class MineFragment extends BaseAcFragment {
                 .setProportion(1.6f)
                 .into(mTvUseCount);
 
-        RxTextUtils.getBuilder("警告天数\n")
+        RxTextUtils.getBuilder("告警天数\n")
                 .append(bean.getWarningDays() + "")
                 .setForegroundColor(ContextCompat.getColor(mContext, R.color.font_475669))
                 .setProportion(1.6f)
                 .into(mTvWarningCount);
+
+        RxTextUtils.getBuilder("累计监测时长\n")
+                .append(RxFormat.setSec2HM(bean.getTotalCount() * 5 * 60))
+                .setForegroundColor(ContextCompat.getColor(mContext, R.color.font_475669))
+                .setProportion(1.6f)
+                .into(mTvTimes);
     }
 
 

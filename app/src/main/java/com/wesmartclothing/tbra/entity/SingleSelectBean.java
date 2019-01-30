@@ -19,6 +19,11 @@ public class SingleSelectBean {
         this.select = false;
     }
 
+    public SingleSelectBean(String text, boolean select) {
+        this.text = text;
+        this.select = select;
+    }
+
     public String getText() {
         return text;
     }

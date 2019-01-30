@@ -41,11 +41,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <com.vondear.rxtools.view.cardview.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="6dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="6dp"
                 app:cardShadowColorEnd="#006A6F7B"
@@ -83,12 +84,14 @@
                     </android.support.v7.widget.RecyclerView>
 
                     <com.wesmartclothing.tbra.view.HistoryTempView
+                        android:id="@+id/historyTempView"
                         android:layout_width="302dp"
                         android:layout_height="156dp"
                         app:background_normal="@color/colortheme"
                         app:corner_radius="6dp">
 
                     </com.wesmartclothing.tbra.view.HistoryTempView>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -99,52 +102,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="18dp"
-                        android:text="折线图"
+                        android:text="柱状图"
                         android:textColor="@color/font_475669"
                         android:textSize="19sp"/>
 
-                    <LinearLayout
+
+                    <com.wesmartclothing.tbra.view.HistoryTempDetailView
+                        android:id="@+id/historyTempDetailView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right">
+                        android:layout_height="155dp"
+                        >
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@mipmap/ic_legend"
-                            android:drawablePadding="4dp"
-                            android:text="温差"
-                            android:textColor="@color/font_6A6F7B"
-                            android:textSize="12sp"/>
+                    </com.wesmartclothing.tbra.view.HistoryTempDetailView>
 
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="---"
-                            android:textColor="@color/colortheme"
-                            android:textSize="12sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:drawablePadding="4dp"
-                            android:text="标准"
-                            android:textColor="@color/font_6A6F7B"
-                            android:textSize="12sp"/>
-
-                    </LinearLayout>
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/lineChart"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="10dp">
-
-
-                    </com.github.mikephil.charting.charts.LineChart>
 
                 </LinearLayout>
 
@@ -180,7 +150,7 @@
 
 
                 <TextView
-                    android:id="@+id/tv_pointTemp"
+                    android:id="@+id/tv_leftPoint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="14dp"
@@ -192,14 +162,14 @@
 
 
                 <TextView
-                    android:id="@+id/tv_normalTemp"
+                    android:id="@+id/tv_rightTemp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginTop="72dp"
                     android:layout_marginRight="14dp"
+                    android:layout_marginTop="52dp"
                     android:lineSpacingExtra="6dp"
-                    android:text="标准温度：35.0°C"
+                    android:text="单点温差：1.6°C\nL03：34.6°C"
                     android:textColor="#2C272D"
                     android:textSize="12sp"/>
 

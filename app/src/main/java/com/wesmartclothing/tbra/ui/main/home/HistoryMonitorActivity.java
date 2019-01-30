@@ -1,14 +1,17 @@
 package com.wesmartclothing.tbra.ui.main.home;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.github.mikephil.charting.charts.LineChart;
-import com.vondear.rxtools.utils.RxLogUtils;
+import com.vondear.rxtools.utils.RxFormatValue;
+import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -20,6 +23,8 @@ import com.wesmartclothing.tbra.entity.SingleSelectBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
+import com.wesmartclothing.tbra.view.HistoryTempDetailView;
+import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import butterknife.BindView;
@@ -30,14 +35,19 @@ public class HistoryMonitorActivity extends BaseActivity {
     RxTitle mRxTitle;
     @BindView(R.id.recyclerPoint)
     RecyclerView mRecyclerPoint;
-    @BindView(R.id.lineChart)
-    LineChart mLineChart;
     @BindView(R.id.tv_pointTime)
     TextView mTvPointTime;
-    @BindView(R.id.tv_pointTemp)
-    TextView mTvPointTemp;
-    @BindView(R.id.tv_normalTemp)
     TextView mTvNormalTemp;
+    @BindView(R.id.historyTempDetailView)
+    HistoryTempDetailView mHistoryTempDetailView;
+    @BindView(R.id.tv_leftPoint)
+    TextView mTvLeftPoint;
+    @BindView(R.id.tv_rightTemp)
+    TextView mTvRightTemp;
+    @BindView(R.id.historyTempView)
+    HistoryTempView mHistoryTempView;
+
+    private String lastetType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,35 +61,37 @@ public class HistoryMonitorActivity extends BaseActivity {
 
     @Override
     public void initBundle(Bundle bundle) {
-        String lastetType = bundle.getString(Key.BUNDLE_LATEST_TYPE);
-        String pointName = bundle.getString(Key.BUNDLE_POINT_NAME);
-
-        RxManager.getInstance().doNetSubscribe(
-                NetManager.getApiService().unusualPointData(lastetType, pointName, 1, 10),
-                lifecycleSubject,
-                "unusualPointData" + lastetType + pointName,
-                SingleHistoryPointBean.class,
-                CacheStrategy.firstCache()
-        )
-                .compose(RxComposeTools.showDialog(mContext))
-                .subscribe(new RxNetSubscriber<SingleHistoryPointBean>() {
-                    @Override
-                    protected void _onNext(SingleHistoryPointBean bean) {
-                        RxLogUtils.d("当前线程：" + Thread.currentThread().getName());
-                    }
-
-                    @Override
-                    protected void _onError(String error, int code) {
-                        super._onError(error, code);
-                        RxToast.normal(error);
-                    }
-                });
+        lastetType = bundle.getString(Key.BUNDLE_LATEST_TYPE);
+        selectItem("01");
     }
 
     @Override
     public void initViews() {
         initTitle(mRxTitle);
         initRecycler();
+        initChart();
+    }
+
+    private void initChart() {
+        mHistoryTempDetailView.setOnChartSelectListener(bean -> {
+            RxTextUtils.getBuilder("L" + bean.getPoint() + ":")
+                    .append(bean.getLeftTemp() + "℃").setForegroundColor(ContextCompat.getColor(mContext,
+                    bean.getLeftWarning() == 1 ? R.color.color_FE746E : R.color.color_2C272D))
+                    .append("\n标准温度:" + bean.getAvgTemp() + "℃")
+                    .into(mTvLeftPoint);
+
+            RxTextUtils.getBuilder("R" + bean.getPoint() + ":")
+                    .append(bean.getRightTemp() + "℃")
+                    .setForegroundColor(ContextCompat.getColor(mContext, bean.getRightWarning() == 1 ? R.color.color_FE746E : R.color.color_2C272D))
+                    .append("\n对称温差:")
+                    .append(RxFormatValue.fromat4S5R(Math.abs(bean.getLeftTemp() - bean.getRightTemp()), 2) + "℃")
+                    .setForegroundColor(ContextCompat.getColor(mContext, R.color.color_FE746E))
+                    .into(mTvRightTemp);
+
+            mTvPointTime.setText(RxFormat.setFormatDate(bean.getCollectDate(), RxFormat.Date_Date2));
+
+            mHistoryTempView.setDoubleMode(bean.getPoint());
+        });
     }
 
     private void initRecycler() {
@@ -90,7 +102,15 @@ public class HistoryMonitorActivity extends BaseActivity {
             protected void convert(BaseViewHolder helper, SingleSelectBean item) {
                 helper.setText(R.id.tv_point, item.getText())
                         .setBackgroundRes(R.id.tv_point, item.isSelect() ?
-                                R.mipmap.bg_btn : R.drawable.shape_gray_circle_42);
+                                R.drawable.shape_theme_circle_42 : R.drawable.shape_gray_circle_42);
+                View view = helper.getView(R.id.tv_point);
+                if (item.isSelect()) {
+                    view.setScaleX(1.2f);
+                    view.setScaleY(1.2f);
+                } else {
+                    view.setScaleX(1f);
+                    view.setScaleY(1f);
+                }
             }
         };
 
@@ -104,10 +124,40 @@ public class HistoryMonitorActivity extends BaseActivity {
                 adapter.setData(lastIndex, lastItem);
                 adapter.setData(position, curItem);
                 mRecyclerPoint.setTag(position);
+
+                selectItem(curItem.getText());
             }
         });
+        adapter.addData(new SingleSelectBean("01", true));
+        for (int i = 1; i < 8; i++) {
+            adapter.addData(new SingleSelectBean("0" + (i + 1)));
+        }
 
         mRecyclerPoint.setAdapter(adapter);
+    }
+
+
+    private void selectItem(String pointName) {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().symmetryPointInfo(lastetType, pointName, 1, 10),
+                lifecycleSubject,
+                "unusualPointData" + lastetType + pointName,
+                SingleHistoryPointBean.class,
+                CacheStrategy.firstCache()
+        )
+                .compose(RxComposeTools.showDialog(mContext, "unusualPointData" + lastetType + pointName))
+                .subscribe(new RxNetSubscriber<SingleHistoryPointBean>() {
+                    @Override
+                    protected void _onNext(SingleHistoryPointBean bean) {
+                        mHistoryTempDetailView.updateUI(bean.getList());
+                    }
+
+                    @Override
+                    protected void _onError(String error, int code) {
+                        super._onError(error, code);
+                        RxToast.normal(error);
+                    }
+                });
     }
 
     @Override

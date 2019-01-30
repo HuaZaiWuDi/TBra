@@ -377,6 +377,19 @@ public interface ApiService {
 
 
     /**
+     * 获取用户每天的数据信息列表（操作->使用记录）
+     */
+    @FormUrlEncoded
+    @POST("dataRecord/symmetryPointInfo")
+    Observable<HttpResult<SingleHistoryPointBean>> symmetryPointInfo(
+            @Field("latestType") String latestType,
+            @Field("point") String point,
+            @Field("pageNum") int pageNum,
+            @Field("pageSize") int pageSize
+    );
+
+
+    /**
      * 每月或每周点位数据信息
      */
     @POST("dataRecord/monthOrWeekPointsInfo")

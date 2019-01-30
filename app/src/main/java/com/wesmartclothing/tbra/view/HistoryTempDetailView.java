@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,10 +19,14 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.vondear.rxtools.utils.RxDataUtils;
+import com.vondear.rxtools.utils.RxLogUtils;
+import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.wesmartclothing.tbra.R;
-import com.wesmartclothing.tbra.entity.JsonDataBean;
+import com.wesmartclothing.tbra.entity.SingleHistoryPointBean;
 import com.wesmartclothing.tbra.tools.BarRoundChartRenderer;
 
 import java.util.ArrayList;
@@ -34,13 +38,19 @@ import butterknife.ButterKnife;
 
 /**
  * @Package com.wesmartclothing.tbra.view
- * @FileName TimingMonitorView
- * @Date 2019/1/8 14:48
+ * @FileName HistoryTempDetailView
+ * @Date 2019/1/29 15:43
  * @Author JACK
- * @Describe TODO封装实时监测界面图标统计
+ * @Describe TODO
  * @Project tbra
  */
-public class TimingMonitorView extends LinearLayout {
+public class HistoryTempDetailView extends RelativeLayout {
+
+
+    public interface OnChartSelectListener {
+
+        void select(SingleHistoryPointBean.ListBean bean);
+    }
 
     @BindView(R.id.layout_legend)
     LinearLayout mLayoutLegend;
@@ -48,127 +58,86 @@ public class TimingMonitorView extends LinearLayout {
     LineChart mLineChart;
     @BindView(R.id.mBarChart)
     BarChart mMBarChart;
-    @BindView(R.id.tv_L1)
-    TextView mTvL1;
-    @BindView(R.id.tv_R1)
-    TextView mTvR1;
-    @BindView(R.id.tv_L2)
-    TextView mTvL2;
-    @BindView(R.id.tv_R2)
-    TextView mTvR2;
-    @BindView(R.id.tv_L3)
-    TextView mTvL3;
-    @BindView(R.id.tv_R3)
-    TextView mTvR3;
-    @BindView(R.id.tv_L4)
-    TextView mTvL4;
-    @BindView(R.id.tv_R4)
-    TextView mTvR4;
-    @BindView(R.id.tv_L5)
-    TextView mTvL5;
-    @BindView(R.id.tv_R5)
-    TextView mTvR5;
-    @BindView(R.id.tv_L6)
-    TextView mTvL6;
-    @BindView(R.id.tv_R6)
-    TextView mTvR6;
-    @BindView(R.id.tv_L7)
-    TextView mTvL7;
-    @BindView(R.id.tv_R7)
-    TextView mTvR7;
-    @BindView(R.id.tv_L8)
-    TextView mTvL8;
-    @BindView(R.id.tv_R8)
-    TextView mTvR8;
-    @BindView(R.id.layout_temp)
-    LinearLayout mLayoutTemp;
-
-
-    public TimingMonitorView(Context context) {
-        this(context, null);
-    }
-
-    public TimingMonitorView(Context context, @Nullable @android.support.annotation.Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public TimingMonitorView(Context context, @Nullable @android.support.annotation.Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView(context);
-    }
 
     ArrayList<BarEntry> valuesLeft = new ArrayList<>();
     ArrayList<BarEntry> valuesRight = new ArrayList<>();
-    ArrayList<Entry> valueLine = new ArrayList<>();
-    ArrayList<Float> tempDiffs = new ArrayList<>();
+    ArrayList<Entry> diffLine = new ArrayList<>();
+    ArrayList<Entry> normalLine = new ArrayList<>();
+    ArrayList<String> collectDateLists = new ArrayList<>();
 
-
+    private OnChartSelectListener mOnChartSelectListener;
     private float maxValue = 45f;
     private float minValue = 0f;
-    private final float normalTemp = 35.0f;
+    private final float normalTemp = 20.0f;
 
-    private void initView(Context context) {
-        View view = View.inflate(context, R.layout.layout_timing_monitor, this);
+    public HistoryTempDetailView(Context context) {
+        this(context, null);
+    }
+
+    public HistoryTempDetailView(Context context, @Nullable @android.support.annotation.Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public HistoryTempDetailView(Context context, @Nullable @android.support.annotation.Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        View view = View.inflate(context, R.layout.layout_history_monitor_detail, this);
         ButterKnife.bind(this, view);
-        initChart();
-
+        initView();
     }
 
 
-    public void updateUI(List<JsonDataBean> jsonDataBeans) {
-        if (RxDataUtils.isEmpty(jsonDataBeans)) return;
-        tempDiffs.clear();
+    private void initView() {
+        initChart();
+    }
+
+    public void updateUI(List<SingleHistoryPointBean.ListBean> list) {
+        if (RxDataUtils.isEmpty(list)) return;
+        collectDateLists.clear();
         valuesLeft.clear();
         valuesRight.clear();
-        valueLine.clear();
+        diffLine.clear();
+        normalLine.clear();
 
-        for (int i = 0; i < jsonDataBeans.size(); i = i + 2) {
-            valuesLeft.add(new BarEntry((i / 2), (float) jsonDataBeans.get(i).getNodeTemp()));
-            valuesRight.add(new BarEntry((i / 2), (float) jsonDataBeans.get(i + 1).getNodeTemp()));
-        }
+        for (int i = 0; i < list.size(); i++) {
+            SingleHistoryPointBean.ListBean bean = list.get(i);
+            RxLogUtils.d("点位数据:" + bean.toString());
+            valuesLeft.add(new BarEntry(i, (float) bean.getLeftTemp()));
+            valuesRight.add(new BarEntry(i, (float) bean.getRightTemp()));
+            collectDateLists.add(RxFormat.setFormatDate(bean.getCollectDate(), "MM-dd"));
 
-        for (int i = 0; i < valuesRight.size(); i++) {
             float tempDiff = valuesLeft.get(i).getY() - valuesRight.get(i).getY();
-            tempDiffs.add(Math.abs(tempDiff));
-            valueLine.add(new Entry(i, normalTemp + tempDiff));
+            diffLine.add(new Entry(i, (float) (normalTemp + tempDiff)));
+            normalLine.add(new Entry(i, (float) bean.getAvgTemp()));
         }
 
-        mMBarChart.getXAxis().setValueFormatter((value, axis) -> {
-            return tempDiffs.get(Math.min(Math.max((int) value, 0), tempDiffs.size() - 1)) + "";
-//                return "0.5";
-        });
 
+        mMBarChart.getXAxis().setValueFormatter((value, axis) ->
+                collectDateLists.get(Math.min(Math.max((int) value, 0), collectDateLists.size() - 1)));
 
         setData();
 
         setLine();
 
-        initTemp();
+        if (mOnChartSelectListener != null) {
+            mOnChartSelectListener.select(list.get(0));
+        }
+
+        mMBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (mOnChartSelectListener != null) {
+//                    RxLogUtils.d("点击下标：" + ((int) e.getX()) / 2 + "index:" + (int) e.getX());
+                    mOnChartSelectListener.select(list.get(Math.min(Math.max((int) e.getX(), 0), list.size() - 1)));
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
 
     }
-
-    private void initTemp() {
-        mTvL1.setText(valuesLeft.get(0).getY() + "");
-        mTvL2.setText(valuesLeft.get(1).getY() + "");
-        mTvL3.setText(valuesLeft.get(2).getY() + "");
-        mTvL4.setText(valuesLeft.get(3).getY() + "");
-        mTvL5.setText(valuesLeft.get(4).getY() + "");
-        mTvL6.setText(valuesLeft.get(5).getY() + "");
-        mTvL7.setText(valuesLeft.get(6).getY() + "");
-        mTvL8.setText(valuesLeft.get(7).getY() + "");
-
-
-        mTvR1.setText(valuesRight.get(0).getY() + "");
-        mTvR2.setText(valuesRight.get(1).getY() + "");
-        mTvR3.setText(valuesRight.get(2).getY() + "");
-        mTvR4.setText(valuesRight.get(3).getY() + "");
-        mTvR5.setText(valuesRight.get(4).getY() + "");
-        mTvR6.setText(valuesRight.get(5).getY() + "");
-        mTvR7.setText(valuesRight.get(6).getY() + "");
-        mTvR8.setText(valuesRight.get(7).getY() + "");
-
-    }
-
 
     private void initChart() {
         //替换系统的渲染器，设置成圆角柱状图
@@ -180,10 +149,12 @@ public class TimingMonitorView extends LinearLayout {
                 150f
         ));
         mMBarChart.setNoDataText("");
+        mMBarChart.getDescription().setEnabled(false);
         mMBarChart.getLegend().setEnabled(false);
         mMBarChart.setHighlightFullBarEnabled(false);
         mMBarChart.setScaleEnabled(false);
-        mMBarChart.setEnabled(false);
+        mMBarChart.setEnabled(true);
+
 
         YAxis yAxis = mMBarChart.getAxisLeft();
         yAxis.setEnabled(false);
@@ -203,9 +174,13 @@ public class TimingMonitorView extends LinearLayout {
         xAxis.setAxisMaximum(8);
         xAxis.setLabelCount(8);
 
+        mMBarChart.getAxisLeft().setAxisMaximum(maxValue);
+        mMBarChart.getAxisLeft().setAxisMinimum(minValue);
+
 
         //初始化线条
         mLineChart.setNoDataText("没有实时监测数据，\n穿上监测内衣试试吧!");
+        mLineChart.getDescription().setEnabled(false);
         mLineChart.setNoDataTextColor(ContextCompat.getColor(mLineChart.getContext(), R.color.color_444A59));
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setScaleEnabled(false);
@@ -223,16 +198,17 @@ public class TimingMonitorView extends LinearLayout {
         mLineChart.getAxisLeft().setAxisMinimum(minValue);
     }
 
-
     private void setLine() {
-        LineDataSet set;
+        LineDataSet set, set2;
         if (mLineChart.getData() != null) {
-            set = (LineDataSet) mLineChart.getData().getDataSetByLabel("lineChart", false);
-            set.setValues(valueLine);
+            set = (LineDataSet) mLineChart.getData().getDataSetByLabel("tempDiffLine", false);
+            set2 = (LineDataSet) mLineChart.getData().getDataSetByLabel("tempNormalLine", false);
+            set.setValues(diffLine);
+            set2.setValues(normalLine);
             mLineChart.getData().notifyDataChanged();
             mLineChart.notifyDataSetChanged();
         } else {
-            set = new LineDataSet(valueLine, "lineChart");
+            set = new LineDataSet(diffLine, "tempDiffLine");
             set.setColor(Color.parseColor("#FD74B4"));
             set.setLineWidth(1f);
             set.setDrawFilled(true);
@@ -249,8 +225,22 @@ public class TimingMonitorView extends LinearLayout {
             set.setDrawCircles(false);
             set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
             set.setDrawValues(false);
+
+            set2 = new LineDataSet(normalLine, "tempNormalLine");
+            set2.setColor(Color.parseColor("#FD74B4"));
+            set2.setLineWidth(1f);
+            set2.setDrawFilled(false);
+
+            set2.setHighlightEnabled(false);
+            set2.setDrawCircleHole(false);
+            set2.setDrawCircles(false);
+            set2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set2.setDrawValues(false);
+            set2.enableDashedLine(10f, 5f, 0);
+
             LineData d = new LineData();
             d.addDataSet(set);
+            d.addDataSet(set2);
 
             mLineChart.setData(d);
         }
@@ -260,8 +250,6 @@ public class TimingMonitorView extends LinearLayout {
 
     private void setData() {
         BarDataSet set, set2;
-        int green = Color.parseColor("#6589FF");
-        int red = Color.parseColor("#FE68AE");
 
         if (mMBarChart.getData() != null &&
                 mMBarChart.getData().getDataSetCount() > 0) {
@@ -273,20 +261,19 @@ public class TimingMonitorView extends LinearLayout {
             mMBarChart.notifyDataSetChanged();
         } else {
             set = new BarDataSet(valuesLeft, "barLeft");
-            set.setColor(green);
+            set.setColor(Color.parseColor("#6589FF"));
             set.setDrawValues(false);
-            set.setHighlightEnabled(false);
+            set.setHighlightEnabled(true);
 
             set2 = new BarDataSet(valuesRight, "barRight");
-            set2.setColor(red);
+            set2.setColor(Color.parseColor("#FE68AE"));
             set2.setDrawValues(false);
-            set2.setHighlightEnabled(false);
+            set2.setHighlightEnabled(true);
 
             BarData data = new BarData(set, set2);
             data.setBarWidth(0.2f);
 
             mMBarChart.setData(data);
-
         }
 
         float groupSpace = 0.3f;
@@ -297,5 +284,7 @@ public class TimingMonitorView extends LinearLayout {
 
     }
 
-
+    public void setOnChartSelectListener(OnChartSelectListener onChartSelectListener) {
+        mOnChartSelectListener = onChartSelectListener;
+    }
 }

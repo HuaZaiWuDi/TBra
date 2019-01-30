@@ -67,6 +67,7 @@ public class SplashActivity extends BaseActivity {
 //        }
 //        initUserInfo();
 //        otherSetting();
+
     }
 
 

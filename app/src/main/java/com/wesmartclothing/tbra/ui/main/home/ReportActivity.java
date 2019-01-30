@@ -22,7 +22,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.reflect.TypeToken;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxFormatValue;
-import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
@@ -91,7 +90,7 @@ public class ReportActivity extends BaseActivity {
     private MonthOrWeekPointsBean mMonthOrWeekPointsBean = new MonthOrWeekPointsBean();
     private Map<String, Integer> lefeErorCountMap = new HashMap<>();
     private Map<String, Integer> rightErorCountMap = new HashMap<>();
-    private int leftCount, rightCount;
+    private int leftTotalCount, rightTotalCount, sumCount;
 
 
     @Override
@@ -121,7 +120,6 @@ public class ReportActivity extends BaseActivity {
                 lifecycleSubject,
                 key,
                 ReportDetailBean.class,
-//                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT)
                 CacheStrategy.firstCache()
         )
                 .compose(RxComposeTools.showDialog(mContext, key))
@@ -135,24 +133,29 @@ public class ReportActivity extends BaseActivity {
 
 
     private void updateUI(ReportDetailBean reportDetailBean, boolean isMonth) {
+        ReportDetailBean.WeekDataBean reportData;
         if (isMonth) {
-            ReportDetailBean.WeekDataBean monthData = reportDetailBean.getMonthData();
-            report(monthData);
+            reportData = reportDetailBean.getMonthData();
         } else {
-            ReportDetailBean.WeekDataBean weekData = reportDetailBean.getWeekData();
-            report(weekData);
+            reportData = reportDetailBean.getWeekData();
         }
+        //统计天数
+        mTvCollectionCount.setText(reportData.getCollectCount() + "");
+        mTvMonitorTime.setText("监测时段\t\t\t\t\t" + RxFormat.setFormatDate(reportData.getStartTime(), RxFormat.Date_Date2) + "～" +
+                RxFormat.setFormatDate(reportData.getEndTime(), RxFormat.Date_Date2));
 
         List<ReportDetailBean.PointsListBean> pointsList = reportDetailBean.getPointsList();
         List<SingleSelectBean> errorPointNameList = new ArrayList<>();
 
         pointsList.forEach(pointsListBean -> {
-            RxLogUtils.d("异常次数：" + pointsListBean.getUnusualCount());
-            RxLogUtils.d("异常名字：" + pointsListBean.getPoint());
             if ("L".equals(pointsListBean.getSide())) {
-                lefeErorCountMap.put(pointsListBean.getPoint(), pointsListBean.getUnusualCount());
+                leftTotalCount += pointsListBean.getUnusualCount();
+
+                lefeErorCountMap.merge(pointsListBean.getPoint(), pointsListBean.getUnusualCount(), Integer::sum);
             } else {
-                rightErorCountMap.put(pointsListBean.getPoint(), pointsListBean.getUnusualCount());
+                rightTotalCount += pointsListBean.getUnusualCount();
+
+                rightErorCountMap.merge(pointsListBean.getPoint(), pointsListBean.getUnusualCount(), Integer::sum);
             }
             errorPointNameList.add(new SingleSelectBean(pointsListBean.getSide() + pointsListBean.getPoint()));
         });
@@ -163,44 +166,39 @@ public class ReportActivity extends BaseActivity {
         }
         errorPointAdapter.setNewData(errorPointNameList);
 
-        ArrayList<PieEntry> leftEntrys = sortUtil(lefeErorCountMap, leftCount);
-        ArrayList<PieEntry> rightEntrys = sortUtil(rightErorCountMap, rightCount);
+        sumCount = leftTotalCount + rightTotalCount;
 
-        setData(mPieLeft, "mPieLeft", leftEntrys);
-        setData(mPieRight, "mPieRight", rightEntrys);
-
-    }
-
-    private void report(ReportDetailBean.WeekDataBean monthData) {
-        if (monthData != null) {
-            mTvMonitorTime.setText("监测时段\t\t\t\t\t" + RxFormat.setFormatDate(monthData.getStartTime(), RxFormat.Date_Date2) + "～" +
-                    RxFormat.setFormatDate(monthData.getEndTime(), RxFormat.Date_Date2));
-            mTvCollectionCount.setText(monthData.getCollectCount() + "");
-            mTvWarningCount.setText(monthData.getUnusualCount() + "");
-
-            int total = monthData.getUnusualCount();
-            leftCount = monthData.getLeftUnusual();
-            rightCount = monthData.getRightUnusual();
-
-            SpannableStringBuilder stringBuilder = RxTextUtils.getBuilder("异常总数\n").setBold()
-                    .append(total + "次")
-                    .setProportion(0.9f).create();
-            mTvErrorTotal.setText(stringBuilder);
-
-            int sumCount = leftCount + rightCount;
-            double leftProportion = RxFormatValue.format4S5R(leftCount * 100f / sumCount, 1);
-            double rightProportion = RxFormatValue.format4S5R(rightCount * 100f / sumCount, 1);
-
-            RxTextUtils.getBuilder("L\t" + leftProportion + "%\n")
-                    .append(leftCount + "次").setProportion(0.9f)
-                    .into(mTvLeftProportion);
-
-            RxTextUtils.getBuilder("L\t" + rightProportion + "%\n")
-                    .append(rightCount + "次").setProportion(0.9f)
-                    .into(mTvRightProportion);
-
+        if (sumCount == 0) {
+            return;
         }
+        double leftProportion = RxFormatValue.format4S5R(leftTotalCount * 100f / sumCount, 1);
+        double rightProportion = RxFormatValue.format4S5R(rightTotalCount * 100f / sumCount, 1);
+
+        if (sumCount > 0)
+            mProErrorTotal.setProgress((int) (rightTotalCount / (sumCount) * 100f));
+
+        mTvWarningCount.setText(sumCount + "");
+
+        RxTextUtils.getBuilder("异常总数\n").setBold()
+                .append(sumCount + "次").setProportion(0.9f)
+                .into(mTvErrorTotal);
+
+        RxTextUtils.getBuilder("L\t" + leftProportion + "%\n")
+                .append(leftTotalCount + "次").setProportion(0.9f)
+                .into(mTvLeftProportion);
+
+        RxTextUtils.getBuilder("L\t" + rightProportion + "%\n")
+                .append(rightTotalCount + "次").setProportion(0.9f)
+                .into(mTvRightProportion);
+
+        ArrayList<PieEntry> leftEntrys = sortUtil(lefeErorCountMap, leftTotalCount);
+        ArrayList<PieEntry> rightEntrys = sortUtil(rightErorCountMap, rightTotalCount);
+
+        setPieData(mPieLeft, "mPieLeft", leftEntrys);
+        setPieData(mPieRight, "mPieRight", rightEntrys);
+
     }
+
 
     private ArrayList<PieEntry> sortUtil(Map<String, Integer> map, int total) {
         map = MapSortUtil.sortMapByValue(map);
@@ -225,16 +223,20 @@ public class ReportActivity extends BaseActivity {
         initPointDetail();
     }
 
+
+    /**
+     * 初始化饼状图
+     *
+     * @param chart
+     */
     private void initPie(PieChart chart) {
         chart.setUsePercentValues(true);
         chart.getDescription().setEnabled(false);
 //        chart.setExtraOffsets(5, 10, 5, 5);
 
         chart.setDragDecelerationFrictionCoef(0.95f);
-
 //        chart.setCenterTextTypeface(tfLight);
 //        chart.setCenterText(generateCenterSpannableText());
-
         chart.setDrawHoleEnabled(false);
 //        chart.setHoleColor(Color.WHITE);
 
@@ -245,7 +247,7 @@ public class ReportActivity extends BaseActivity {
 //        chart.setTransparentCircleRadius(61f);
 
         chart.setDrawCenterText(false);
-
+        chart.setNoDataText("");
         chart.setRotationAngle(0);
         // enable rotation of the chart by touch
         chart.setRotationEnabled(true);
@@ -277,8 +279,14 @@ public class ReportActivity extends BaseActivity {
         chart.setEntryLabelTextSize(7f);
     }
 
-
-    private void setData(PieChart chart, String label, ArrayList<PieEntry> entries) {
+    /**
+     * 设置饼状图数据
+     *
+     * @param chart
+     * @param label
+     * @param entries
+     */
+    private void setPieData(PieChart chart, String label, ArrayList<PieEntry> entries) {
 
         PieDataSet dataSet = new PieDataSet(entries, label);
 
@@ -291,8 +299,6 @@ public class ReportActivity extends BaseActivity {
         colors.add(Color.parseColor("#FB8E8A"));
         colors.add(Color.parseColor("#FB807B"));
         colors.add(Color.parseColor("#FB726D"));
-
-//        colors.add(ColorTemplate.getHoloBlue());
 
         dataSet.setColors(colors);
 
@@ -310,6 +316,9 @@ public class ReportActivity extends BaseActivity {
         chart.invalidate();
     }
 
+    /**
+     * 异常点位的列表
+     */
     private void initErrorPoint() {
         mRecyclerPoint.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         errorPointAdapter = new BaseQuickAdapter<SingleSelectBean, BaseViewHolder>(R.layout.item_point) {
@@ -318,9 +327,17 @@ public class ReportActivity extends BaseActivity {
                 helper.setText(R.id.tv_point, item.getText())
                         .setBackgroundRes(R.id.tv_point, item.isSelect() ?
                                 R.drawable.shape_theme_circle_42 : R.drawable.shape_gray_circle_42);
-                doAnim(helper.getView(R.id.tv_point), item.isSelect());
+                View view = helper.getView(R.id.tv_point);
+                if (item.isSelect()) {
+                    view.setScaleX(1.2f);
+                    view.setScaleY(1.2f);
+                } else {
+                    view.setScaleX(1f);
+                    view.setScaleY(1f);
+                }
             }
         };
+
         mRecyclerPoint.setTag(0);
         errorPointAdapter.setOnItemClickListener((adapter1, view, position) -> {
             int lastIndex = (int) mRecyclerPoint.getTag();
@@ -341,17 +358,9 @@ public class ReportActivity extends BaseActivity {
         mRecyclerPoint.setAdapter(errorPointAdapter);
     }
 
-    private void doAnim(View view, boolean openOrClose) {
-        if (openOrClose) {
-            view.setScaleX(1.2f);
-            view.setScaleY(1.2f);
-        } else {
-            view.setScaleX(1f);
-            view.setScaleY(1f);
-        }
-    }
-
-
+    /**
+     * 异常点位详情列表
+     */
     private void initPointDetail() {
         mRecyclerWarningPoint.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerWarningPoint.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
@@ -380,6 +389,11 @@ public class ReportActivity extends BaseActivity {
         mRecyclerWarningPoint.setAdapter(errorPointDetailAdapter);
     }
 
+    /**
+     * 异常点位数据
+     *
+     * @param pointName
+     */
     private void uploadSinglePointData(String pointName) {
         mMonthOrWeekPointsBean.setPointName(pointName);
         RxManager.getInstance().doNetSubscribe(

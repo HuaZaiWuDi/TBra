@@ -306,7 +306,6 @@ public class ScanDeviceActivity extends BaseActivity {
         ).subscribe(new RxNetSubscriber<String>() {
             @Override
             protected void _onNext(String s) {
-
             }
         });
 

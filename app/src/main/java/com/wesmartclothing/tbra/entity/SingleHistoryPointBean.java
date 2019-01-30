@@ -21,7 +21,7 @@ public class SingleHistoryPointBean {
      * isFirstPage : true
      * isLastPage : true
      * lastPage : 0
-     * list : [{"avgTemp":1,"collectCount":1,"collectDate":"2019-01-15T10:55:04.921Z","createTime":1511248354000,"createUser":1,"endTime":"2019-01-15T10:55:04.921Z","gid":1,"jsonData":"string","maxTemp":1,"minTemp":1,"point":"string","side":"string","startTime":"2019-01-15T10:55:04.921Z","status":101,"tempDTOList":[{"temp":0,"time":"2019-01-15T10:55:04.921Z","warning":1}],"unusualCount":1,"updateTime":1511248354000,"updateUser":1,"userId":"string","usualCount":1,"warningFlag":1}]
+     * list : [{"avgTemp":0,"collectDate":"2019-01-29T10:20:51.420Z","leftTemp":0,"leftWarning":0,"rightTemp":0,"rightWarning":0}]
      * navigateFirstPage : 0
      * navigateLastPage : 0
      * navigatePages : 0
@@ -219,108 +219,69 @@ public class SingleHistoryPointBean {
 
     public static class ListBean {
         /**
-         * avgTemp : 1
-         * collectCount : 1
-         * collectDate : 2019-01-15T10:55:04.921Z
-         * createTime : 1511248354000
-         * createUser : 1
-         * endTime : 2019-01-15T10:55:04.921Z
-         * gid : 1
-         * jsonData : string
-         * maxTemp : 1
-         * minTemp : 1
-         * point : string
-         * side : string
-         * startTime : 2019-01-15T10:55:04.921Z
-         * status : 101
-         * tempDTOList : [{"temp":0,"time":"2019-01-15T10:55:04.921Z","warning":1}]
-         * unusualCount : 1
-         * updateTime : 1511248354000
-         * updateUser : 1
-         * userId : string
-         * usualCount : 1
-         * warningFlag : 1
+         * avgTemp : 0
+         * collectDate : 2019-01-29T10:20:51.420Z
+         * leftTemp : 0
+         * leftWarning : 0
+         * rightTemp : 0
+         * rightWarning : 0
          */
 
-        private int avgTemp;
-        private int collectCount;
-        private long collectDate;
-        private String endTime;
-        private String gid;
-        private String jsonData;
-        private int maxTemp;
-        private int minTemp;
+        private Double avgTemp;
+        private Long collectDate;
+        private Double leftTemp;
+        private Integer leftWarning;
+        private Double rightTemp;
+        private Integer rightWarning;
         private String point;
-        private String side;
-        private String startTime;
-        private int status;
-        private int unusualCount;
-        private int usualCount;
-        private int warningFlag;
-        private List<TempDTOListBean> tempDTOList;
 
-        public int getAvgTemp() {
+
+        public double getAvgTemp() {
             return avgTemp;
         }
 
-        public void setAvgTemp(int avgTemp) {
+        public void setAvgTemp(Double avgTemp) {
             this.avgTemp = avgTemp;
         }
 
-        public int getCollectCount() {
-            return collectCount;
-        }
-
-        public void setCollectCount(int collectCount) {
-            this.collectCount = collectCount;
-        }
-
-        public long getCollectDate() {
+        public Long getCollectDate() {
             return collectDate;
         }
 
-        public void setCollectDate(long collectDate) {
+        public void setCollectDate(Long collectDate) {
             this.collectDate = collectDate;
         }
 
-        public String getEndTime() {
-            return endTime;
+        public double getLeftTemp() {
+            return leftTemp;
         }
 
-        public void setEndTime(String endTime) {
-            this.endTime = endTime;
+        public void setLeftTemp(Double leftTemp) {
+            this.leftTemp = leftTemp;
         }
 
-        public String getGid() {
-            return gid;
+        public Integer getLeftWarning() {
+            return leftWarning;
         }
 
-        public void setGid(String gid) {
-            this.gid = gid;
+        public void setLeftWarning(Integer leftWarning) {
+            this.leftWarning = leftWarning;
         }
 
-        public String getJsonData() {
-            return jsonData;
+        public double getRightTemp() {
+            return rightTemp;
         }
 
-        public void setJsonData(String jsonData) {
-            this.jsonData = jsonData;
+        public void setRightTemp(Double rightTemp) {
+            this.rightTemp = rightTemp;
         }
 
-        public int getMaxTemp() {
-            return maxTemp;
+        public Integer getRightWarning() {
+            return rightWarning;
         }
 
-        public void setMaxTemp(int maxTemp) {
-            this.maxTemp = maxTemp;
-        }
-
-        public int getMinTemp() {
-            return minTemp;
-        }
-
-        public void setMinTemp(int minTemp) {
-            this.minTemp = minTemp;
+        public void setRightWarning(Integer rightWarning) {
+            this.rightWarning = rightWarning;
         }
 
         public String getPoint() {
@@ -331,96 +292,17 @@ public class SingleHistoryPointBean {
             this.point = point;
         }
 
-        public String getSide() {
-            return side;
-        }
-
-        public void setSide(String side) {
-            this.side = side;
-        }
-
-        public String getStartTime() {
-            return startTime;
-        }
-
-        public void setStartTime(String startTime) {
-            this.startTime = startTime;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public void setStatus(int status) {
-            this.status = status;
-        }
-
-        public int getUnusualCount() {
-            return unusualCount;
-        }
-
-        public void setUnusualCount(int unusualCount) {
-            this.unusualCount = unusualCount;
-        }
-
-        public int getUsualCount() {
-            return usualCount;
-        }
-
-        public void setUsualCount(int usualCount) {
-            this.usualCount = usualCount;
-        }
-
-        public int getWarningFlag() {
-            return warningFlag;
-        }
-
-        public void setWarningFlag(int warningFlag) {
-            this.warningFlag = warningFlag;
-        }
-
-        public List<TempDTOListBean> getTempDTOList() {
-            return tempDTOList;
-        }
-
-        public void setTempDTOList(List<TempDTOListBean> tempDTOList) {
-            this.tempDTOList = tempDTOList;
-        }
-
-        public static class TempDTOListBean {
-            /**
-             * temp : 0
-             * time : 2019-01-15T10:55:04.921Z
-             * warning : 1
-             */
-
-            private int temp;
-            private String time;
-            private int warning;
-
-            public int getTemp() {
-                return temp;
-            }
-
-            public void setTemp(int temp) {
-                this.temp = temp;
-            }
-
-            public String getTime() {
-                return time;
-            }
-
-            public void setTime(String time) {
-                this.time = time;
-            }
-
-            public int getWarning() {
-                return warning;
-            }
-
-            public void setWarning(int warning) {
-                this.warning = warning;
-            }
+        @Override
+        public String toString() {
+            return "ListBean{" +
+                    "avgTemp=" + avgTemp +
+                    ", collectDate=" + collectDate +
+                    ", leftTemp=" + leftTemp +
+                    ", leftWarning=" + leftWarning +
+                    ", rightTemp=" + rightTemp +
+                    ", rightWarning=" + rightWarning +
+                    ", point='" + point + '\'' +
+                    '}';
         }
     }
 }
