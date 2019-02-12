@@ -37,6 +37,7 @@ import com.wesmartclothing.tbra.view.TimingMonitorView;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -109,7 +110,7 @@ public class MonitorFragment extends BaseAcFragment {
             mTvSwitchDevice.setText("切换设备\t\t>>");
             mPowerIcon.setVisibility(View.VISIBLE);
             mTvDeviceName.setText("设备名字：" + BleTools.getInstance().getBleDevice().getMac());
-            if (BleTools.getInstance().isConnected())
+            if (BleTools.getInstance().isConnected() && isVisibled())
                 myTimer.startTimer();
         }
     }
@@ -149,7 +150,7 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     protected void onVisible() {
         super.onVisible();
-        if (BleTools.getInstance().isConnected())
+        if (BleTools.getInstance().isConnected() && isVisibled())
             myTimer.startTimer();
         RxLogUtils.d("【MonitorFragment】onVisible");
     }
@@ -193,7 +194,7 @@ public class MonitorFragment extends BaseAcFragment {
                     return;
                 }
                 mWarningRuleBean = warningRuleBean;
-                if (BleTools.getInstance().isConnected())
+                if (BleTools.getInstance().isConnected() && isVisibled())
                     myTimer.startTimer();
             }
         });
@@ -220,20 +221,20 @@ public class MonitorFragment extends BaseAcFragment {
         }
         //标准温度
         double normTemp = CheckTempErrorUtil.calculationNormTemp(tempLists);
+        RxLogUtils.d("标准温度：" + normTemp);
         //标准温度的区间
         double[] normTemps = {normTemp - mWarningRuleBean.getTempNum(), normTemp + mWarningRuleBean.getTempNum()};
+        RxLogUtils.d("标准温度区间：" + Arrays.toString(normTemps));
 
         for (JsonDataBean bean : data.getDataList()) {
             double nodeTemp = bean.getNodeTemp();
-            int flag = 0;
+            int flag = -1;
             if (CheckTempErrorUtil.isValidTemperature(nodeTemp)) {
                 if (nodeTemp <= normTemps[1] && nodeTemp >= normTemps[0]) {
                     flag = 0;
                 } else {
                     flag = 1;
                 }
-            } else {
-                flag = -1;
             }
             bean.setWarningFlag(flag);
         }

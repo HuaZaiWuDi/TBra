@@ -187,8 +187,8 @@ public class BleAPI {
             protected void _onNext(byte[] bytes) {
                 AddTempDataBean dataBean = new AddTempDataBean();
                 String dateStr = ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}) + "-" +
-                        (int) bytes[8] + "-" + (int) bytes[9] + " " + (int) bytes[10] + ":" +
-                        (int) bytes[11] + ":" + (int) bytes[12];
+                        dateFormat(bytes[8]) + "-" + dateFormat(bytes[9]) + " " + dateFormat(bytes[10]) + ":" +
+                        dateFormat(bytes[11]) + ":" + dateFormat(bytes[12]);
                 dataBean.setCollectTime(dateStr);
                 dataBean.setIndex(ByteUtil.bytesToIntD2(new byte[]{bytes[4], bytes[5]}));
                 List<JsonDataBean> dataList = new ArrayList<>();
@@ -310,8 +310,8 @@ public class BleAPI {
             protected void _onNext(byte[] bytes) {
                 AddTempDataBean dataBean = new AddTempDataBean();
                 String dateStr = ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}) + "-" +
-                        (int) bytes[8] + "-" + (int) bytes[9] + " " + (int) bytes[10] + ":" +
-                        (int) bytes[11] + ":" + (int) bytes[12];
+                        dateFormat(bytes[8]) + "-" + dateFormat(bytes[9]) + " " + dateFormat(bytes[10]) + ":" +
+                        dateFormat(bytes[11]) + ":" + dateFormat(bytes[12]);
                 dataBean.setCollectTime(dateStr);
                 dataBean.setIndex(ByteUtil.bytesToIntD2(new byte[]{bytes[4], bytes[5]}));
                 List<JsonDataBean> dataList = new ArrayList<>();
@@ -339,6 +339,12 @@ public class BleAPI {
                 subscriber.onError(e);
             }
         });
+    }
+
+
+    private static String dateFormat(byte b) {
+        int date = (int) b;
+        return date < 10 ? "0" + date : date + "";
     }
 
 

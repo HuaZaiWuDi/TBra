@@ -1,66 +1,76 @@
 package com.wesmartclothing.tbra.entity;
 
+import java.util.List;
+
 /**
  * @Package com.wesmartclothing.tbra.entity
  * @FileName PointDataBean
  * @Date 2019/1/15 11:46
  * @Author JACK
- * @Describe TODO
+ * @Describe TODO异常点位信息界面接口
  * @Project tbra
  */
 public class PointDataBean {
 
 
     /**
-     * avgTemp : 35.77
-     * collectTime : 1543890167000
-     * createTime : 1546684135000
-     * createUser : 4d974e25cebe4535bde4e23302ba0dd2
-     * gid : ee4dfbf6f6f24726b4278a8c051ca7ca
-     * //warningFlag:0正常,1警告
-     * jsonData : [{"nodeName":"R01","nodeTemp":36.7,"warningFlag":1},{"nodeName":"R02","nodeTemp":34.7,"warningFlag":1},{"nodeName":"R03","nodeTemp":35.7,"warningFlag":0},{"nodeName":"R04","nodeTemp":36.2,"warningFlag":0},{"nodeName":"R05","nodeTemp":36,"warningFlag":0},{"nodeName":"R06","nodeTemp":35.7,"warningFlag":0},{"nodeName":"R07","nodeTemp":35.3,"warningFlag":0},{"nodeName":"R08","nodeTemp":35.7,"warningFlag":0},{"nodeName":"L01","nodeTemp":36.7,"warningFlag":1},{"nodeName":"L02","nodeTemp":34.7,"warningFlag":1},{"nodeName":"L03","nodeTemp":35.7,"warningFlag":0},{"nodeName":"L04","nodeTemp":36.2,"warningFlag":0},{"nodeName":"L05","nodeTemp":36,"warningFlag":0},{"nodeName":"L06","nodeTemp":35.7,"warningFlag":0},{"nodeName":"L07","nodeTemp":35.3,"warningFlag":0},{"nodeName":"L08","nodeTemp":35.7,"warningFlag":0}]
-     * leftUnusual : 2
-     * leftUsual : 6
-     * maxTemp : 36.7
-     * minTemp : 34.7
-     * rightUnusual : 2
-     * rightUsual : 6
+     * avgTemp : 1
+     * collectCount : 1
+     * collectDate : 2019-02-11T06:14:49.347Z
+     * createTime : 1511248354000
+     * createUser : 1
+     * cycleNumber : 0
+     * endTime : 2019-02-11T06:14:49.347Z
+     * gid : 1
+     * leftUnusual : 1
+     * leftUsual : 1
+     * maxTemp : 1
+     * minTemp : 1
+     * pointsList : [{"avgTemp":1,"collectCount":1,"collectDate":"2019-02-11T06:14:49.347Z","createTime":1511248354000,"createUser":1,"endTime":"2019-02-11T06:14:49.347Z","gid":1,"jsonData":"string","maxTemp":1,"minTemp":1,"point":"string","side":"string","startTime":"2019-02-11T06:14:49.347Z","status":101,"tempDTOList":[{"temp":0,"time":"2019-02-11T06:14:49.347Z","warning":1}],"unusualCount":1,"updateTime":1511248354000,"updateUser":1,"userId":"string","usualCount":1,"warningFlag":1}]
+     * rightUnusual : 1
+     * rightUsual : 1
+     * startTime : 2019-02-11T06:14:49.347Z
      * status : 101
-     * totalPoints : 16
-     * unusualNum : 4
-     * unusualPoints : ["R01 ","R02 ","L01 ","L02 "]
-     * updateTime : 1546684135000
-     * updateUser : 4d974e25cebe4535bde4e23302ba0dd2
-     * userId : 4d974e25cebe4535bde4e23302ba0dd2
-     * usualNum : 12
-     * warnMax : 36.27
-     * warnMin : 35.27
-     * warningFlag : 0
+     * unusualCount : 1
+     * updateTime : 1511248354000
+     * updateUser : 1
+     * userId : string
+     * usualCount : 1
+     * warnMax : 1
+     * warnMin : 1
+     * warningFlag : 1
      */
 
-    private Double avgTemp;
-    private Long collectTime;
-    private Long createTime;
-    private String createUser;
+    private double avgTemp;
+    private int collectCount;
+    private long collectDate;
+    private int cycleNumber;
+    private long endTime;
     private String gid;
-    private Integer leftUnusual;
-    private Integer leftUsual;
-    private Double maxTemp;
-    private Double minTemp;
-    private Integer rightUnusual;
-    private Integer rightUsual;
-    private Integer status;
-    private Integer totalPoints;
-    private Integer unusualNum;
-    private Long updateTime;
-    private String updateUser;
-    private String userId;
-    private Integer usualNum;
-    private Double warnMax;
-    private Double warnMin;
-    private Integer warningFlag;
+    private int leftUnusual;
+    private int leftUsual;
+    private double maxTemp;
+    private double minTemp;
+    private int rightUnusual;
+    private int rightUsual;
+    private long startTime;
+    private int status;
+    private int unusualCount;
+    private int usualCount;
+    private double warnMax;
+    private double warnMin;
+    private int warningFlag;
     private String jsonData;
-    private String unusualPoints;
+    private List<PointsListBean> pointsList;
+
+
+    public String getJsonData() {
+        return jsonData;
+    }
+
+    public void setJsonData(String jsonData) {
+        this.jsonData = jsonData;
+    }
 
     public double getAvgTemp() {
         return avgTemp;
@@ -70,28 +80,36 @@ public class PointDataBean {
         this.avgTemp = avgTemp;
     }
 
-    public long getCollectTime() {
-        return collectTime;
+    public int getCollectCount() {
+        return collectCount;
     }
 
-    public void setCollectTime(long collectTime) {
-        this.collectTime = collectTime;
+    public void setCollectCount(int collectCount) {
+        this.collectCount = collectCount;
     }
 
-    public long getCreateTime() {
-        return createTime;
+    public long getCollectDate() {
+        return collectDate;
     }
 
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
+    public void setCollectDate(long collectDate) {
+        this.collectDate = collectDate;
     }
 
-    public String getCreateUser() {
-        return createUser;
+    public int getCycleNumber() {
+        return cycleNumber;
     }
 
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
+    public void setCycleNumber(int cycleNumber) {
+        this.cycleNumber = cycleNumber;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 
     public String getGid() {
@@ -150,6 +168,14 @@ public class PointDataBean {
         this.rightUsual = rightUsual;
     }
 
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -158,52 +184,20 @@ public class PointDataBean {
         this.status = status;
     }
 
-    public int getTotalPoints() {
-        return totalPoints;
+    public int getUnusualCount() {
+        return unusualCount;
     }
 
-    public void setTotalPoints(int totalPoints) {
-        this.totalPoints = totalPoints;
+    public void setUnusualCount(int unusualCount) {
+        this.unusualCount = unusualCount;
     }
 
-    public int getUnusualNum() {
-        return unusualNum;
+    public int getUsualCount() {
+        return usualCount;
     }
 
-    public void setUnusualNum(int unusualNum) {
-        this.unusualNum = unusualNum;
-    }
-
-    public long getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public int getUsualNum() {
-        return usualNum;
-    }
-
-    public void setUsualNum(int usualNum) {
-        this.usualNum = usualNum;
+    public void setUsualCount(int usualCount) {
+        this.usualCount = usualCount;
     }
 
     public double getWarnMax() {
@@ -230,21 +224,241 @@ public class PointDataBean {
         this.warningFlag = warningFlag;
     }
 
-    public String getJsonData() {
-        return jsonData;
+    public List<PointsListBean> getPointsList() {
+        return pointsList;
     }
 
-    public void setJsonData(String jsonData) {
-        this.jsonData = jsonData;
+    public void setPointsList(List<PointsListBean> pointsList) {
+        this.pointsList = pointsList;
     }
 
-    public String getUnusualPoints() {
-        return unusualPoints;
+    public static class PointsListBean {
+        /**
+         * avgTemp : 1
+         * collectCount : 1
+         * collectDate : 2019-02-11T06:14:49.347Z
+         * createTime : 1511248354000
+         * createUser : 1
+         * endTime : 2019-02-11T06:14:49.347Z
+         * gid : 1
+         * jsonData : string
+         * maxTemp : 1
+         * minTemp : 1
+         * point : string
+         * side : string
+         * startTime : 2019-02-11T06:14:49.347Z
+         * status : 101
+         * tempDTOList : [{"temp":0,"time":"2019-02-11T06:14:49.347Z","warning":1}]
+         * unusualCount : 1
+         * updateTime : 1511248354000
+         * updateUser : 1
+         * userId : string
+         * usualCount : 1
+         * warningFlag : 1
+         */
+
+        private double avgTemp;
+        private int collectCount;
+        private long collectDate;
+        private long endTime;
+        private String gid;
+        private String jsonData;
+        private double maxTemp;
+        private double minTemp;
+        private String point;
+        private String side;
+        private long startTime;
+        private int status;
+        private int unusualCount;
+        private int usualCount;
+        private int warningFlag;
+        private List<TempDTOListBean> tempDTOList;
+
+        public double getAvgTemp() {
+            return avgTemp;
+        }
+
+        public void setAvgTemp(double avgTemp) {
+            this.avgTemp = avgTemp;
+        }
+
+        public int getCollectCount() {
+            return collectCount;
+        }
+
+        public void setCollectCount(int collectCount) {
+            this.collectCount = collectCount;
+        }
+
+        public long getCollectDate() {
+            return collectDate;
+        }
+
+        public void setCollectDate(long collectDate) {
+            this.collectDate = collectDate;
+        }
+
+
+        public long getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(long endTime) {
+            this.endTime = endTime;
+        }
+
+        public String getGid() {
+            return gid;
+        }
+
+        public void setGid(String gid) {
+            this.gid = gid;
+        }
+
+        public String getJsonData() {
+            return jsonData;
+        }
+
+        public void setJsonData(String jsonData) {
+            this.jsonData = jsonData;
+        }
+
+        public double getMaxTemp() {
+            return maxTemp;
+        }
+
+        public void setMaxTemp(double maxTemp) {
+            this.maxTemp = maxTemp;
+        }
+
+        public double getMinTemp() {
+            return minTemp;
+        }
+
+        public void setMinTemp(double minTemp) {
+            this.minTemp = minTemp;
+        }
+
+        public String getPoint() {
+            return point;
+        }
+
+        public void setPoint(String point) {
+            this.point = point;
+        }
+
+        public String getSide() {
+            return side;
+        }
+
+        public void setSide(String side) {
+            this.side = side;
+        }
+
+        public long getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(long startTime) {
+            this.startTime = startTime;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public int getUnusualCount() {
+            return unusualCount;
+        }
+
+        public void setUnusualCount(int unusualCount) {
+            this.unusualCount = unusualCount;
+        }
+
+        public int getUsualCount() {
+            return usualCount;
+        }
+
+        public void setUsualCount(int usualCount) {
+            this.usualCount = usualCount;
+        }
+
+        public int getWarningFlag() {
+            return warningFlag;
+        }
+
+        public void setWarningFlag(int warningFlag) {
+            this.warningFlag = warningFlag;
+        }
+
+        public List<TempDTOListBean> getTempDTOList() {
+            return tempDTOList;
+        }
+
+        public void setTempDTOList(List<TempDTOListBean> tempDTOList) {
+            this.tempDTOList = tempDTOList;
+        }
+
+        public static class TempDTOListBean {
+            /**
+             * temp : 0
+             * time : 2019-02-11T06:14:49.347Z
+             * warning : 1
+             */
+
+            private double temp;
+            private long time;
+            private int warning;
+
+            public double getTemp() {
+                return temp;
+            }
+
+            public void setTemp(double temp) {
+                this.temp = temp;
+            }
+
+            public long getTime() {
+                return time;
+            }
+
+            public void setTime(long time) {
+                this.time = time;
+            }
+
+            public int getWarning() {
+                return warning;
+            }
+
+            public void setWarning(int warning) {
+                this.warning = warning;
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "PointsListBean{" +
+                    "avgTemp=" + avgTemp +
+                    ", collectCount=" + collectCount +
+                    ", collectDate=" + collectDate +
+                    ", endTime=" + endTime +
+                    ", gid='" + gid + '\'' +
+                    ", jsonData='" + jsonData + '\'' +
+                    ", maxTemp=" + maxTemp +
+                    ", minTemp=" + minTemp +
+                    ", point='" + point + '\'' +
+                    ", side='" + side + '\'' +
+                    ", startTime=" + startTime +
+                    ", status=" + status +
+                    ", unusualCount=" + unusualCount +
+                    ", usualCount=" + usualCount +
+                    ", warningFlag=" + warningFlag +
+                    ", tempDTOList=" + tempDTOList +
+                    '}';
+        }
     }
-
-    public void setUnusualPoints(String unusualPoints) {
-        this.unusualPoints = unusualPoints;
-    }
-
-
 }

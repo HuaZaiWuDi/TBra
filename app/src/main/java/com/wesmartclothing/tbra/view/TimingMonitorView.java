@@ -180,6 +180,7 @@ public class TimingMonitorView extends LinearLayout {
                 150f
         ));
         mMBarChart.setNoDataText("");
+        mMBarChart.getDescription().setEnabled(false);
         mMBarChart.getLegend().setEnabled(false);
         mMBarChart.setHighlightFullBarEnabled(false);
         mMBarChart.setScaleEnabled(false);
@@ -208,6 +209,7 @@ public class TimingMonitorView extends LinearLayout {
         mLineChart.setNoDataText("没有实时监测数据，\n穿上监测内衣试试吧!");
         mLineChart.setNoDataTextColor(ContextCompat.getColor(mLineChart.getContext(), R.color.color_444A59));
         mLineChart.getLegend().setEnabled(false);
+        mLineChart.getDescription().setEnabled(false);
         mLineChart.setScaleEnabled(false);
         mLineChart.setViewPortOffsets(0, 0, 0, 0);
 

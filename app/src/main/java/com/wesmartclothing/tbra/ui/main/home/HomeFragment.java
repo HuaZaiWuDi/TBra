@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -18,15 +19,20 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.gson.reflect.TypeToken;
 import com.kongzue.dialog.v2.CustomDialog;
+import com.kongzue.dialog.v2.TipDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxAnimationUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.RxUtils;
+import com.vondear.rxtools.utils.net.ExplainException;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
+import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
@@ -34,9 +40,9 @@ import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
-import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.ReportDataBean;
+import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -47,11 +53,13 @@ import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.zchu.rxcache.RxCache;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -81,15 +89,20 @@ public class HomeFragment extends BaseAcFragment {
     CommonTabLayout mTitleCommonTabLayout;
     @BindView(R.id.errorRecyclerView)
     RecyclerView mErrorRecyclerView;
+    @BindView(R.id.pro_syncData)
+    RxRoundProgressBar mProSyncData;
+    @BindView(R.id.layout_syncData)
+    RelativeLayout mLayoutSyncData;
+    Unbinder unbinder;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
     }
 
-
+    private static boolean FIRST_CONNECT = false;
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
     private ArrayList<CustomTabEntity> mTitleTabItems = new ArrayList<>();
-    private List<PointDataBean> pointDatalist;
+    private List<SingleDataDetailBean> pointDatalist;
     private BaseQuickAdapter adapter, errorPointAdapter;
 
     @Override
@@ -112,45 +125,11 @@ public class HomeFragment extends BaseAcFragment {
     private void bleConnectState(boolean isConnected) {
         mTvConnectState.setText(isConnected ? "设备已连接" : "设备未连接");
         mImgBattery.setVisibility(isConnected ? View.VISIBLE : View.INVISIBLE);
-        mImgBattery.setBatteryValue(50);
-        if (isConnected) {
-            new AddTempData(new RxSubscriber<Integer>() {
+        mImgBattery.setBatteryValue(100);
+        FIRST_CONNECT = isConnected;
 
-                //开始
-                @Override
-                public void onSubscribe(Disposable d) {
-                    super.onSubscribe(d);
-                    RxLogUtils.d("开始");
-                    CustomDialog.show(mContext, R.layout.dialog_data_sync);
-                    new Handler().postDelayed(() -> {
-                        CustomDialog.unloadAllDialog();
-                    }, 3000);
-                }
-
-                //进度
-                @Override
-                protected void _onNext(Integer integer) {
-                    RxLogUtils.d("进度：" + integer);
-                    if (integer == 100) {
-                        RxLogUtils.d("蓝牙数据获取完成：");
-                    }
-                }
-
-                //上传完成
-                @Override
-                public void onComplete() {
-                    super.onComplete();
-                    RxLogUtils.d("上传完成");
-                    clearHistoryData();
-                }
-
-                //异常
-                @Override
-                public void onError(Throwable e) {
-                    super.onError(e);
-                    RxLogUtils.d("异常");
-                }
-            }).uploadCacheOrBleData();
+        if (isVisibled()) {
+            uploadTempData();
         }
     }
 
@@ -168,15 +147,16 @@ public class HomeFragment extends BaseAcFragment {
         mErrorRecyclerView.setAdapter(errorPointAdapter);
 
         mHistoryTempView.setOnErrorPointListener(errorPoints -> {
-            List<String> errorPoint = new ArrayList<>(errorPoints.keySet());
-            errorPointAdapter.setNewData(errorPoint);
+            if (errorPoints != null) {
+                List<String> errorPoint = new ArrayList<>(errorPoints.keySet());
+                errorPointAdapter.setNewData(errorPoint);
+            }
         });
         mHistoryTempView.setOnSelectParentListener(() -> {
             Bundle bundle = new Bundle();
             bundle.putString(Key.BUNDLE_LATEST_TYPE, ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
             RxActivityUtils.skipActivity(mContext, HistoryMonitorActivity.class, bundle);
         });
-
     }
 
     private void initRecyclerView() {
@@ -186,11 +166,11 @@ public class HomeFragment extends BaseAcFragment {
             @Override
             protected void convert(BaseViewHolder helper, ReportDataBean.ListBean item) {
                 SpannableStringBuilder stringBuilder = RxTextUtils.getBuilder("监测时长\t")
-                        .append("205min").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
+                        .append(item.getCollectCount() * 5 + "min").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
                         .append("\n采集次数\t")
                         .append(item.getCollectCount() + "").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
-                        .append("\n异常点位\t")
-                        .append("L03,L04,L05").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
+//                        .append("\n异常点位\t")
+//                        .append("L03,L04,L05").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
                         .append("\n告警次数\t")
                         .append(item.getUnusualCount() + "").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
                         .create();
@@ -309,14 +289,14 @@ public class HomeFragment extends BaseAcFragment {
                 NetManager.getBigFileService().latestSingleData(new RecordBean(tag))
                 , lifecycleSubject,
                 "latestSingleData" + tag,
-                new TypeToken<List<PointDataBean>>() {
+                new TypeToken<List<SingleDataDetailBean>>() {
                 }.getType(),
                 CacheStrategy.firstCache()
         )
                 .compose(RxComposeTools.showDialog(mContext, "latestSingleData" + tag))
-                .subscribe(new RxNetSubscriber<List<PointDataBean>>() {
+                .subscribe(new RxNetSubscriber<List<SingleDataDetailBean>>() {
                     @Override
-                    protected void _onNext(List<PointDataBean> list) {
+                    protected void _onNext(List<SingleDataDetailBean> list) {
                         RxLogUtils.d("当前线程：" + Thread.currentThread().getName());
 
                         pointDatalist = list;
@@ -336,11 +316,11 @@ public class HomeFragment extends BaseAcFragment {
      * 上传蓝牙数据成功后清除本地数据
      */
     private void clearHistoryData() {
-        RxCache.getDefault().remove("latestSingleData" + PointDate.week);
-        RxCache.getDefault().remove("latestSingleData" + PointDate.oneMonth);
-        RxCache.getDefault().remove("latestSingleData" + PointDate.quarter);
-        RxCache.getDefault().remove("latestSingleData" + PointDate.halfYear);
-        RxCache.getDefault().remove("latestSingleData" + PointDate.year);
+        try {
+            RxCache.getDefault().clear2();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         getPointData(PointDate.week);
     }
 
@@ -348,7 +328,60 @@ public class HomeFragment extends BaseAcFragment {
     @Override
     protected void onVisible() {
         super.onVisible();
+        uploadTempData();
+
     }
+
+    private void uploadTempData() {
+        if (FIRST_CONNECT) {
+            FIRST_CONNECT = false;
+            new AddTempData(new RxSubscriber<Integer>() {
+                //开始
+                @Override
+                public void onSubscribe(Disposable d) {
+                    super.onSubscribe(d);
+                    RxLogUtils.d("开始");
+                    CustomDialog.show(mContext, R.layout.dialog_data_sync);
+                    new Handler().postDelayed(() -> {
+                        CustomDialog.unloadAllDialog();
+                    }, 1500);
+
+                    RxAnimationUtils.animateHeight(RxUtils.dp2px(1), RxUtils.dp2px(39), mLayoutSyncData);
+                }
+
+                //进度
+                @Override
+                protected void _onNext(Integer integer) {
+                    RxLogUtils.d("进度：" + integer);
+                    mProSyncData.setProgress(integer);
+                    if (integer == 100) {
+                        RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
+                        RxLogUtils.d("蓝牙数据获取完成：");
+                        if (mContext != null)
+                            TipDialog.show(mContext, "获取数据成功", TipDialog.TYPE_FINISH);
+                    }
+                }
+
+                //上传完成
+                @Override
+                public void onComplete() {
+                    super.onComplete();
+                    RxLogUtils.d("上传完成");
+                    clearHistoryData();
+                }
+
+                //异常
+                @Override
+                public void onError(Throwable e) {
+                    super.onError(e);
+                    RxLogUtils.d("异常");
+                    if (mContext != null)
+                        TipDialog.show(mContext, ((ExplainException) e).getMsg(), TipDialog.TYPE_ERROR);
+                }
+            }).uploadCacheOrBleData();
+        }
+    }
+
 
     @Override
     protected void onInvisible() {
@@ -363,12 +396,13 @@ public class HomeFragment extends BaseAcFragment {
             case R.id.tv_seeMore:
                 if (RxDataUtils.isEmpty(pointDatalist)) return;
                 Bundle bundle = new Bundle();
-                bundle.putString(Key.BUNDLE_LATEST_TYPE, "latestSingleData" + ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
+                bundle.putString(Key.BUNDLE_LATEST_TYPE, ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
                 RxActivityUtils.skipActivity(mContext, ErrorPointActivity.class, bundle);
                 break;
             default:
                 break;
         }
     }
+
 
 }

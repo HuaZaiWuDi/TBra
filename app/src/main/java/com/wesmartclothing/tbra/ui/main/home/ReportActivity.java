@@ -22,6 +22,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.gson.reflect.TypeToken;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxFormatValue;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
@@ -163,19 +164,20 @@ public class ReportActivity extends BaseActivity {
         if (!RxDataUtils.isEmpty(errorPointNameList)) {
             errorPointNameList.get(0).setSelect(true);
             uploadSinglePointData(errorPointNameList.get(0).getText());
+            mHistoryTempView.setSingleMode(errorPointNameList.get(0).getText());
         }
         errorPointAdapter.setNewData(errorPointNameList);
 
         sumCount = leftTotalCount + rightTotalCount;
 
-        if (sumCount == 0) {
-            return;
-        }
-        double leftProportion = RxFormatValue.format4S5R(leftTotalCount * 100f / sumCount, 1);
-        double rightProportion = RxFormatValue.format4S5R(rightTotalCount * 100f / sumCount, 1);
+        double leftProportion = 0, rightProportion = 0;
 
-        if (sumCount > 0)
-            mProErrorTotal.setProgress((int) (rightTotalCount / (sumCount) * 100f));
+        if (sumCount != 0) {
+            leftProportion = RxFormatValue.format4S5R(leftTotalCount * 100f / sumCount, 1);
+            rightProportion = RxFormatValue.format4S5R(rightTotalCount * 100f / sumCount, 1);
+        }
+
+        mProErrorTotal.setProgress((int) rightProportion);
 
         mTvWarningCount.setText(sumCount + "");
 
@@ -201,12 +203,13 @@ public class ReportActivity extends BaseActivity {
 
 
     private ArrayList<PieEntry> sortUtil(Map<String, Integer> map, int total) {
-        map = MapSortUtil.sortMapByValue(map);
         ArrayList<PieEntry> entrys = new ArrayList<>();
-        if (RxDataUtils.isEmpty(map)) return entrys;
+        if (RxDataUtils.isEmpty(map)||total == 0) return entrys;
+        map = MapSortUtil.sortMapByValue(map);
         map.forEach((s, integer) -> {
+            RxLogUtils.d("异常次数排名：Key:" + s + "--值:" + integer);
             if (entrys.size() < 3) {
-                entrys.add(new PieEntry(integer / total * 1f, integer + "次", s));
+                entrys.add(new PieEntry(integer * 1f / total, integer + "次", s));
             }
         });
         return entrys;
@@ -310,8 +313,8 @@ public class ReportActivity extends BaseActivity {
                 (String) ((PieEntry) entry).getData()
         );
 
-        // undo all highlights
-        chart.highlightValues(null);
+//        // undo all highlights
+//        chart.highlightValues(null);
 
         chart.invalidate();
     }
@@ -379,6 +382,7 @@ public class ReportActivity extends BaseActivity {
                         .setText(R.id.tv_temp, stringBuilder);
             }
         };
+
 //        errorPointDetailAdapter.setOnItemClickListener((adapter1, view, position) -> {
 //            Bundle bundle = new Bundle();
 //            bundle.putString(Key.BUNDLE_LATEST_TYPE, (String) mRxTitle.getTag());

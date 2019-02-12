@@ -49,12 +49,14 @@ import com.wesmartclothing.tbra.tools.BLEUtil;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
 
 import java.util.List;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScanDeviceActivity extends BaseActivity {
 
+    private static final String TAG = "【ScanDeviceActivity】";
     @BindView(R.id.rxTitle)
     RxTitle mRxTitle;
     @BindView(R.id.deviceRecyclerView)
@@ -94,6 +96,24 @@ public class ScanDeviceActivity extends BaseActivity {
         startService(new Intent(this, LocationIntentService.class));
         initTitle(mRxTitle);
         initRecyclerView();
+        initPermissions();
+
+    }
+
+    private void initPermissions() {
+        //判断是否有权限
+        new RxPermissions(mActivity)
+                .requestEach(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .compose(RxComposeUtils.<Permission>bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<Permission>() {
+                    @Override
+                    protected void _onNext(Permission aBoolean) {
+                        RxLogUtils.e("是否开启了权限：" + aBoolean);
+                        if (!aBoolean.granted) {
+                            MessageDialog.show(mContext, "提示", "未开启定位权限无法搜索到蓝牙设备");
+                        }
+                    }
+                });
     }
 
     private void initRecyclerView() {
@@ -167,19 +187,6 @@ public class ScanDeviceActivity extends BaseActivity {
     }
 
     private void startScan() {
-        //判断是否有权限
-        new RxPermissions(mActivity)
-                .requestEach(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                .compose(RxComposeUtils.<Permission>bindLife(lifecycleSubject))
-                .subscribe(new RxSubscriber<Permission>() {
-                    @Override
-                    protected void _onNext(Permission aBoolean) {
-                        RxLogUtils.e("是否开启了权限：" + aBoolean);
-                        if (!aBoolean.granted) {
-                            MessageDialog.show(mContext, "提示", "未开启定位权限无法搜索到蓝牙设备");
-                        }
-                    }
-                });
 
         if (!BleTools.getBleManager().isBlueEnable()) {
             CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->
@@ -192,8 +199,8 @@ public class ScanDeviceActivity extends BaseActivity {
         }
 
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
-//                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
-                .setDeviceName(true, BLEKey.DEVICE_NAME)
+                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
+//                .setDeviceName(true, BLEKey.DEVICE_NAME)
                 .setScanTimeOut(15000)
                 .build();
         BleTools.getBleManager().initScanRule(bleConfig);
@@ -212,6 +219,8 @@ public class ScanDeviceActivity extends BaseActivity {
                 //清空列表
                 if (success) {
                     adapter.setNewData(null);
+                } else {
+//                    TipDialog.show(mContext, "扫描失败", TipDialog.TYPE_ERROR);
                 }
             }
 
@@ -249,7 +258,9 @@ public class ScanDeviceActivity extends BaseActivity {
                 SPUtils.put(SPKey.SP_BIND_DEVICE, bleDevice.getMac());
                 BleTools.getInstance().stopScan();
 
-                TipDialog.show(mContext, "连接成功", TipDialog.TYPE_FINISH);
+//                RxLogUtils.d(TAG, "连接成功");
+//                bindDevice(bleDevice.getMac());
+
                 BleTools.getInstance().openNotify(new RxSubscriber<Boolean>() {
                     @Override
                     protected void _onNext(Boolean aBoolean) {
@@ -264,11 +275,12 @@ public class ScanDeviceActivity extends BaseActivity {
                             @Override
                             public void onMtuChanged(int mtu) {
                                 RxLogUtils.d("连接成功");
+                                WaitDialog.dismiss();
+                                TipDialog.show(mContext, "连接成功", TipDialog.TYPE_FINISH);
 
                                 BleAPI.syncTime(new RxSubscriber<byte[]>() {
                                     @Override
                                     protected void _onNext(byte[] bytes) {
-                                        WaitDialog.dismiss();
                                         connectDevice();
                                         bindDevice(bleDevice.getMac());
                                         RxBus.getInstance().post(new ConnectStateBus(true));

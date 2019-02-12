@@ -37,16 +37,15 @@ public class SingleDataDetailBean {
      * warningFlag : 1
      */
 
-    private Integer avgTemp;
+    private Double avgTemp;
     private String collectTime;
     private Long createTime;
-    private Integer createUser;
     private String gid;
     private String jsonData;
     private Integer leftUnusual;
     private Integer leftUsual;
-    private Integer maxTemp;
-    private Integer minTemp;
+    private double maxTemp;
+    private double minTemp;
     private Integer rightUnusual;
     private Integer rightUsual;
     private Integer status;
@@ -55,15 +54,15 @@ public class SingleDataDetailBean {
     private String unusualPoints;
     private Long updateTime;
     private Integer usualNum;
-    private Integer warnMax;
-    private Integer warnMin;
+    private double warnMax;
+    private double warnMin;
     private Integer warningFlag;
 
-    public int getAvgTemp() {
+    public Double getAvgTemp() {
         return avgTemp;
     }
 
-    public void setAvgTemp(int avgTemp) {
+    public void setAvgTemp(Double avgTemp) {
         this.avgTemp = avgTemp;
     }
 
@@ -83,13 +82,6 @@ public class SingleDataDetailBean {
         this.createTime = createTime;
     }
 
-    public int getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(int createUser) {
-        this.createUser = createUser;
-    }
 
     public String getGid() {
         return gid;
@@ -123,19 +115,19 @@ public class SingleDataDetailBean {
         this.leftUsual = leftUsual;
     }
 
-    public int getMaxTemp() {
+    public double getMaxTemp() {
         return maxTemp;
     }
 
-    public void setMaxTemp(int maxTemp) {
+    public void setMaxTemp(double maxTemp) {
         this.maxTemp = maxTemp;
     }
 
-    public int getMinTemp() {
+    public double getMinTemp() {
         return minTemp;
     }
 
-    public void setMinTemp(int minTemp) {
+    public void setMinTemp(double minTemp) {
         this.minTemp = minTemp;
     }
 
@@ -203,19 +195,19 @@ public class SingleDataDetailBean {
         this.usualNum = usualNum;
     }
 
-    public int getWarnMax() {
+    public double getWarnMax() {
         return warnMax;
     }
 
-    public void setWarnMax(int warnMax) {
+    public void setWarnMax(double warnMax) {
         this.warnMax = warnMax;
     }
 
-    public int getWarnMin() {
+    public double getWarnMin() {
         return warnMin;
     }
 
-    public void setWarnMin(int warnMin) {
+    public void setWarnMin(double warnMin) {
         this.warnMin = warnMin;
     }
 

@@ -21,7 +21,7 @@ import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
-import com.wesmartclothing.tbra.entity.PointDataBean;
+import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
 import com.wesmartclothing.tbra.tools.MapSortUtil;
 
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class HistoryTempView extends LinearLayout {
     private boolean isPlay = false, isShow = false;
     private int currentTime = 0;
     private Gson gson = new Gson();
-    private List<PointDataBean> mPointDataBeans;
+    private List<SingleDataDetailBean> mPointDataBeans;
     private Map<String, Integer> errorPointMap = new HashMap<>();
     private OnErrorPointListener mOnErrorPointListener;
     private OnSelectParentListener mOnSelectParentListener;
@@ -175,6 +175,7 @@ public class HistoryTempView extends LinearLayout {
     }
 
 
+    //单点突出
     private List<JsonDataBean> createPointData(String pointName) {
         List<JsonDataBean> jsonDataBeans = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
@@ -184,6 +185,7 @@ public class HistoryTempView extends LinearLayout {
         return jsonDataBeans;
     }
 
+    //双点突出
     private List<JsonDataBean> createDoublePointData(String pointName) {
         List<JsonDataBean> jsonDataBeans = new ArrayList<>();
         for (int i = 0; i < 16; i++) {
@@ -209,14 +211,16 @@ public class HistoryTempView extends LinearLayout {
      *
      * @param list
      */
-    public void setData(List<PointDataBean> list) {
+    public void setData(List<SingleDataDetailBean> list) {
         mPointDataBeans = list;
         showMode = MODE_DYNAMIC;
         //视频模式，动态播放
         setShow(true);
+        errorPointMap = new HashMap<>();
         currentTime = 0;
         mProgress.setMax(list.size());
         mProgress.setProgress(0);
+        showPoint(createPointData(""));
         RxTextUtils.getBuilder(RxFormat.setSec2MS(currentTime))
                 .append("/" + RxFormat.setSec2MS(list.size()))
                 .setForegroundColor(Color.parseColor("#99FFFFFF"))
@@ -324,7 +328,7 @@ public class HistoryTempView extends LinearLayout {
                     break;
             }
         }
-        if (mOnErrorPointListener != null) {
+        if (mOnErrorPointListener != null && errorPointMap != null) {
             //排序
             errorPointMap = MapSortUtil.sortMapByValue(errorPointMap, true);
             mOnErrorPointListener.errorPoint(errorPointMap);

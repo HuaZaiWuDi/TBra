@@ -139,7 +139,7 @@ public class HistoryMonitorActivity extends BaseActivity {
 
     private void selectItem(String pointName) {
         RxManager.getInstance().doNetSubscribe(
-                NetManager.getApiService().symmetryPointInfo(lastetType, pointName, 1, 10),
+                NetManager.getApiService().symmetryPointInfo(lastetType, pointName, 1, 30),
                 lifecycleSubject,
                 "unusualPointData" + lastetType + pointName,
                 SingleHistoryPointBean.class,

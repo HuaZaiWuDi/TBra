@@ -25,15 +25,34 @@ public class RecordBean {
      */
     @PointDate
     private String latestType;
-    private String pointName;
+    private String point;
+    private String side;
 
     public RecordBean(@PointDate String latestType) {
         this.latestType = latestType;
     }
 
-    public RecordBean(@PointDate String latestType, String pointName) {
+    public RecordBean(String latestType, String point, String side) {
         this.latestType = latestType;
-        this.pointName = pointName;
+        this.point = point;
+        this.side = side;
+    }
+
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
+    }
+
+    public String getSide() {
+        return side;
+    }
+
+    public void setSide(String side) {
+        this.side = side;
     }
 
     public String getLatestType() {
@@ -44,11 +63,4 @@ public class RecordBean {
         this.latestType = latestType;
     }
 
-    public String getPointName() {
-        return pointName;
-    }
-
-    public void setPointName(String pointName) {
-        this.pointName = pointName;
-    }
 }

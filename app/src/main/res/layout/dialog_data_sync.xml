@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="29dp"
         android:gravity="center"
-        android:text="正在为您计算数据量 \n数据传输过程中请保持网络畅通"
+        android:text="正在为您计算数据量 \n数据传输过程中请保持蓝牙连接和网络畅通"
         android:textColor="@color/font_6A6F7B"
         android:textSize="14sp"/>
 

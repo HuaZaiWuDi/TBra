@@ -14,14 +14,49 @@
 
 
         <RelativeLayout
+            android:id="@+id/layout_syncData"
             android:layout_width="match_parent"
-            android:layout_height="51dp"
-            android:padding="14dp">
+            android:layout_height="0dp"
+            tools:layout_height="39dp"
+            >
+
+            <com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar
+                android:id="@+id/pro_syncData"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="19dp"
+                android:layout_marginRight="19dp"
+                app:rcBackgroundColor="@color/line_C3C5CA"
+                app:rcProgressColor="@color/colortheme">
+
+            </com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="数据同步中..."
+                android:textColor="@color/white"
+                android:textSize="10sp"/>
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_centerVertical="true"
                 android:text="数据同步"
                 android:textColor="@color/font_475669"
@@ -32,7 +67,7 @@
                 android:id="@+id/tv_connectState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="19dp"
                 android:layout_toLeftOf="@+id/img_battery"
                 android:text="设备未连接"
@@ -44,8 +79,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="25dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
                 android:visibility="invisible"
+                tools:visibility="visible"
                 />
 
         </RelativeLayout>

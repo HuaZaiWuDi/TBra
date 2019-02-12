@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.net;
 import com.vondear.rxtools.utils.net.HttpResult;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
+import com.wesmartclothing.tbra.entity.ErrorRecordPointDetailBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
@@ -121,7 +122,7 @@ public interface ApiService {
      * 告警信息已读
      */
     @POST("user/warningInfoReaded")
-    Observable<HttpResult<List<PointDataBean>>> warningInfoReaded(@Body WarningRecordBean.ListBean bean);
+    Observable<HttpResult<PointDataBean>> warningInfoReaded(@Body WarningRecordBean.ListBean bean);
 
 
     /**
@@ -339,7 +340,21 @@ public interface ApiService {
      * 获取用户最近一段时间的单次数据
      */
     @POST("dataRecord/latestSingleData")
-    Observable<HttpResult<List<PointDataBean>>> latestSingleData(@Body RecordBean bean);
+    Observable<HttpResult<List<SingleDataDetailBean>>> latestSingleData(@Body RecordBean bean);
+
+
+    /**
+     * 获取用户最近一段时间的异常点位数据
+     */
+    @FormUrlEncoded
+    @POST("dataRecord/latestUnusualPointData")
+    Observable<HttpResult<SingleHistoryPointBean>> latestUnusualPointData(
+            @Field("latestType") String latestType,
+            @Field("point") String point,
+            @Field("side") String side,
+            @Field("pageNum") int pageNum,
+            @Field("pageSize") int pageSize
+    );
 
 
     /**
@@ -361,9 +376,11 @@ public interface ApiService {
      */
     @FormUrlEncoded
     @POST(" dataRecord/unusualPointData")
-    Observable<HttpResult<SingleHistoryPointBean>> unusualPointData(
-            @Field("latestType") String latestType,
-            @Field("pointName") String pointName,
+    Observable<HttpResult<ErrorRecordPointDetailBean>> unusualPointData(
+            @Field("side") String side,
+            @Field("point") String point,
+            @Field("startTime") long startTime,
+            @Field("endTime") long endTime,
             @Field("pageNum") int pageNum,
             @Field("pageSize") int pageSize
     );
@@ -373,7 +390,7 @@ public interface ApiService {
      * 获取用户最近一段时间的异常数据
      */
     @POST("dataRecord/unusualData")
-    Observable<HttpResult<WarningRuleBean>> unusualData(@Body RecordBean bean);
+    Observable<HttpResult<PointDataBean>> unusualData(@Body RecordBean bean);
 
 
     /**

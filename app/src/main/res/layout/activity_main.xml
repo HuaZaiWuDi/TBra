@@ -41,7 +41,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
-                android:text="@string/navMonitor"
+                android:text="@string/navMain"
                 android:textColor="@color/font_222222"
                 android:textSize="16sp"
                 android:textStyle="bold"/>

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -141,20 +140,20 @@ public class WarningRecordActivity extends BaseActivity {
     private void readed(int position) {
         WarningRecordBean.ListBean bean = (WarningRecordBean.ListBean) adapter.getItem(position);
 //        0-未读，1-已读
-        if (bean.getReadState() == 1) return;
+
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().warningInfoReaded(bean),
                 lifecycleSubject,
                 "warningInfoReaded" + bean.getGid(),
-                new TypeToken<List<PointDataBean>>() {
-                }.getType(),
+                PointDataBean.class,
                 CacheStrategy.firstCache()
-        ).subscribe(new RxNetSubscriber<List<PointDataBean>>() {
+        ).subscribe(new RxNetSubscriber<PointDataBean>() {
             @Override
-            protected void _onNext(List<PointDataBean> pointDataLists) {
-                bean.setReadState(1);
-                adapter.setData(position, bean);
-
+            protected void _onNext(PointDataBean pointDataBean) {
+                if (bean.getReadState() != 1) {
+                    bean.setReadState(1);
+                    adapter.setData(position, bean);
+                }
 
                 Bundle bundle = new Bundle();
                 bundle.putString(Key.BUNDLE_LATEST_TYPE, "warningInfoReaded" + bean.getGid());

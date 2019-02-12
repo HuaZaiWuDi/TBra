@@ -8,8 +8,8 @@ public class JsonDataBean {
      */
 
     private String nodeName;
-    private Double nodeTemp;
-    private Integer warningFlag;
+    private double nodeTemp;
+    private int warningFlag;
 
     public JsonDataBean() {
     }

@@ -15,16 +15,19 @@ import com.clj.fastble.callback.BleScanAndConnectCallback;
 import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
+import com.kongzue.dialog.v2.TipDialog;
 import com.vondear.rxtools.activity.ActivityLifecycleImpl;
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxNetUtils;
 import com.vondear.rxtools.utils.RxSystemBroadcastUtil;
+import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
-import com.wesmartclothing.tbra.constant.BLEKey;
+import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
@@ -51,8 +54,7 @@ public class BleService extends Service {
                     break;
                 case RxSystemBroadcastUtil.SCREEN_ON:
                     RxLogUtils.d("亮屏");
-                    if (!BleTools.getInstance().isConnected())
-                        scanConnectDevice();
+                    scanConnectDevice();
                     break;
                 case RxSystemBroadcastUtil.SCREEN_OFF:
                     RxLogUtils.d("息屏");
@@ -115,13 +117,21 @@ public class BleService extends Service {
     }
 
     private void scanConnectDevice() {
+
+        if (BleTools.getInstance().isConnected()) {
+            RxLogUtils.e("设备已连接");
+            return;
+        }
+
+
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
-                .setDeviceName(true, BLEKey.DEVICE_NAME)
-//                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
+//                .setDeviceName(true, BLEKey.DEVICE_NAME)
+                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
                 .setScanTimeOut(-1)
                 .build();
         BleTools.getBleManager().initScanRule(bleConfig);
+
 
         BleTools.getBleManager().scanAndConnect(new BleScanAndConnectCallback() {
             @Override
@@ -184,6 +194,7 @@ public class BleService extends Service {
                                 BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
                                     @Override
                                     protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
+                                        TipDialog.show(RxActivityUtils.currentActivity(), "连接成功", TipDialog.TYPE_FINISH);
                                         RxBus.getInstance().post(new ConnectStateBus(true));
                                     }
                                 });

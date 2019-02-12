@@ -11,33 +11,31 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.Key;
-import com.wesmartclothing.tbra.entity.JsonDataBean;
+import com.wesmartclothing.tbra.entity.ErrorRecordPointDetailBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
-import com.wesmartclothing.tbra.entity.SinglePointBean;
 import com.wesmartclothing.tbra.entity.SingleSelectBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
-import com.wesmartclothing.tbra.tools.MapSortUtil;
+import com.zchu.rxcache.RxCache;
+import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class ErrorPointActivity extends BaseActivity {
 
@@ -57,7 +55,7 @@ public class ErrorPointActivity extends BaseActivity {
     RecyclerView mRecyclerWarningPoint;
 
     private BaseQuickAdapter errorPointDetailAdapter, errorPointAdapter;
-    private Map<String, List<SinglePointBean>> errorMap = new HashMap<>();
+    private long startTime, endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,56 +71,84 @@ public class ErrorPointActivity extends BaseActivity {
     public void initBundle(Bundle bundle) {
         String latestType = bundle.getString(Key.BUNDLE_LATEST_TYPE);
         RxLogUtils.d("类型：" + latestType);
-//        mRxTitle.setTag(latestType);
-        RxManager.getInstance().doNetSubscribe(
-                NetManager.getApiService().latestSingleData(new RecordBean(latestType))
-                , lifecycleSubject, latestType,
-                new TypeToken<List<PointDataBean>>() {
-                }.getType(),
-                CacheStrategy.onlyCache())
-                .subscribe(new RxNetSubscriber<List<PointDataBean>>() {
-                    @Override
-                    protected void _onNext(List<PointDataBean> list) {
-                        updateUI(list);
-                    }
-                });
+
+        if (latestType.startsWith("warningInfoReaded")) {
+            RxCache.getDefault().<PointDataBean>load(latestType, PointDataBean.class)
+                    .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                    .map(new CacheResult.MapFunc())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new RxNetSubscriber<PointDataBean>() {
+                        @Override
+                        protected void _onNext(PointDataBean bean) {
+                            updateUI(bean);
+                        }
+                    });
+        } else {
+            RxManager.getInstance().doNetSubscribe(
+                    NetManager.getApiService().unusualData(new RecordBean(latestType))
+                    , lifecycleSubject,
+                    "unusualData" + latestType,
+                    PointDataBean.class,
+                    CacheStrategy.firstCache())
+                    .subscribe(new RxNetSubscriber<PointDataBean>() {
+                        @Override
+                        protected void _onNext(PointDataBean bean) {
+                            updateUI(bean);
+                        }
+                    });
+        }
+    }
+
+    private void updateUI(PointDataBean bean) {
+        startTime = bean.getStartTime();
+        endTime = bean.getEndTime();
+
+        mTvMonitorTime.setText("监测时段\t\t\t\t\t" + RxFormat.setFormatDate(startTime, RxFormat.Date_Date2) + "～" +
+                RxFormat.setFormatDate(endTime, RxFormat.Date_Date2));
+
+        List<SingleSelectBean> beans = new ArrayList<>();
+        bean.getPointsList().forEach(pointsListBean -> {
+            if (pointsListBean.getWarningFlag() == 1) {
+                beans.add(new SingleSelectBean(pointsListBean.getSide() + pointsListBean.getPoint()));
+            }
+        });
+
+        //警告次数
+        mTvWarningCount.setText(bean.getUnusualCount() + "");
+
+        //异常点位个数
+        mTvWarningPoint.setText(beans.size() + "");
+
+        if (!RxDataUtils.isEmpty(beans)) {
+            beans.get(0).setSelect(true);
+            getErrorPointDetail(beans.get(0).getText());
+        }
+        errorPointAdapter.setNewData(beans);
 
     }
 
-    private void updateUI(List<PointDataBean> pointDatalist) {
-        int errorTotal = 0;
 
-        Gson gson = new Gson();
-        for (PointDataBean bean : pointDatalist) {
-            errorTotal += bean.getUnusualNum();
-            List<JsonDataBean> errorPointlist = gson.fromJson(bean.getUnusualPoints(), new TypeToken<List<JsonDataBean>>() {
-            }.getType());
+    private void getErrorPointDetail(String pointName) {
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().unusualPointData(
+                        pointName.substring(0, 1),
+                        pointName.substring(1, pointName.length()),
+                        startTime,
+                        endTime,
+                        1,
+                        30
+                )
+                , lifecycleSubject, "unusualPointData" + pointName + startTime + endTime,
+                ErrorRecordPointDetailBean.class,
+                CacheStrategy.firstCache())
+                .subscribe(new RxNetSubscriber<ErrorRecordPointDetailBean>() {
+                    @Override
+                    protected void _onNext(ErrorRecordPointDetailBean bean) {
+                        errorPointDetailAdapter.setNewData(bean.getList());
+                    }
 
-            for (JsonDataBean errorBean : errorPointlist) {
-                List<SinglePointBean> singlePointBeans = errorMap.get(errorBean.getNodeName());
-                if (singlePointBeans == null) {
-                    singlePointBeans = new ArrayList<>();
-                    errorMap.put(errorBean.getNodeName(), singlePointBeans);
-                }
-                singlePointBeans.add(new SinglePointBean(bean.getCollectTime(), errorBean.getNodeName(), errorBean.getNodeTemp()));
-            }
-        }
-        errorMap = MapSortUtil.sortMapByKey(errorMap);
-        List<SingleSelectBean> beans = new ArrayList<>();
-        for (String s : errorMap.keySet()) {
-            beans.add(new SingleSelectBean(s));
-        }
-        if (!RxDataUtils.isEmpty(beans))
-            beans.get(0).setSelect(true);
-        errorPointAdapter.setNewData(beans);
-        if (!RxDataUtils.isEmpty(beans))
-            errorPointDetailAdapter.setNewData(errorMap.get(beans.get(0).getText()));
 
-        if (!RxDataUtils.isEmpty(pointDatalist))
-            mTvMonitorTime.setText("监测时段\t\t\t\t\t" + RxFormat.setFormatDate(pointDatalist.get(0).getCollectTime(), RxFormat.Date_Date2) + "～" +
-                    RxFormat.setFormatDate(pointDatalist.get(pointDatalist.size() - 1).getCollectTime(), RxFormat.Date_Date2));
-        mTvWarningCount.setText(errorTotal + "");
-        mTvWarningPoint.setText(errorMap.size() + "");
+                });
     }
 
     @Override
@@ -160,7 +186,8 @@ public class ErrorPointActivity extends BaseActivity {
                 curItem.setSelect(true);
                 errorPointAdapter.setData(lastIndex, lastItem);
                 errorPointAdapter.setData(position, curItem);
-                errorPointDetailAdapter.setNewData(errorMap.get(curItem.getText()));
+
+                getErrorPointDetail(curItem.getText());
                 mRecyclerErrorPoint.setTag(position);
             }
         });
@@ -171,13 +198,16 @@ public class ErrorPointActivity extends BaseActivity {
     private void initPointDetail() {
         mRecyclerWarningPoint.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerWarningPoint.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
-        errorPointDetailAdapter = new BaseQuickAdapter<SinglePointBean, BaseViewHolder>(R.layout.item_warning_point) {
+        errorPointDetailAdapter = new BaseQuickAdapter<ErrorRecordPointDetailBean.ListBean, BaseViewHolder>(R.layout.item_warning_point) {
             @Override
-            protected void convert(BaseViewHolder helper, SinglePointBean item) {
-                String pointTime = RxFormat.setFormatDate(item.getTime(), RxFormat.Date_Date2) + "\n" +
-                        "异常点位：" + item.getPointName();
+            protected void convert(BaseViewHolder helper, ErrorRecordPointDetailBean.ListBean item) {
+                String pointTime = RxFormat.setFormatDate(item.getCollectDate(), RxFormat.Date_Date2) + "\n" +
+                        "异常点位：" + item.getSide() + item.getPoint();
+                //异常温度通过最大，最小温度与平均温度的偏差对比，
+                double errorTemp = Math.abs(item.getMaxTemp() - item.getAvgTemp()) >
+                        Math.abs(item.getMinTemp() - item.getAvgTemp()) ? item.getMaxTemp() : item.getMinTemp();
                 SpannableStringBuilder stringBuilder = RxTextUtils.getBuilder("异常温度：")
-                        .append(item.getTemp() + "°C").setForegroundColor(Color.parseColor("#FF756E"))
+                        .append(errorTemp + "°C").setForegroundColor(Color.parseColor("#FF756E"))
                         .create();
                 helper.setText(R.id.tv_point_time, pointTime)
                         .setText(R.id.tv_temp, stringBuilder);

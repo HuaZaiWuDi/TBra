@@ -6,6 +6,7 @@ import com.vondear.rxtools.utils.RxFormatValue;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
+import com.vondear.rxtools.utils.net.ExplainException;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.ble.BleAPI;
@@ -53,12 +54,12 @@ public class AddTempData {
         BleAPI.getTempCount(new RxSubscriber<Integer>() {
             @Override
             protected void _onNext(Integer integer) {
+                RxLogUtils.d("硬件包数：" + integer);
                 if (integer > 0) {
                     if (mRxSubscriber != null)
                         mRxSubscriber.onSubscribe(null);
                     maxCount = integer;
                     getTempData();
-
                 }
             }
         });
@@ -66,11 +67,11 @@ public class AddTempData {
 
 
     private void getTempData() {
-        BleAPI.getTempData(SPUtils.getInt(SPKey.SP_LAST_INDEX, 0) + 1, maxCount, new RxSubscriber<AddTempDataBean>() {
+        BleAPI.getTempData(SPUtils.getInt(SPKey.SP_LAST_INDEX, 0), maxCount, new RxSubscriber<AddTempDataBean>() {
             @Override
             protected void _onNext(AddTempDataBean addTempDataBean) {
                 if (mRxSubscriber != null) {
-                    int progress = (int) (addTempDataBean.getIndex() * 100f / maxCount);
+                    int progress = (int) (addTempDataBean.getIndex() * 100f / (maxCount - 1));
                     mRxSubscriber.onNext(progress);
                 }
                 tempDataBeans.add(addTempDataBean);
@@ -101,7 +102,7 @@ public class AddTempData {
                 }
 
                 if (mRxSubscriber != null)
-                    mRxSubscriber.onError(e);
+                    mRxSubscriber.onError(new ExplainException("获取失败", -3));
             }
         });
     }
@@ -144,7 +145,8 @@ public class AddTempData {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        RxLogUtils.d("蓝牙获取数据并上传");
+                        RxLogUtils.d("没有本地数据");
+
                         getDateByBle();
                     }
                 });
@@ -185,9 +187,10 @@ public class AddTempData {
                     public void onError(Throwable e) {
                         super.onError(e);
                         if (mRxSubscriber != null)
-                            mRxSubscriber.onError(e);
+                            mRxSubscriber.onError(new ExplainException("上传失败", -4));
                         //上传出现异常，刷新本地缓存，清空已经上传的数据源
-                        saveCache(tempDataBeans.subList(endIndex - 200, tempDataBeans.size()));
+                        saveCache(tempDataBeans.subList(Math.max(endIndex - 200, 0), tempDataBeans.size()));
+
                     }
                 });
     }
@@ -257,7 +260,7 @@ public class AddTempData {
                     public void onError(Throwable e) {
                         super.onError(e);
                         if (mRxSubscriber != null)
-                            mRxSubscriber.onError(e);
+                            mRxSubscriber.onError(new ExplainException("上传失败", -4));
                     }
                 });
     }

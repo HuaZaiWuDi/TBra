@@ -14,7 +14,7 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         app:corner_radius="8dp"
-        app:icon_src_normal="@color/colortheme"
+        app:icon_src_normal="@mipmap/ic_launcher"
         />
 
     <TextView

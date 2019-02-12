@@ -171,8 +171,8 @@ public class HistoryTempDetailView extends RelativeLayout {
         xAxis.setTextColor(Color.parseColor("#FD74B4"));
         xAxis.setTextSize(10f);
         xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(8);
-        xAxis.setLabelCount(8);
+//        xAxis.setAxisMaximum(8);
+//        xAxis.setLabelCount(8);
 
         mMBarChart.getAxisLeft().setAxisMaximum(maxValue);
         mMBarChart.getAxisLeft().setAxisMinimum(minValue);
@@ -200,6 +200,8 @@ public class HistoryTempDetailView extends RelativeLayout {
 
     private void setLine() {
         LineDataSet set, set2;
+
+
         if (mLineChart.getData() != null) {
             set = (LineDataSet) mLineChart.getData().getDataSetByLabel("tempDiffLine", false);
             set2 = (LineDataSet) mLineChart.getData().getDataSetByLabel("tempNormalLine", false);
@@ -250,6 +252,9 @@ public class HistoryTempDetailView extends RelativeLayout {
 
     private void setData() {
         BarDataSet set, set2;
+
+        XAxis xAxis = mMBarChart.getXAxis();
+        xAxis.setAxisMaximum(valuesLeft.size() < 8 ? valuesLeft.size() : 8);
 
         if (mMBarChart.getData() != null &&
                 mMBarChart.getData().getDataSetCount() > 0) {
