@@ -173,10 +173,10 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         RxLogUtils.i(TGA + "：onResume");
         lifecycleSubject.onNext(LifeCycleEvent.RESUME);
 
-        //已经准备好，并且只有第一次会调用这个
-        if (isPrepared && isFirstLoad) {
-            onVisible();
-        }
+//        //已经准备好，并且只有第一次会调用这个
+//        if (isPrepared && isFirstLoad) {
+//            onVisible();
+//        }
         super.onResume();
     }
 
@@ -193,7 +193,6 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         onInvisible();
         RxLogUtils.i(TGA + "：onStop");
         lifecycleSubject.onNext(LifeCycleEvent.STOP);
-        isVisible = false;
         super.onStop();
     }
 

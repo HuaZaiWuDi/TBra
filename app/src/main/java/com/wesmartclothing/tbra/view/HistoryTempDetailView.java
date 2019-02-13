@@ -254,7 +254,11 @@ public class HistoryTempDetailView extends RelativeLayout {
         BarDataSet set, set2;
 
         XAxis xAxis = mMBarChart.getXAxis();
-        xAxis.setAxisMaximum(valuesLeft.size() < 8 ? valuesLeft.size() : 8);
+        xAxis.setAxisMaximum(8);
+        xAxis.setLabelCount(8);
+//        xAxis.setAxisMaximum(Math.min(valuesLeft.size(), 8));
+//        xAxis.setLabelCount(Math.min(valuesLeft.size(), 8));
+
 
         if (mMBarChart.getData() != null &&
                 mMBarChart.getData().getDataSetCount() > 0) {

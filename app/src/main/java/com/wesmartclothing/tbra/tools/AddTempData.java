@@ -41,10 +41,13 @@ public class AddTempData {
     private List<AddTempDataBean> tempDataBeans = new ArrayList<>();
     private RxSubscriber<Integer> mRxSubscriber;
 
-    public AddTempData(RxSubscriber<Integer> mRxSubscriber) {
-        this.mRxSubscriber = mRxSubscriber;
+    public AddTempData() {
     }
 
+
+    public void setRxSubscriber(RxSubscriber<Integer> rxSubscriber) {
+        mRxSubscriber = rxSubscriber;
+    }
 
     /**
      * 412a0005 0000 0000 0000000000
@@ -56,17 +59,17 @@ public class AddTempData {
             protected void _onNext(Integer integer) {
                 RxLogUtils.d("硬件包数：" + integer);
                 if (integer > 0) {
-                    if (mRxSubscriber != null)
-                        mRxSubscriber.onSubscribe(null);
                     maxCount = integer;
-                    getTempData();
+                    if (mRxSubscriber != null) {
+                        mRxSubscriber.onSubscribe(null);
+                    }
                 }
             }
         });
     }
 
 
-    private void getTempData() {
+    public void getTempData() {
         BleAPI.getTempData(SPUtils.getInt(SPKey.SP_LAST_INDEX, 0), maxCount, new RxSubscriber<AddTempDataBean>() {
             @Override
             protected void _onNext(AddTempDataBean addTempDataBean) {

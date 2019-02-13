@@ -243,6 +243,7 @@ public class ReportDataBean {
          * warnMax : 1
          * warnMin : 1
          * warningFlag : 1
+         * readState：0   //0未读，1已读
          */
 
         private double avgTemp;
@@ -266,6 +267,16 @@ public class ReportDataBean {
         private double warnMin;
         private int warningFlag;
         private int weeks;
+        private int readState;
+
+
+        public int getReadState() {
+            return readState;
+        }
+
+        public void setReadState(int readState) {
+            this.readState = readState;
+        }
 
         public double getAvgTemp() {
             return avgTemp;

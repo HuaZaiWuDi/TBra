@@ -22,10 +22,10 @@ import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
+import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
-import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.CheckTempErrorUtil;
@@ -123,25 +123,21 @@ public class MonitorFragment extends BaseAcFragment {
 
     @Override
     public void initRxBus2() {
-        //系统蓝牙监听
-        RxBus.getInstance().register2(SystemBleOpenBus.class)
-                .compose(RxComposeUtils.<SystemBleOpenBus>bindLife(lifecycleSubject))
-                .subscribe(new RxSubscriber<SystemBleOpenBus>() {
-                    @Override
-                    protected void _onNext(SystemBleOpenBus systemBleOpenBus) {
-//                        if (systemBleOpenBus.isOpen) {
-//                            CustomDialog.unloadAllDialog();
-//                            RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
-//                        }
-                    }
-                });
-
         RxBus.getInstance().register2(ConnectStateBus.class)
                 .compose(RxComposeUtils.bindLife(lifecycleSubject))
                 .subscribe(new RxSubscriber<ConnectStateBus>() {
                     @Override
                     protected void _onNext(ConnectStateBus connectStateBus) {
                         bleConnectState(connectStateBus.isConnect());
+                    }
+                });
+
+        RxBus.getInstance().register2(DeviceBatteryInfoBean.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<DeviceBatteryInfoBean>() {
+                    @Override
+                    protected void _onNext(DeviceBatteryInfoBean deviceBatteryInfoBean) {
+                        mPowerIcon.setBatteryValue(deviceBatteryInfoBean.getBatteryValue());
                     }
                 });
     }

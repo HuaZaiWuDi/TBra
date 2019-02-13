@@ -204,7 +204,7 @@ public class ReportActivity extends BaseActivity {
 
     private ArrayList<PieEntry> sortUtil(Map<String, Integer> map, int total) {
         ArrayList<PieEntry> entrys = new ArrayList<>();
-        if (RxDataUtils.isEmpty(map)||total == 0) return entrys;
+        if (RxDataUtils.isEmpty(map) || total == 0) return entrys;
         map = MapSortUtil.sortMapByValue(map);
         map.forEach((s, integer) -> {
             RxLogUtils.d("异常次数排名：Key:" + s + "--值:" + integer);

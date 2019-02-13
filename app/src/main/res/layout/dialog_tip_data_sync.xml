@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.vondear.rxtools.view.layout.RxLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="329dp"
+    android:layout_height="282dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    app:background_normal="@color/white"
+    app:corner_radius="8dp">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:text="数据同步提示"
+        android:textColor="@color/font_475669"
+        android:textSize="21sp"/>
+
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="274dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:gravity="center"
+        android:text="您有超过xx天的数据未同步，请开启蓝牙并连接设备进行数据同步。"
+        android:textColor="@color/font_6A6F7B"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/tv_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="55dp"
+        android:background="@mipmap/ic_btn"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        />
+
+
+</com.vondear.rxtools.view.layout.RxLinearLayout>

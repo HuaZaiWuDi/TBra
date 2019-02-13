@@ -6,7 +6,6 @@ import com.vondear.rxtools.utils.aboutByte.ByteUtil;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
-import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 
 import java.io.UnsupportedEncodingException;
@@ -128,34 +127,15 @@ public class BleAPI {
 
     /**
      * 获取电池信息
-     *
-     * @param subscriber
      */
-    public static void getBattery(RxSubscriber<DeviceBatteryInfoBean> subscriber) {
+    public static void getBattery() {
         byte[] bytes = new byte[20];
 
         bytes[1] = 0x01;
         bytes[3] = 0x04;
 
         RxLogUtils.d("【获取电池信息】", HexUtil.encodeHexStr(bytes));
-        BleTools.getInstance().write(bytes, new RxSubscriber<byte[]>() {
-            @Override
-            protected void _onNext(byte[] bytes) {
-                DeviceBatteryInfoBean batteryInfoBean = new DeviceBatteryInfoBean();
-                batteryInfoBean.setBatteryState(bytes[4]);
-                batteryInfoBean.setBatteryValue(bytes[5]);
-                batteryInfoBean.setBatteryVoltage(ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}));
-                batteryInfoBean.setBatteryTemperature(ByteUtil.bytesToIntD2(new byte[]{bytes[8], bytes[9]}));
-                RxLogUtils.d("电池温度信息：" + batteryInfoBean.toString());
-                subscriber.onNext(batteryInfoBean);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                subscriber.onError(e);
-            }
-        });
+        BleTools.getInstance().write(bytes, null);
     }
 
     /**

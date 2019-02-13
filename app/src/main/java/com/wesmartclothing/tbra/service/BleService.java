@@ -85,11 +85,6 @@ public class BleService extends Service {
         }
     };
 
-    private void initBle() {
-
-    }
-
-
     public BleService() {
     }
 
@@ -97,6 +92,17 @@ public class BleService extends Service {
     public void onCreate() {
         super.onCreate();
         initBroadcast();
+
+        RxBus.getInstance().register2(ConnectStateBus.class)
+                .subscribe(new RxSubscriber<ConnectStateBus>() {
+                    @Override
+                    protected void _onNext(ConnectStateBus connectStateBus) {
+                        //断开连接重连
+                        if (!connectStateBus.isConnect()) {
+                            scanConnectDevice();
+                        }
+                    }
+                });
     }
 
     private void initBroadcast() {
@@ -122,7 +128,6 @@ public class BleService extends Service {
             RxLogUtils.e("设备已连接");
             return;
         }
-
 
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
@@ -155,7 +160,6 @@ public class BleService extends Service {
                 RxLogUtils.d("连接成功：");
                 BleTools.getInstance().stopScan();
                 connectSuccess();
-
             }
 
             @Override
@@ -194,7 +198,9 @@ public class BleService extends Service {
                                 BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
                                     @Override
                                     protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
-                                        TipDialog.show(RxActivityUtils.currentActivity(), "连接成功", TipDialog.TYPE_FINISH);
+                                        TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "连接成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                                        tipDialog.setCanCancel(true);
+                                        tipDialog.showDialog();
                                         RxBus.getInstance().post(new ConnectStateBus(true));
                                     }
                                 });

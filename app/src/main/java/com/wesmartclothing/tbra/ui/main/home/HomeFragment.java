@@ -33,6 +33,7 @@ import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
+import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
@@ -40,6 +41,7 @@ import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
+import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.ReportDataBean;
 import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
@@ -59,7 +61,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -93,7 +94,6 @@ public class HomeFragment extends BaseAcFragment {
     RxRoundProgressBar mProSyncData;
     @BindView(R.id.layout_syncData)
     RelativeLayout mLayoutSyncData;
-    Unbinder unbinder;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -120,6 +120,7 @@ public class HomeFragment extends BaseAcFragment {
         initTab();
         initRecyclerView();
         initErrorPoint();
+
     }
 
     private void bleConnectState(boolean isConnected) {
@@ -127,10 +128,12 @@ public class HomeFragment extends BaseAcFragment {
         mImgBattery.setVisibility(isConnected ? View.VISIBLE : View.INVISIBLE);
         mImgBattery.setBatteryValue(100);
         FIRST_CONNECT = isConnected;
+        if (isConnected) BleAPI.getBattery();
 
         if (isVisibled()) {
             uploadTempData();
         }
+
     }
 
     private void initErrorPoint() {
@@ -159,6 +162,10 @@ public class HomeFragment extends BaseAcFragment {
         });
     }
 
+
+    /**
+     * 周报月报
+     */
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         adapter = new BaseQuickAdapter<ReportDataBean.ListBean, BaseViewHolder>(R.layout.item_report) {
@@ -178,10 +185,16 @@ public class HomeFragment extends BaseAcFragment {
                 helper.setImageResource(R.id.img_date, mCommonTabLayout.getCurrentTab() == 0 ? R.mipmap.ic_week : R.mipmap.ic_month)
                         .setImageResource(R.id.img_mark, item.getWarningFlag() == 0 ? R.mipmap.ic_security_green : R.mipmap.ic_warning_red)
                         .setText(R.id.tv_reportDetail, stringBuilder)
-                        .setImageResource(R.id.img_complete, R.mipmap.ic_complete_pink);
+                        .setImageResource(R.id.img_complete, item.getReadState() == 0 ? R.color.white : R.mipmap.ic_complete_pink);
             }
         };
         adapter.setOnItemClickListener((adapter, view, position) -> {
+            ReportDataBean.ListBean item = (ReportDataBean.ListBean) adapter.getItem(position);
+            if (item.getReadState() == 0) {
+                item.setReadState(1);
+                adapter.setData(position, item);
+            }
+
             Bundle bundle = new Bundle();
             bundle.putInt(Key.BUNDLE_REPORT_TYPE, mCommonTabLayout.getCurrentTab());
             bundle.putString(Key.BUNDLE_GID_DATA, ((ReportDataBean.ListBean) adapter.getItem(position)).getGid());
@@ -226,6 +239,15 @@ public class HomeFragment extends BaseAcFragment {
                         bleConnectState(connectStateBus.isConnect());
                     }
                 });
+
+        RxBus.getInstance().register2(DeviceBatteryInfoBean.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<DeviceBatteryInfoBean>() {
+                    @Override
+                    protected void _onNext(DeviceBatteryInfoBean deviceBatteryInfoBean) {
+                        mImgBattery.setBatteryValue(deviceBatteryInfoBean.getBatteryValue());
+                    }
+                });
     }
 
 
@@ -249,32 +271,34 @@ public class HomeFragment extends BaseAcFragment {
 
             @Override
             public void onTabReselect(int position) {
-                if (position == 0) {
-                    clearHistoryData();
-                } else if (position == 1) {
-                    List<AddTempDataBean> tempDataBeans = new ArrayList<>();
-                    BleAPI.getTempData(0, 10, new RxSubscriber<AddTempDataBean>() {
-                        @Override
-                        protected void _onNext(AddTempDataBean addTempDataBean) {
-                            tempDataBeans.add(addTempDataBean);
-                        }
-                    });
-
+                //测试功能
+                if (BuildConfig.DEBUG) {
+                    if (position == 0) {
+                        clearHistoryData();
+                    } else if (position == 1) {
+                        List<AddTempDataBean> tempDataBeans = new ArrayList<>();
+                        BleAPI.getTempData(0, 10, new RxSubscriber<AddTempDataBean>() {
+                            @Override
+                            protected void _onNext(AddTempDataBean addTempDataBean) {
+                                tempDataBeans.add(addTempDataBean);
+                            }
+                        });
+                    }
                 }
             }
         });
     }
 
+    //一号更新月报，星期一更新周报
     private void getReportData(int position) {
         RxManager.getInstance().doNetSubscribe(
-                position == 0 ? NetManager.getApiService().weekDataList(1, 7) :
-                        NetManager.getApiService().monthDataList(1, 7),
+                position == 0 ? NetManager.getApiService().weekDataList(1, 30) :
+                        NetManager.getApiService().monthDataList(1, 30),
                 lifecycleSubject,
                 position == 0 ? "weekDataList" : "monthDataList",
                 ReportDataBean.class,
-                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT)
+                CacheStrategy.firstRemote()
         )
-//                .compose(RxComposeTools.showDialog(mContext))
                 .subscribe(new RxSubscriber<ReportDataBean>() {
                     @Override
                     protected void _onNext(ReportDataBean pointDataBeans) {
@@ -335,18 +359,29 @@ public class HomeFragment extends BaseAcFragment {
     private void uploadTempData() {
         if (FIRST_CONNECT) {
             FIRST_CONNECT = false;
-            new AddTempData(new RxSubscriber<Integer>() {
+            AddTempData addTempData = new AddTempData();
+
+            addTempData.setRxSubscriber(new RxSubscriber<Integer>() {
                 //开始
                 @Override
                 public void onSubscribe(Disposable d) {
                     super.onSubscribe(d);
-                    RxLogUtils.d("开始");
-                    CustomDialog.show(mContext, R.layout.dialog_data_sync);
-                    new Handler().postDelayed(() -> {
-                        CustomDialog.unloadAllDialog();
-                    }, 1500);
+                    RxLogUtils.d("有未同步的数据");
 
-                    RxAnimationUtils.animateHeight(RxUtils.dp2px(1), RxUtils.dp2px(39), mLayoutSyncData);
+                    CustomDialog.show(mContext, R.layout.dialog_tip_data_sync, rootView -> {
+                        rootView.findViewById(R.id.tv_complete)
+                                .setOnClickListener(view -> {
+                                    RxLogUtils.d("开始同步数据");
+                                    addTempData.getTempData();
+
+                                    CustomDialog.show(mContext, R.layout.dialog_data_sync);
+                                    new Handler().postDelayed(() -> {
+                                        CustomDialog.unloadAllDialog();
+                                    }, 1500);
+
+                                    RxAnimationUtils.animateHeight(RxUtils.dp2px(1), RxUtils.dp2px(39), mLayoutSyncData);
+                                });
+                    });
                 }
 
                 //进度
@@ -378,7 +413,9 @@ public class HomeFragment extends BaseAcFragment {
                     if (mContext != null)
                         TipDialog.show(mContext, ((ExplainException) e).getMsg(), TipDialog.TYPE_ERROR);
                 }
-            }).uploadCacheOrBleData();
+            });
+
+            addTempData.uploadCacheOrBleData();
         }
     }
 

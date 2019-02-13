@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,6 +28,7 @@ import com.kongzue.dialog.v2.WaitDialog;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxAnimationUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
@@ -63,8 +67,12 @@ public class ScanDeviceActivity extends BaseActivity {
     RecyclerView mDeviceRecyclerView;
     @BindView(R.id.tv_btn)
     TextView mTvBtn;
+    @BindView(R.id.img_ble_scan)
+    ImageView mImgBleScan;
+    @BindView(R.id.layout_ble_scan)
+    FrameLayout mLayoutBleScan;
 
-    BaseQuickAdapter adapter;
+    private BaseQuickAdapter adapter;
     private BindDeviceBean deviceBean = new BindDeviceBean();
     private int position = 0;
     private WaitDialog waitDialog;
@@ -135,6 +143,7 @@ public class ScanDeviceActivity extends BaseActivity {
         mDeviceRecyclerView.setTag(-1);
         adapter.setOnItemClickListener((adapter, view, position) -> {
                     this.position = position;
+                    BleTools.getInstance().disConnect();
                     connectDevice(((DeviceConnectBean) adapter.getItem(position)).getBleDevice().getMac());
                 }
         );
@@ -187,7 +196,6 @@ public class ScanDeviceActivity extends BaseActivity {
     }
 
     private void startScan() {
-
         if (!BleTools.getBleManager().isBlueEnable()) {
             CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->
                     rootView.findViewById(R.id.tv_complete)
@@ -197,6 +205,7 @@ public class ScanDeviceActivity extends BaseActivity {
                             })).setCanCancel(true).showDialog();
             return;
         }
+
 
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
                 .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
@@ -210,6 +219,7 @@ public class ScanDeviceActivity extends BaseActivity {
             public void onScanFinished(List<BleDevice> scanResultList) {
                 RxLogUtils.d("扫描结果:" + scanResultList.size());
                 if (scanResultList.isEmpty()) {
+                    TipDialog.show(mContext, "未发现设备", TipDialog.TYPE_ERROR);
                 }
             }
 
@@ -218,6 +228,8 @@ public class ScanDeviceActivity extends BaseActivity {
                 RxLogUtils.d("扫描开始：" + success);
                 //清空列表
                 if (success) {
+                    mLayoutBleScan.setVisibility(View.VISIBLE);
+                    mImgBleScan.startAnimation(RxAnimationUtils.RotateAnim(15));
                     adapter.setNewData(null);
                 } else {
 //                    TipDialog.show(mContext, "扫描失败", TipDialog.TYPE_ERROR);
@@ -226,6 +238,8 @@ public class ScanDeviceActivity extends BaseActivity {
 
             @Override
             public void onScanning(BleDevice bleDevice) {
+                mLayoutBleScan.setVisibility(View.GONE);
+                mImgBleScan.clearAnimation();
                 RxLogUtils.d("正在扫描：" + bleDevice.getMac());
                 DeviceConnectBean firstItem = (DeviceConnectBean) adapter.getItem(0);
                 if (firstItem != null && firstItem.getBleDevice().getRssi() < bleDevice.getRssi()) {
@@ -320,14 +334,13 @@ public class ScanDeviceActivity extends BaseActivity {
             protected void _onNext(String s) {
             }
         });
-
     }
 
 
     @Override
     protected void onDestroy() {
         BleTools.getInstance().stopScan();
-        BleTools.getBleManager().removeConnectGattCallback(BleTools.getInstance().getBleDevice());
+//        BleTools.getBleManager().removeConnectGattCallback(BleTools.getInstance().getBleDevice());
         super.onDestroy();
     }
 }

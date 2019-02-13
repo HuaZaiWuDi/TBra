@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxDataUtils;
+import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
@@ -54,25 +55,25 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void initNetData() {
 
-        RxActivityUtils.skipActivityAndFinish(mContext, MainActivity.class);
+//        RxActivityUtils.skipActivityAndFinish(mContext, MainActivity.class);
 //
-//        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
-//            SPUtils.put(SPKey.SP_GUIDE, true);
-//            RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);
-//            return;
-//        }
-//        if (RxDataUtils.isNullString(SPUtils.getString(SPKey.SP_UserId, ""))) {
-//            RxActivityUtils.skipActivityAndFinish(mActivity, LoginActivity.class);
-//            return;
-//        }
-//        initUserInfo();
-//        otherSetting();
+        if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
+            SPUtils.put(SPKey.SP_GUIDE, true);
+            RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);
+            return;
+        }
+        if (RxDataUtils.isNullString(SPUtils.getString(SPKey.SP_UserId, ""))) {
+            RxActivityUtils.skipActivityAndFinish(mActivity, LoginActivity.class);
+            return;
+        }
+        initUserInfo();
+        otherSetting();
 
     }
 
 
     private void otherSetting() {
-        new AddTempData(null).uploadCacheOrBleData();
+        new AddTempData().uploadCacheOrBleData();
     }
 
     //获取用户信息

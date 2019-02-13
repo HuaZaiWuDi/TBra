@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
@@ -76,12 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBase {
     }
 
     public void initTitle(RxTitle mRxTitle) {
-        mRxTitle.setLeftOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+        mRxTitle.setLeftOnClickListener(view -> onBackPressed());
     }
 
 

@@ -18,13 +18,17 @@ import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.data.BleScanState;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.utils.HexUtil;
+import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.RxLogUtils;
+import com.vondear.rxtools.utils.aboutByte.ByteUtil;
 import com.vondear.rxtools.utils.net.ExplainException;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.ble.listener.BleCallBack;
 import com.wesmartclothing.tbra.ble.listener.BleOpenNotifyCallBack;
-import com.wesmartclothing.tbra.ble.listener.SynDataCallBack;
 import com.wesmartclothing.tbra.constant.BLEKey;
+import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 
 import java.util.List;
 
@@ -63,7 +67,6 @@ public class BleTools {
 
     private BleCallBack mBleCallBack;
     private RxSubscriber subscriber;
-    private SynDataCallBack mSynDataCallBack;
     private byte[] bytes;
     private final int reWriteCount = 2;    //重连次数
     private int currentCount = 0;          //当前次数
@@ -91,6 +94,9 @@ public class BleTools {
 
     }
 
+    public void setBleCallBack(BleCallBack bleCallBack) {
+        mBleCallBack = bleCallBack;
+    }
 
     public BleDevice getBleDevice() {
         List<BleDevice> bleDevices = getBleManager().getAllConnectedDevice();
@@ -124,6 +130,7 @@ public class BleTools {
             Log.e(TAG, "未连接");
             if (subscriber != null)
                 subscriber.onError(new Exception("蓝牙未连接"));
+            RxBus.getInstance().post(new ConnectStateBus(false));
             return;
         }
         this.bytes = bytes;
@@ -212,6 +219,19 @@ public class BleTools {
                     subscriber.onNext(data);
                     TimeOut.removeCallbacks(reWrite);
                 }
+
+                //电池信息反馈
+                if (data[3] == 0x04) {
+                    DeviceBatteryInfoBean batteryInfoBean = new DeviceBatteryInfoBean();
+                    batteryInfoBean.setBatteryState(bytes[4]);
+                    batteryInfoBean.setBatteryValue(bytes[5]);
+                    batteryInfoBean.setBatteryVoltage(ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}));
+                    batteryInfoBean.setBatteryTemperature(ByteUtil.bytesToIntD2(new byte[]{bytes[8], bytes[9]}));
+                    RxLogUtils.d("电池温度信息：" + batteryInfoBean.toString());
+
+                    RxBus.getInstance().post(batteryInfoBean);
+                }
+
             }
         });
     }
