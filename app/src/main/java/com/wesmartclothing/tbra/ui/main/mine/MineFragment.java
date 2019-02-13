@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
+import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
@@ -21,6 +22,7 @@ import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.UserCenterBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
+import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
@@ -118,6 +120,10 @@ public class MineFragment extends BaseAcFragment {
                 RxToast.normal(error);
             }
         });
+        syncUserInfo();
+    }
+
+    private void syncUserInfo() {
         RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
                 .compose(RxComposeUtils.bindLife(lifecycleSubject))
                 .map(new CacheResult.MapFunc<>())
@@ -135,6 +141,7 @@ public class MineFragment extends BaseAcFragment {
                     }
                 });
     }
+
 
     private void setTextView(UserCenterBean bean) {
         RxTextUtils.getBuilder("使用天数\n")
@@ -159,7 +166,14 @@ public class MineFragment extends BaseAcFragment {
 
     @Override
     public void initRxBus2() {
-
+        RxBus.getInstance().register2(RefreshUserInfoBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxNetSubscriber<RefreshUserInfoBus>() {
+                    @Override
+                    protected void _onNext(RefreshUserInfoBus refreshUserInfoBus) {
+                        syncUserInfo();
+                    }
+                });
     }
 
 
@@ -167,6 +181,7 @@ public class MineFragment extends BaseAcFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_userImg:
+                RxActivityUtils.skipActivity(mContext, UserInfoActivity.class);
                 break;
             case R.id.img_message:
                 RxActivityUtils.skipActivity(mContext, MessageActivity.class);

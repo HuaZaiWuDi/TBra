@@ -205,6 +205,10 @@
         </activity>
         <activity android:name=".ui.main.home.ReportActivity">
         </activity>
+        <activity android:name=".ui.main.mine.UserInfoActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.EditInfoActivity">
+        </activity>
     </application>
 
 </manifest>

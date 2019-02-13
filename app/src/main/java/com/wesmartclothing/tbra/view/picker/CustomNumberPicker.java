@@ -23,11 +23,12 @@ public class CustomNumberPicker extends NumberPicker {
         setGravity(Gravity.BOTTOM);
         setHeight((int) (getScreenHeightPixels() * 0.4));
         setTopLineVisible(false);
-        setCycleDisable(false);
+        setCycleDisable(true);
         setDividerConfig(null);
         setOffset(2);//偏移量
         setTextSize(24);
-        setUseWeight(true);
+        setUseWeight(false);
+        setLabel("cm");
         setTextColor(activity.getResources().getColor(R.color.Gray));
     }
 
@@ -43,20 +44,14 @@ public class CustomNumberPicker extends NumberPicker {
     protected View makeFooterView() {
         View view = LayoutInflater.from(activity).inflate(R.layout.layout_picker_footer, null);
         TextView picker_cancel = view.findViewById(R.id.tv_cancel);
-        picker_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                onCancel();
-            }
+        picker_cancel.setOnClickListener(v -> {
+            dismiss();
+            onCancel();
         });
         TextView picker_ok = view.findViewById(R.id.tv_ok);
-        picker_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                onSubmit();
-            }
+        picker_ok.setOnClickListener(v -> {
+            dismiss();
+            onSubmit();
         });
         return view;
     }

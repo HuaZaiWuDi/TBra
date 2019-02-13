@@ -82,7 +82,7 @@ public interface ApiService {
      * 保存用户信息，无需上送imgUrl参数
      */
     @POST("user/saveUserInfo")
-    Observable<HttpResult<String>> saveUserInfo(@Body UserInfoBean gidBean);
+    Observable<HttpResult<String>> saveUserInfo(@Body UserInfoBean Bean);
 
 
     /**

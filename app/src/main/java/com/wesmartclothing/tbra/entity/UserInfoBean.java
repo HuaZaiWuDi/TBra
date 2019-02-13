@@ -51,6 +51,7 @@ public class UserInfoBean {
     private List<IllnessBean> illnessList;
     private List<String> macAddrList;
 
+
     public int getAge() {
         return age;
     }

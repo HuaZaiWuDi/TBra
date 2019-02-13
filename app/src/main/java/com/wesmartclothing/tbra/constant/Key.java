@@ -33,4 +33,9 @@ public interface Key {
     String BUNDLE_REPORT_TYPE = "BUNDLE_REPORT_TYPE";
 
     String BUNDLE_GID_DATA = "BUNDLE_GID_DATA";
+
+    //标题
+    String BUNDLE_TITLE = "BUNDLE_TITLE";
+
+    String BUNDLE_DATA = "BUNDLE_DATA";
 }

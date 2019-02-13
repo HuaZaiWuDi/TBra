@@ -20,6 +20,7 @@ import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxAnimationUtils;
+import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
@@ -33,6 +34,7 @@ import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
+import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
 import com.wesmartclothing.tbra.net.ServiceAPI;
 import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
@@ -123,7 +125,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initRxBus2() {
-
+        RxBus.getInstance().register2(RefreshUserInfoBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxNetSubscriber<RefreshUserInfoBus>() {
+                    @Override
+                    protected void _onNext(RefreshUserInfoBus refreshUserInfoBus) {
+                        initNetData();
+                    }
+                });
     }
 
 

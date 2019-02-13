@@ -64,6 +64,7 @@
                 android:layout_width="224dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:gravity="center"
                 android:maxLines="1"
                 android:text="多说无益，给个眼神自己去体会....."
                 android:textColor="#C1C0C9"

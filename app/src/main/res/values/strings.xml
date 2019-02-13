@@ -17,4 +17,5 @@
     </string>
 
     <string name="signup_agreeTerms">我同意<a style="backgroundColor='#FFFFFF'" href="http://www.baidu.com/">用户协议</a>中的所有内容</string>
+    <string name="must_input">最多可以输入%1$d字</string>
 </resources>
