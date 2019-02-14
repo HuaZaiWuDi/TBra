@@ -122,22 +122,22 @@ public class TimingMonitorView extends LinearLayout {
         valuesRight.clear();
         valueLine.clear();
 
-        for (int i = 0; i < jsonDataBeans.size(); i = i + 2) {
-            valuesLeft.add(new BarEntry((i / 2), (float) jsonDataBeans.get(i).getNodeTemp()));
-            valuesRight.add(new BarEntry((i / 2), (float) jsonDataBeans.get(i + 1).getNodeTemp()));
+        for (int i = 0; i < jsonDataBeans.size(); i++) {
+            if (i < 8) {
+                valuesLeft.add(new BarEntry(i, (float) jsonDataBeans.get(i).getNodeTemp()));
+            } else {
+                valuesRight.add(new BarEntry((i - 8), (float) jsonDataBeans.get(i).getNodeTemp()));
+            }
         }
 
         for (int i = 0; i < valuesRight.size(); i++) {
             float tempDiff = valuesLeft.get(i).getY() - valuesRight.get(i).getY();
             tempDiffs.add(Math.abs(tempDiff));
-            valueLine.add(new Entry(i, normalTemp + tempDiff));
+            valueLine.add(new Entry(i, normalTemp + Math.abs(tempDiff)));
         }
 
-        mMBarChart.getXAxis().setValueFormatter((value, axis) -> {
-            return tempDiffs.get(Math.min(Math.max((int) value, 0), tempDiffs.size() - 1)) + "";
-//                return "0.5";
-        });
-
+        mMBarChart.getXAxis().setValueFormatter((value, axis) ->
+                tempDiffs.get(Math.min(Math.max((int) value, 0), tempDiffs.size() - 1)) + "");
 
         setData();
 
@@ -206,8 +206,7 @@ public class TimingMonitorView extends LinearLayout {
 
 
         //初始化线条
-        mLineChart.setNoDataText("没有实时监测数据，\n穿上监测内衣试试吧!");
-        mLineChart.setNoDataTextColor(ContextCompat.getColor(mLineChart.getContext(), R.color.color_444A59));
+        mLineChart.setNoDataText("");
         mLineChart.getLegend().setEnabled(false);
         mLineChart.getDescription().setEnabled(false);
         mLineChart.setScaleEnabled(false);

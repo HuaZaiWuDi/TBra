@@ -256,13 +256,17 @@ public class ScanDeviceActivity extends BaseActivity {
         BleTools.getBleManager().connect(mac, new BleGattCallback() {
             @Override
             public void onStartConnect() {
-                waitDialog = WaitDialog.show(mContext, "正在连接");
+                waitDialog = WaitDialog.show(RxActivityUtils.currentActivity(), "正在连接");
             }
 
             @Override
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 WaitDialog.dismiss();
-                TipDialog.show(mContext, "连接失败", TipDialog.TYPE_ERROR);
+                if (mContext != null) {
+                    TipDialog tipDialog = TipDialog.build(mContext, "连接失败", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                    tipDialog.setCanCancel(true);
+                    tipDialog.showDialog();
+                }
                 startScan();
                 RxBus.getInstance().post(new ConnectStateBus(false));
             }
@@ -289,12 +293,16 @@ public class ScanDeviceActivity extends BaseActivity {
                             @Override
                             public void onMtuChanged(int mtu) {
                                 RxLogUtils.d("连接成功");
-                                WaitDialog.dismiss();
-                                TipDialog.show(mContext, "连接成功", TipDialog.TYPE_FINISH);
-
                                 BleAPI.syncTime(new RxSubscriber<byte[]>() {
                                     @Override
                                     protected void _onNext(byte[] bytes) {
+                                        RxLogUtils.d("同步时间成功");
+                                        WaitDialog.dismiss();
+                                        if (mContext != null) {
+                                            TipDialog tipDialog = TipDialog.build(mContext, "连接成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                                            tipDialog.setCanCancel(true);
+                                            tipDialog.showDialog();
+                                        }
                                         connectDevice();
                                         bindDevice(bleDevice.getMac());
                                         RxBus.getInstance().post(new ConnectStateBus(true));
@@ -317,7 +325,12 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
                 WaitDialog.dismiss();
-                TipDialog.show(mContext, "断开连接", TipDialog.TYPE_ERROR);
+                if (mContext != null) {
+                    TipDialog tipDialog = TipDialog.build(mContext, "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                    tipDialog.setCanCancel(true);
+                    tipDialog.showDialog();
+                }
+
                 RxBus.getInstance().post(new ConnectStateBus(false));
             }
         });

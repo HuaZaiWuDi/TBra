@@ -3,7 +3,9 @@ package com.wesmartclothing.tbra.net;
 import com.vondear.rxtools.utils.net.HttpResult;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
+import com.wesmartclothing.tbra.entity.CarouselPictureBean;
 import com.wesmartclothing.tbra.entity.ErrorRecordPointDetailBean;
+import com.wesmartclothing.tbra.entity.FeedBackBean;
 import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
@@ -131,6 +133,21 @@ public interface ApiService {
     @POST("user/warningInfoReadedAll")
     Observable<HttpResult<Integer>> warningInfoReadedAll();
 
+
+    /**
+     * 用户反馈文字信息接口
+     */
+    @POST("user/feedback")
+    Observable<HttpResult<String>> feedback(@Body FeedBackBean backBean);
+
+    /**
+     * 用户反馈图片信息接口
+     */
+    @Multipart
+    @POST("user/feedbackImg")
+    Observable<HttpResult<String>> feedbackImg(@Part() List<MultipartBody.Part> parts);
+
+
     ///////////////////////////////////////////////////////////////////////////
     // 登录
     ///////////////////////////////////////////////////////////////////////////
@@ -236,6 +253,12 @@ public interface ApiService {
     // 疾病列表下拉框
     @POST("user/systemIllnessList")
     Observable<HttpResult<List<IllnessBean>>> systemIllnessList();
+
+
+    // 获取广告轮播图列表
+    @POST("user/fetchCarouselPictureList")
+    Observable<HttpResult<List<CarouselPictureBean>>> fetchCarouselPictureList();
+
 
     ///////////////////////////////////////////////////////////////////////////
     //设备信息接口

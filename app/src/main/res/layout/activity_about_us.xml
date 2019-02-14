@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.mine.SettingActivity">
+
+
+    <com.vondear.rxtools.view.cardview.CardView
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
+        >
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="关于我们"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+    </com.vondear.rxtools.view.cardview.CardView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layoutTitle"
+        android:background="@color/bg_F7F7F9"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="253dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_clothingVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color_978E9D"
+                android:textSize="13sp"
+                tools:text="固件版本号 v1.0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Tbra"
+                android:textColor="@color/Gray"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"/>
+
+            <com.vondear.rxtools.view.layout.RxTextView
+                android:id="@+id/btn_update"
+                android:layout_width="195dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="16dp"
+                android:enabled="false"
+                android:gravity="center"
+                android:text="升级"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:background_normal="@color/color_D9D8E1"
+                app:corner_radius="23dp"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="253dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_appVersion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color_978E9D"
+                android:textSize="13sp"
+                tools:text="固件版本号 v1.0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="智裳科技APP"
+                android:textColor="@color/Gray"
+                android:textSize="18sp"/>
+
+            <com.vondear.rxtools.view.layout.RxImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="20dp"
+                app:corner_radius="8dp"
+                app:icon_src_normal="@mipmap/ic_launcher"
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/Gray"
+        android:textSize="11sp"
+        tools:text="智裳科技 服务条款和隐私条款"/>
+
+
+    <LinearLayout
+        android:id="@+id/layout_updateFail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layoutTitle"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="升级失败"
+            android:textColor="@color/red"
+            android:textSize="18sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="请确保燃脂衣电量充足并尽量靠近手机"
+            android:textColor="@color/color_978E9D"
+            android:textSize="13sp"/>
+
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:id="@+id/btn_reUpdate"
+            android:layout_width="195dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="56dp"
+            android:gravity="center"
+            android:text="重\t新\t升\t级"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:background_normal="@color/red"
+            app:corner_radius="23dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -17,7 +17,6 @@ import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.bitmap.RxImageUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
-import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
@@ -37,7 +36,7 @@ import com.wesmartclothing.tbra.view.picker.AddressPickTask;
 import com.wesmartclothing.tbra.view.picker.CustomDatePicker;
 import com.wesmartclothing.tbra.view.picker.CustomNumberPicker;
 import com.zchu.rxcache.RxCache;
-import com.zchu.rxcache.data.CacheResult;
+import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -220,9 +219,13 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     public void initNetData() {
-        RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
-                .compose(RxComposeUtils.bindLife(lifecycleSubject))
-                .map(new CacheResult.MapFunc<>())
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().userInfo(),
+                lifecycleSubject,
+                SPKey.SP_UserInfo,
+                UserInfoBean.class,
+                CacheStrategy.firstCache()
+        )
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfoBean) {
@@ -233,6 +236,11 @@ public class UserInfoActivity extends BaseActivity {
                         mTvUserHeight.setText(userInfoBean.getHeight() + "cm");
                         mTvUserCity.setText(userInfoBean.getProvince() + "," + userInfoBean.getCity());
                         mTvUserSign.setText(userInfoBean.getSignature());
+                    }
+
+                    @Override
+                    protected void _onError(String error, int code) {
+                        RxToast.normal(error);
                     }
                 });
     }

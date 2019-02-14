@@ -2,6 +2,7 @@ package com.wesmartclothing.tbra.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ public class MapSortUtil {
      */
     public static <T, V> Map<T, V> sortMapByKey(Map<T, V> map, boolean isDown) {
         if (map == null || map.isEmpty()) {
-            return null;
+            return new HashMap<>();
         }
         Map<T, V> sortMap = new TreeMap<>(
                 (s, t1) -> {
@@ -76,7 +77,7 @@ public class MapSortUtil {
      */
     public static <T, V> Map<T, V> sortMapByValue(Map<T, V> oriMap, boolean isDown) {
         if (oriMap == null || oriMap.isEmpty()) {
-            return null;
+            return new HashMap<>();
         }
         Map<T, V> sortedMap = new LinkedHashMap<>();
         List<Map.Entry<T, V>> entryList = new ArrayList<>(oriMap.entrySet());

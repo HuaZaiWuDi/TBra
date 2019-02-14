@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
@@ -28,14 +26,12 @@ import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.layout.RxImageView;
-import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
-import com.wesmartclothing.tbra.net.ServiceAPI;
 import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
 import com.wesmartclothing.tbra.ui.main.home.HomeFragment;
@@ -157,29 +153,6 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onTabReselect(int position) {
-                //双击我的按钮，出现切换网络界面，同时需要退出重新登录
-                if (position == mFragments.size() - 1 && RxUtils.isFastClick(1000) && BuildConfig.DEBUG) {
-                    new QMUIBottomSheet.BottomListSheetBuilder(mContext)
-                            .addItem(ServiceAPI.BASE_URL_192)
-                            .addItem(ServiceAPI.BASE_URL_208)
-                            .addItem(ServiceAPI.BASE_URL_125)
-                            .addItem(ServiceAPI.BASE_URL_mix)
-                            .addItem(ServiceAPI.BASE_RELEASE)
-                            .addItem(ServiceAPI.BASE_DEBUG)
-                            .setTitle("修改网络需要重启应用，提示网络错误，需要重新登录")
-                            .setOnSheetItemClickListener(new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
-                                @Override
-                                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                                    dialog.dismiss();
-//                                    SPUtils.put(SPKey.SP_BSER_URL, tag);
-//                                    ServiceAPI.switchURL(tag);
-                                }
-                            })
-                            .build()
-                            .show();
-                } else if (position == 0) {
-                    new UsedTipDialog(mContext, lifecycleSubject);
-                }
             }
         });
     }

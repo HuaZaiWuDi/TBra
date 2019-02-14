@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.mine.SettingActivity">
+
+
+    <com.vondear.rxtools.view.cardview.CardView
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
+        >
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="问题与建议"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+    </com.vondear.rxtools.view.cardview.CardView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_F7F7F9"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:id="@+id/btn_type"
+            android:layout_width="160dp"
+            android:layout_height="44dp"
+            android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+            android:gravity="left|center_vertical"
+            android:padding="8dp"
+            android:text="反馈类型"
+            android:textColor="@color/color_D9D8E1"
+            android:textSize="15sp"
+            app:background_normal="@color/white"
+            app:border_color_normal="@color/color_D9D8E1"
+            app:border_width_normal="1dp"
+            app:corner_radius="4dp"
+            />
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:id="@+id/btn_times"
+            android:layout_width="160dp"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+            android:gravity="left|center_vertical"
+            android:padding="8dp"
+            android:text="出现频率"
+            android:textColor="@color/color_D9D8E1"
+            android:textSize="15sp"
+            app:background_normal="@color/white"
+            app:border_color_normal="@color/color_D9D8E1"
+            app:border_width_normal="1dp"
+            app:corner_radius="4dp"/>
+
+        <com.vondear.rxtools.view.layout.RxRelativeLayout
+            android:id="@+id/layout_problem"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:layout_below="@+id/btn_type"
+            android:layout_marginTop="16dp"
+            app:background_normal="@color/white"
+            app:border_color_normal="@color/color_D9D8E1"
+            app:border_width_normal="1dp"
+            app:corner_radius="4dp">
+
+            <EditText
+                android:id="@+id/edit_proble"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="left"
+                android:hint="请您详细描述问题发生的场景和现象，并添加截图，这将有助于我们快速解决您的问题。"
+                android:maxLength="500"
+                android:padding="8dp"
+                android:textColor="@color/Gray"
+                android:textColorHint="@color/color_D9D8E1"
+                android:textSize="15sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_InputCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="8dp"
+                android:text="500"
+                android:textColor="@color/color_D9D8E1"
+                android:textSize="13sp"/>
+
+        </com.vondear.rxtools.view.layout.RxRelativeLayout>
+
+        <com.vondear.rxtools.view.layout.RxRelativeLayout
+            android:id="@+id/layout_phone"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_below="@+id/layout_problem"
+            android:layout_marginTop="16dp"
+            app:background_normal="@color/white"
+            app:border_color_normal="@color/color_D9D8E1"
+            app:border_width_normal="1dp"
+            app:corner_radius="4dp">
+
+            <EditText
+                android:id="@+id/edit_phone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="请留下您的联系方式（电话或邮箱）"
+                android:padding="8dp"
+                android:textColor="@color/Gray"
+                android:textColorHint="@color/color_D9D8E1"
+                android:textSize="15sp"/>
+
+
+        </com.vondear.rxtools.view.layout.RxRelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_imgs_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_phone"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="添加截图（最多添加4张）"
+            android:textColor="@color/color_978E9D"
+            android:textSize="13sp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_imgs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_imgs_title">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+        <com.vondear.rxtools.view.layout.RxTextView
+            android:id="@+id/btn_submit"
+            android:layout_width="195dp"
+            android:layout_height="46dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="提交"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:background_normal="@color/red"
+            app:corner_radius="23dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

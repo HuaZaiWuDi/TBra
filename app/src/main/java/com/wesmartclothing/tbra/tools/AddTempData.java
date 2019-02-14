@@ -63,6 +63,7 @@ public class AddTempData {
                     if (mRxSubscriber != null) {
                         mRxSubscriber.onSubscribe(null);
                     }
+                    getTempData();
                 }
             }
         });
@@ -77,19 +78,15 @@ public class AddTempData {
                     int progress = (int) (addTempDataBean.getIndex() * 100f / (maxCount - 1));
                     mRxSubscriber.onNext(progress);
                 }
-                tempDataBeans.add(addTempDataBean);
+                if (tempDataBeans.size() < maxCount)
+                    tempDataBeans.add(addTempDataBean);
 
-                if (addTempDataBean.getIndex() == maxCount - 1) {
+                if (tempDataBeans.size() == maxCount) {
                     RxLogUtils.d("获取结束");
                     uploadTempData();
                     saveCache(tempDataBeans);
                     SPUtils.put(SPKey.SP_LAST_INDEX, 0);
-//                            BleAPI.clearTempData(new RxSubscriber<byte[]>() {
-//                                @Override
-//                                protected void _onNext(byte[] bytes) {
-//
-//                                }
-//                            });
+                    BleAPI.clearTempData();
                 }
             }
 

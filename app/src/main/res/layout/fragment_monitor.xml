@@ -182,27 +182,38 @@
             </com.wesmartclothing.tbra.view.TimingMonitorView>
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/layout_monitor_empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible"
+                >
+
+
+                <com.vondear.rxtools.view.layout.RxRelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:background_normal="#80000000"
+                    app:corner_radius="8dp">
+
+
+                </com.vondear.rxtools.view.layout.RxRelativeLayout>
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@mipmap/ic_p"
+                    android:layout_centerInParent="true"
                     android:drawablePadding="14dp"
-                    android:text="未有实时监测数据，穿上监测内衣试试吧！"
-                    android:textColor="@color/font_C3C5CA"
-                    android:textSize="12sp"/>
+                    android:gravity="center"
+                    android:text="未有实时监测数据，\n穿上监测内衣试试吧！"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"/>
 
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
         </com.vondear.rxtools.view.cardview.CardView>

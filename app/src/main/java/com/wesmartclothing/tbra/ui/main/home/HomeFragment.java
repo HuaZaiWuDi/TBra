@@ -1,13 +1,16 @@
 package com.wesmartclothing.tbra.ui.main.home;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -94,6 +97,8 @@ public class HomeFragment extends BaseAcFragment {
     RxRoundProgressBar mProSyncData;
     @BindView(R.id.layout_syncData)
     RelativeLayout mLayoutSyncData;
+    @BindView(R.id.scrollView)
+    NestedScrollView mScrollView;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -114,12 +119,24 @@ public class HomeFragment extends BaseAcFragment {
     public void initBundle(Bundle bundle) {
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initViews() {
         initTitleTab();
         initTab();
         initRecyclerView();
         initErrorPoint();
+
+        mRecyclerView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                //允许ScrollView截断点击事件，ScrollView可滑动
+                mScrollView.requestDisallowInterceptTouchEvent(false);
+            } else {
+                //不允许ScrollView截断点击事件，点击事件由子View处理
+                mScrollView.requestDisallowInterceptTouchEvent(true);
+            }
+            return false;
+        });
 
     }
 
@@ -368,20 +385,12 @@ public class HomeFragment extends BaseAcFragment {
                     super.onSubscribe(d);
                     RxLogUtils.d("有未同步的数据");
 
-                    CustomDialog.show(mContext, R.layout.dialog_tip_data_sync, rootView -> {
-                        rootView.findViewById(R.id.tv_complete)
-                                .setOnClickListener(view -> {
-                                    RxLogUtils.d("开始同步数据");
-                                    addTempData.getTempData();
+                    CustomDialog show = CustomDialog.show(mContext, R.layout.dialog_data_sync);
+                    new Handler().postDelayed(() -> {
+                        show.doDismiss();
+                    }, 1500);
 
-                                    CustomDialog.show(mContext, R.layout.dialog_data_sync);
-                                    new Handler().postDelayed(() -> {
-                                        CustomDialog.unloadAllDialog();
-                                    }, 1500);
-
-                                    RxAnimationUtils.animateHeight(RxUtils.dp2px(1), RxUtils.dp2px(39), mLayoutSyncData);
-                                });
-                    });
+                    RxAnimationUtils.animateHeight(RxUtils.dp2px(1), RxUtils.dp2px(39), mLayoutSyncData);
                 }
 
                 //进度
@@ -392,8 +401,11 @@ public class HomeFragment extends BaseAcFragment {
                     if (integer == 100) {
                         RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
                         RxLogUtils.d("蓝牙数据获取完成：");
-                        if (mContext != null)
-                            TipDialog.show(mContext, "获取数据成功", TipDialog.TYPE_FINISH);
+                        if (mContext != null) {
+                            TipDialog tipDialog = TipDialog.build(mContext, "获取数据成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                            tipDialog.setCanCancel(true);
+                            tipDialog.showDialog();
+                        }
                     }
                 }
 
@@ -410,8 +422,11 @@ public class HomeFragment extends BaseAcFragment {
                 public void onError(Throwable e) {
                     super.onError(e);
                     RxLogUtils.d("异常");
-                    if (mContext != null)
-                        TipDialog.show(mContext, ((ExplainException) e).getMsg(), TipDialog.TYPE_ERROR);
+                    if (mContext != null) {
+                        TipDialog tipDialog = TipDialog.build(mContext, ((ExplainException) e).getMsg(), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                        tipDialog.setCanCancel(true);
+                        tipDialog.showDialog();
+                    }
                 }
             });
 

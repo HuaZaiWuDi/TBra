@@ -9,13 +9,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.tmall.ultraviewpager.UltraViewPager;
-import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.view.layout.RxImageView;
 import com.wesmartclothing.tbra.R;
+import com.wesmartclothing.tbra.entity.CarouselPictureBean;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,10 +28,10 @@ import java.util.List;
 public class UltraPagerAdapter extends PagerAdapter {
 
 
-    private List<String> imgs;
+    private List<CarouselPictureBean> carouselPictureBeans;
 
     public interface SelectImgListener {
-        void selectItem(String URL);
+        void selectItem(CarouselPictureBean bean);
     }
 
     private SelectImgListener mSelectImgListener;
@@ -41,9 +40,8 @@ public class UltraPagerAdapter extends PagerAdapter {
         mSelectImgListener = selectImgListener;
     }
 
-    public UltraPagerAdapter(List<String> imgs, UltraViewPager ultraViewPager) {
-        this.imgs = imgs;
-        RxLogUtils.d("图片：" + Arrays.toString(imgs.toArray()));
+    public UltraPagerAdapter(List<CarouselPictureBean> carouselPictureBeans, UltraViewPager ultraViewPager) {
+        this.carouselPictureBeans = carouselPictureBeans;
         ultraViewPager.setScrollMode(UltraViewPager.ScrollMode.HORIZONTAL);
         //内置indicator初始化
         ultraViewPager.initIndicator();
@@ -68,7 +66,7 @@ public class UltraPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return imgs == null ? 0 : imgs.size();
+        return carouselPictureBeans == null ? 0 : carouselPictureBeans.size();
     }
 
     @Override
@@ -88,15 +86,13 @@ public class UltraPagerAdapter extends PagerAdapter {
         rxImageView.getHelper().setCorner(RxUtils.dp2px(8));
         GlideImageLoader.getInstance().displayImage(
                 container.getContext(),
-                imgs.get(position),
+                carouselPictureBeans.get(position).getImgUrl(),
                 R.mipmap.ic_launcher,
                 rxImageView);
 
-        rxImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mSelectImgListener != null) mSelectImgListener.selectItem("");
-            }
+        rxImageView.setOnClickListener(view -> {
+            if (mSelectImgListener != null)
+                mSelectImgListener.selectItem(carouselPictureBeans.get(position));
         });
         container.addView(rxImageView);
         return rxImageView;

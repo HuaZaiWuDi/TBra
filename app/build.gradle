@@ -10,7 +10,16 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders = [qqappid: "1106924585"]
+        //极光推送：
+//        TimeToFit：
+//        AppKey : c82c3f95626f3c37a620aff8
+//        Master Secret : fb6ad806e3a46e1ddf71a9b2
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "c82c3f95626f3c37a620aff8", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                qqappid      : "1106924585"
+        ]
 
         //修改apk名字
         applicationVariants.all { variant ->
@@ -122,7 +131,7 @@ dependencies {
     implementation 'com.kongzue.dialog:dialog:2.4.7'
     implementation 'com.tencent.sonic:sdk:3.1.0'
 
-    implementation ('com.lzy.widget:imagepicker:0.6.1'){
+    implementation('com.jackUtil:ImagePicker:1.0.1') {
         exclude group: 'com.android.support'
     }  //指定版本
 

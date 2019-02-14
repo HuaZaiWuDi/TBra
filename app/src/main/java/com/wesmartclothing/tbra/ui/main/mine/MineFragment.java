@@ -201,10 +201,12 @@ public class MineFragment extends BaseAcFragment {
                 RxActivityUtils.skipActivity(mContext, RelationPhoneActivity.class);
                 break;
             case R.id.layout_feedback:
+                RxActivityUtils.skipActivity(mContext, FeedbackActivity.class);
                 break;
             case R.id.layout_shareApp:
                 break;
             case R.id.layout_aboutUs:
+                RxActivityUtils.skipActivity(mContext, AboutUsActivity.class);
                 break;
         }
     }

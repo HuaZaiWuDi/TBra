@@ -6,7 +6,6 @@ import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
-import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
@@ -21,6 +20,8 @@ import com.wesmartclothing.tbra.ui.main.MainActivity;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * @author Jack
@@ -86,10 +87,10 @@ public class SplashActivity extends BaseActivity {
                 CacheStrategy.firstRemote()
         )
                 .timeout(3, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfo) {
-
                         if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
                         } else if (userInfo.getAge() == 0) {
@@ -101,7 +102,6 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     protected void _onError(String error, int code) {
-                        RxToast.error(error);
                         RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
                     }
                 });

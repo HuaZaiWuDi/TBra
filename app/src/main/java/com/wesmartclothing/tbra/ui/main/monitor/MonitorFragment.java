@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.vondear.rxtools.activity.RxActivityUtils;
@@ -14,6 +16,7 @@ import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.cardview.CardView;
 import com.wesmartclothing.tbra.R;
@@ -22,6 +25,7 @@ import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
+import com.wesmartclothing.tbra.entity.CarouselPictureBean;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.entity.WarningRuleBean;
@@ -70,12 +74,14 @@ public class MonitorFragment extends BaseAcFragment {
     @BindView(R.id.timingMonitorView)
     TimingMonitorView mTimingMonitorView;
     @BindView(R.id.layout_monitor_empty)
-    LinearLayout mLayoutMonitorEmpty;
+    RelativeLayout mLayoutMonitorEmpty;
     @BindView(R.id.historyTempView)
     HistoryTempView mHistoryTempView;
 
 
     private WarningRuleBean mWarningRuleBean;
+    private List<CarouselPictureBean> carouselPictureLists = new ArrayList<>();
+    private UltraPagerAdapter adapter;
 
     public static MonitorFragment getInstance() {
         return new MonitorFragment();
@@ -119,6 +125,26 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initNetData() {
         getRuleDetail();
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().fetchCarouselPictureList(),
+                lifecycleSubject,
+                "fetchCarouselPictureList",
+                new TypeToken<List<CarouselPictureBean>>() {
+                }.getType(),
+                CacheStrategy.firstRemote()
+        )
+                .subscribe(new RxNetSubscriber<List<CarouselPictureBean>>() {
+                    @Override
+                    protected void _onNext(List<CarouselPictureBean> carouselPictureBeans) {
+                        carouselPictureLists = carouselPictureBeans;
+                        //UltraPagerAdapter 绑定子view到UltraViewPager
+                        adapter = new UltraPagerAdapter(carouselPictureLists, ultraViewPager);
+                        adapter.setSelectImgListener(bean -> {
+
+                        });
+                        ultraViewPager.setAdapter(adapter);
+                    }
+                });
     }
 
     @Override
@@ -160,17 +186,7 @@ public class MonitorFragment extends BaseAcFragment {
 
 
     private void initViewPage() {
-        List<String> imgs = new ArrayList<>();
-        imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=87077840f66f6c7607074ad9d7681e80&imgtype=0&src=http%3A%2F%2Fpic.kekenet.com%2F2017%2F0323%2F24621490236152.png");
-        imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=d7b02b4c46569e0197f5949164433c52&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Flarge%2F574ddb5egw1eqosahw1m6j20pa0g00w3.jpg");
-        imgs.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=53404ec533a940868fef1c0793cc8a5d&imgtype=0&src=http%3A%2F%2Fwerkstette.dk%2Fwp-content%2Fuploads%2F2015%2F09%2FEntertainment_Weekly_Photographer_Marc_Hom_British_Actor_Charlie_Hunnam_as_King_Arthur_Retouch_Werkstette10-770x841.jpg");
 
-        //UltraPagerAdapter 绑定子view到UltraViewPager
-        UltraPagerAdapter adapter = new UltraPagerAdapter(imgs, ultraViewPager);
-        adapter.setSelectImgListener(URL -> {
-
-        });
-        ultraViewPager.setAdapter(adapter);
 
     }
 
@@ -196,7 +212,7 @@ public class MonitorFragment extends BaseAcFragment {
         });
     }
 
-    private MyTimer myTimer = new MyTimer(5000, 5000, () -> {
+    private MyTimer myTimer = new MyTimer(0, 5000, () -> {
         BleAPI.getTimingBraInfo(new RxSubscriber<AddTempDataBean>() {
             @Override
             protected void _onNext(AddTempDataBean addTempDataBean) {
@@ -238,6 +254,7 @@ public class MonitorFragment extends BaseAcFragment {
         mHistoryTempView.setTimingData(data.getDataList());
         mTimingMonitorView.updateUI(data.getDataList());
         mLayoutDeviceEmpty.setVisibility(View.GONE);
+        mLayoutMonitorEmpty.setVisibility(View.GONE);
     }
 
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Handler;
 import android.os.IBinder;
 
 import com.clj.fastble.callback.BleMtuChangedCallback;
@@ -22,10 +23,12 @@ import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxNetUtils;
 import com.vondear.rxtools.utils.RxSystemBroadcastUtil;
+import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
@@ -126,14 +129,17 @@ public class BleService extends Service {
             RxLogUtils.e("设备已连接");
             return;
         }
-
-        final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
+        try {
+            final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
 //                .setDeviceName(true, BLEKey.DEVICE_NAME)
-//                .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
-                .setScanTimeOut(-1)
-                .build();
-        BleTools.getBleManager().initScanRule(bleConfig);
+                    .setDeviceMac(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""))
+                    .setScanTimeOut(-1)
+                    .build();
+            BleTools.getBleManager().initScanRule(bleConfig);
+        } catch (Exception e) {
+
+        }
 
 
         BleTools.getBleManager().scanAndConnect(new BleScanAndConnectCallback() {
@@ -151,19 +157,21 @@ public class BleService extends Service {
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 RxLogUtils.d("连接失败：");
                 RxBus.getInstance().post(new ConnectStateBus(false));
+                scanConnectDevice();
             }
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 RxLogUtils.d("连接成功：");
                 BleTools.getInstance().stopScan();
-                connectSuccess();
+                new Handler().postDelayed(() -> connectSuccess(), 300);
             }
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
                 RxLogUtils.d("断开连接：");
                 RxBus.getInstance().post(new ConnectStateBus(false));
+                scanConnectDevice();
             }
 
             @Override
@@ -220,7 +228,6 @@ public class BleService extends Service {
 
     private void errorReConnect() {
         BleTools.getInstance().disConnect();
-        scanConnectDevice();
     }
 
     @Override

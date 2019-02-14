@@ -209,6 +209,12 @@
         </activity>
         <activity android:name=".ui.main.mine.EditInfoActivity">
         </activity>
+        <activity android:name=".ui.main.mine.FeedbackActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.PhotoDetailActivity">
+        </activity>
+        <activity android:name=".ui.main.mine.AboutUsActivity">
+        </activity>
     </application>
 
 </manifest>
