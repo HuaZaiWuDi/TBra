@@ -148,6 +148,12 @@ public class BleAPI {
      * <p>
      * 012a0009 0000 e307 0116101009
      * 796a796a796a796a796a796a796a796a796a796a796a796a796a796a796a796a
+     * <p>
+     * 包标识：
+     * 0x01     //无
+     * 0x41     //开始包
+     * 0x81     //中间包
+     * 0xc1     //结束包
      *
      * @param subscriber
      */
@@ -166,6 +172,7 @@ public class BleAPI {
             @Override
             protected void _onNext(byte[] bytes) {
                 AddTempDataBean dataBean = new AddTempDataBean();
+                dataBean.setPickageSign(bytes[0]);
                 String dateStr = ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}) + "-" +
                         dateFormat(bytes[8]) + "-" + dateFormat(bytes[9]) + " " + dateFormat(bytes[10]) + ":" +
                         dateFormat(bytes[11]) + ":" + dateFormat(bytes[12]);

@@ -46,6 +46,9 @@ public class LoginSuccessUtils {
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfo) {
+                        if (!RxDataUtils.isEmpty(userInfo.getMacAddrList())) {
+                            SPUtils.put(SPKey.SP_BIND_DEVICE, userInfo.getMacAddrList().get(0));
+                        }
                         if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
                         } else if (userInfo.getAge() == 0) {

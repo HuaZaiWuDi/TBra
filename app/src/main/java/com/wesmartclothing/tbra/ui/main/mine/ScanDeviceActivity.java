@@ -273,7 +273,6 @@ public class ScanDeviceActivity extends BaseActivity {
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                SPUtils.put(SPKey.SP_BIND_DEVICE, bleDevice.getMac());
                 BleTools.getInstance().stopScan();
 
 //                RxLogUtils.d(TAG, "连接成功");
@@ -345,6 +344,7 @@ public class ScanDeviceActivity extends BaseActivity {
         ).subscribe(new RxNetSubscriber<String>() {
             @Override
             protected void _onNext(String s) {
+                SPUtils.put(SPKey.SP_BIND_DEVICE, macAddress);
             }
         });
     }

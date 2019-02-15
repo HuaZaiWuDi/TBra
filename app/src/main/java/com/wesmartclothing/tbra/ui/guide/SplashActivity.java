@@ -1,9 +1,11 @@
 package com.wesmartclothing.tbra.ui.guide;
 
 import android.os.Bundle;
+import android.os.Environment;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxDataUtils;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.wesmartclothing.tbra.R;
@@ -70,6 +72,30 @@ public class SplashActivity extends BaseActivity {
         initUserInfo();
         otherSetting();
 
+
+        //sd卡的路径
+
+        RxLogUtils.d("getExternalStorageDirectory: " + Environment.getExternalStorageDirectory().getAbsolutePath());
+
+//SD卡加载状态
+
+        RxLogUtils.d("getExternalStorageState: " + Environment.getExternalStorageState());
+
+//有SD卡的情况：应用的缓存目录
+
+        RxLogUtils.d("getExternalCacheDir: " + this.getExternalCacheDir().getAbsolutePath());
+
+//无SD卡的情况：应用的缓存目录
+
+        RxLogUtils.d("getCacheDir: " + this.getCacheDir().getAbsolutePath());
+
+//有SD卡的情况：应用的存储目录
+
+        RxLogUtils.d("getExternalFilesDir: " + this.getExternalFilesDir("test").getAbsolutePath());
+
+//无SD卡的情况：应用的存储目录
+        RxLogUtils.d("getFilesDir: " + this.getFilesDir().getAbsolutePath());
+
     }
 
 
@@ -91,6 +117,9 @@ public class SplashActivity extends BaseActivity {
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfo) {
+                        if (!RxDataUtils.isEmpty(userInfo.getMacAddrList())) {
+                            SPUtils.put(SPKey.SP_BIND_DEVICE, userInfo.getMacAddrList().get(0));
+                        }
                         if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
                         } else if (userInfo.getAge() == 0) {

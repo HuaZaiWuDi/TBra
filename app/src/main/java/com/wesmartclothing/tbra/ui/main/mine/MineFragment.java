@@ -11,6 +11,7 @@ import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
+import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
@@ -134,10 +135,10 @@ public class MineFragment extends BaseAcFragment {
                         mTvSign.setText(userInfoBean.getSignature());
                         if (!RxDataUtils.isEmpty(userInfoBean.getMacAddrList()))
                             mTvDeviceCount.setText(userInfoBean.getMacAddrList().get(0));
-                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
-                        if (!RxDataUtils.isEmpty(userInfoBean.getMacAddrList())) {
-                            mTvDeviceCount.setText(userInfoBean.getMacAddrList().get(0));
+                        else {
+                            mTvDeviceCount.setText(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""));
                         }
+                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
                     }
                 });
     }

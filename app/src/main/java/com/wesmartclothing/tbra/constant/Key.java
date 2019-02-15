@@ -20,6 +20,7 @@ public interface Key {
     String LoginType_WEIBO = "MicroBlog";
 
 
+
     //异常点的日期
     String BUNDLE_LATEST_TYPE = "BUNDLE_LATEST_TYPE";
 

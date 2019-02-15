@@ -24,6 +24,16 @@ public class AddTempDataBean {
     private String collectTime;
     private List<JsonDataBean> dataList;
     private Integer index;
+    private byte pickageSign;//包标识
+
+
+    public byte getPickageSign() {
+        return pickageSign;
+    }
+
+    public void setPickageSign(byte pickageSign) {
+        this.pickageSign = pickageSign;
+    }
 
     public int getIndex() {
         return index;

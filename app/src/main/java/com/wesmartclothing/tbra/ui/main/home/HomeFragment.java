@@ -42,12 +42,14 @@ import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
+import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.ReportDataBean;
 import com.wesmartclothing.tbra.entity.SingleDataDetailBean;
+import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -56,9 +58,9 @@ import com.wesmartclothing.tbra.tools.RxComposeTools;
 import com.wesmartclothing.tbra.view.BatteryView;
 import com.wesmartclothing.tbra.view.HistoryTempView;
 import com.zchu.rxcache.RxCache;
+import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -352,17 +354,42 @@ public class HomeFragment extends BaseAcFragment {
                 });
     }
 
+    UserInfoBean userInfo;
 
     /**
      * 上传蓝牙数据成功后清除本地数据
      */
     private void clearHistoryData() {
-        try {
-            RxCache.getDefault().clear2();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        getPointData(PointDate.week);
+
+        //保留用户数据
+        RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .map(new CacheResult.MapFunc<>())
+                .subscribe(new RxNetSubscriber<UserInfoBean>() {
+                    @Override
+                    protected void _onNext(UserInfoBean userInfoBean) {
+                        userInfo = userInfoBean;
+                    }
+                });
+
+        RxCache.getDefault().clear()
+                .subscribe(new RxNetSubscriber<Boolean>() {
+                    @Override
+                    protected void _onNext(Boolean aBoolean) {
+                        RxLogUtils.d("缓存是否清空：" + aBoolean);
+                        if (aBoolean) {
+                            RxCache.getDefault().save(SPKey.SP_UserInfo, userInfo)
+                                    .subscribe(new RxNetSubscriber<Boolean>() {
+                                        @Override
+                                        protected void _onNext(Boolean aBoolean) {
+
+                                        }
+                                    });
+                            getPointData(PointDate.week);
+                        }
+
+                    }
+                });
     }
 
 
@@ -398,15 +425,6 @@ public class HomeFragment extends BaseAcFragment {
                 protected void _onNext(Integer integer) {
                     RxLogUtils.d("进度：" + integer);
                     mProSyncData.setProgress(integer);
-                    if (integer == 100) {
-                        RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
-                        RxLogUtils.d("蓝牙数据获取完成：");
-                        if (mContext != null) {
-                            TipDialog tipDialog = TipDialog.build(mContext, "获取数据成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                            tipDialog.setCanCancel(true);
-                            tipDialog.showDialog();
-                        }
-                    }
                 }
 
                 //上传完成
@@ -414,6 +432,13 @@ public class HomeFragment extends BaseAcFragment {
                 public void onComplete() {
                     super.onComplete();
                     RxLogUtils.d("上传完成");
+                    RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
+                    RxLogUtils.d("蓝牙数据获取完成：");
+                    if (mContext != null) {
+                        TipDialog tipDialog = TipDialog.build(mContext, "获取数据成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                        tipDialog.setCanCancel(true);
+                        tipDialog.showDialog();
+                    }
                     clearHistoryData();
                 }
 

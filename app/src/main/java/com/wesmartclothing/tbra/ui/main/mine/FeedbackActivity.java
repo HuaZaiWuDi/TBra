@@ -297,6 +297,7 @@ public class FeedbackActivity extends BaseActivity {
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().feedbackImg(body),
                 lifecycleSubject)
+                .compose(RxComposeTools.showDialog(mContext))
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String s) {

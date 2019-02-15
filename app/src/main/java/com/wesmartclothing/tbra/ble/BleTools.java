@@ -85,7 +85,7 @@ public class BleTools {
 //        if (!bleManager.isBlueEnable())
 //            bleManager.enableBluetooth();
 //        bleManager.disableBluetooth();//关闭蓝牙
-        bleManager.enableLog(false);//是否开启蓝牙日志
+        bleManager.enableLog(BuildConfig.DEBUG);//是否开启蓝牙日志
         bleManager.setMaxConnectCount(1);
         bleManager.setOperateTimeout(1000);//设置操作超时时间
 

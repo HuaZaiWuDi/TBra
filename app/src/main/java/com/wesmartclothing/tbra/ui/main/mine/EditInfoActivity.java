@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.kongzue.dialog.v2.TipDialog;
 import com.vondear.rxtools.utils.RxDataUtils;
-import com.vondear.rxtools.utils.RxRegUtils;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
@@ -72,7 +71,7 @@ public class EditInfoActivity extends BaseActivity {
         }
 
         if ("昵称".equals(title)) {
-            if (!RxRegUtils.isUsername(name)) {
+            if (RxDataUtils.isNullString(name.trim())) {
                 RxToast.normal("请输入正确的昵称");
                 return;
             }

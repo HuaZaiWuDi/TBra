@@ -70,6 +70,9 @@ public class AddTempData {
     }
 
 
+    /**
+     * 2.15 修改逻辑，不在按照序号判断是否结束，判断命令行开头字符标识
+     */
     public void getTempData() {
         BleAPI.getTempData(SPUtils.getInt(SPKey.SP_LAST_INDEX, 0), maxCount, new RxSubscriber<AddTempDataBean>() {
             @Override
@@ -78,10 +81,21 @@ public class AddTempData {
                     int progress = (int) (addTempDataBean.getIndex() * 100f / (maxCount - 1));
                     mRxSubscriber.onNext(progress);
                 }
-                if (tempDataBeans.size() < maxCount)
-                    tempDataBeans.add(addTempDataBean);
 
-                if (tempDataBeans.size() == maxCount) {
+//                if (tempDataBeans.size() < maxCount)
+//                    tempDataBeans.add(addTempDataBean);
+//
+//                if (tempDataBeans.size() == maxCount) {
+//                    RxLogUtils.d("获取结束");
+//                    uploadTempData();
+//                    saveCache(tempDataBeans);
+//                    SPUtils.put(SPKey.SP_LAST_INDEX, 0);
+//                    BleAPI.clearTempData();
+//                }
+
+                tempDataBeans.add(addTempDataBean);
+
+                if (addTempDataBean.getPickageSign() == (byte) 0xc1) {
                     RxLogUtils.d("获取结束");
                     uploadTempData();
                     saveCache(tempDataBeans);

@@ -129,6 +129,7 @@ public class BleService extends Service {
             RxLogUtils.e("设备已连接");
             return;
         }
+
         try {
             final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
