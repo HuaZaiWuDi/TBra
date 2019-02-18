@@ -97,6 +97,7 @@ public class SettingActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.layout_account:
+                RxActivityUtils.skipActivity(mContext, AccountManagerActivity.class);
                 break;
             case R.id.layout_resetPwd:
                 RxActivityUtils.skipActivity(mContext, ResetPwdActivity.class);

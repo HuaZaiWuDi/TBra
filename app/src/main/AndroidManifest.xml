@@ -215,6 +215,8 @@
         </activity>
         <activity android:name=".ui.main.mine.AboutUsActivity">
         </activity>
+        <activity android:name=".ui.main.mine.AccountManagerActivity">
+        </activity>
     </application>
 
 </manifest>

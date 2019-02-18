@@ -420,7 +420,7 @@ public class HistoryTempView extends LinearLayout {
     }
 
 
-    @OnClick({R.id.img_left, R.id.img_play_pause, R.id.img_right, R.id.parent})
+    @OnClick({R.id.img_left, R.id.img_play_pause, R.id.img_right, R.id.parent, R.id.layout_click})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_right:
@@ -436,6 +436,8 @@ public class HistoryTempView extends LinearLayout {
                     mImgRight.setAlpha(0.6f);
                     mImgRight.setEnabled(false);
                 }
+                if (!RxDataUtils.isEmpty(mPointDataBeans))
+                    setPlay(true);
                 break;
             case R.id.img_play_pause:
                 if (!RxDataUtils.isEmpty(mPointDataBeans))
@@ -454,14 +456,17 @@ public class HistoryTempView extends LinearLayout {
                     mImgLeft.setAlpha(0.6f);
                     mImgLeft.setEnabled(false);
                 }
+                if (!RxDataUtils.isEmpty(mPointDataBeans))
+                    setPlay(true);
                 break;
             case R.id.parent:
+                break;
+            case R.id.layout_click:
                 if (showMode == MODE_DYNAMIC) {
 //                    setShow(!isShow);
                     if (mOnSelectParentListener != null && !RxDataUtils.isEmpty(mPointDataBeans)) {
                         mOnSelectParentListener.select();
                     }
-
                 }
                 break;
         }

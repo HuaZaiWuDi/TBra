@@ -64,6 +64,7 @@ public class VerifyPhoneActivity extends BaseActivity {
 
     @Override
     public void initViews() {
+        initTitle(mRxTitle);
         initEdit();
     }
 

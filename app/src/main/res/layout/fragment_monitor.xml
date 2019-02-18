@@ -34,7 +34,8 @@
             android:layout_marginBottom="8dp"
             android:text="设备名称"
             android:textColor="@color/font_475669"
-            android:textSize="19sp"/>
+            android:textSize="19sp"
+            android:visibility="gone"/>
 
         <!--设备实时监测-->
         <com.vondear.rxtools.view.cardview.CardView

@@ -36,6 +36,7 @@ import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxTitle;
+import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.ble.BleAPI;
@@ -46,14 +47,13 @@ import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.DeviceConnectBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
+import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.LocationIntentService;
-import com.wesmartclothing.tbra.tools.BLEUtil;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
 
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -131,15 +131,15 @@ public class ScanDeviceActivity extends BaseActivity {
             protected void convert(BaseViewHolder helper, DeviceConnectBean item) {
                 BleDevice bleDevice = item.getBleDevice();
                 String deviceDetail = bleDevice.getName() + "\t" +
-                        bleDevice.getMac().substring(12, bleDevice.getMac().length()) + "\n" +
-                        "距离：" + BLEUtil.rssi2Distance(bleDevice.getRssi(), 2) + "米";
+                        bleDevice.getMac().substring(12, bleDevice.getMac().length());
 
                 helper.setText(R.id.tv_deviceDetails, deviceDetail)
                         .setText(R.id.tv_deviceState, item.isConnect() ? "已连接" : "连接");
+                RxRoundProgressBar progressRssi = helper.getView(R.id.pro_rssi);
+                progressRssi.setProgress(100 - (int) ((Math.abs(bleDevice.getRssi()) - 35) / 127f * 100));
             }
         };
         adapter.bindToRecyclerView(mDeviceRecyclerView);
-        adapter.setEmptyView(R.layout.layout_empty_device);
         mDeviceRecyclerView.setTag(-1);
         adapter.setOnItemClickListener((adapter, view, position) -> {
                     this.position = position;
@@ -206,10 +206,10 @@ public class ScanDeviceActivity extends BaseActivity {
             return;
         }
 
-
+        BleTools.getInstance().stopScan();
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
-                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
-//                .setDeviceName(true, BLEKey.DEVICE_NAME)
+//                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
+                .setDeviceName(true, BLEKey.DEVICE_NAME)
                 .setScanTimeOut(15000)
                 .build();
         BleTools.getBleManager().initScanRule(bleConfig);
@@ -218,7 +218,7 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
                 RxLogUtils.d("扫描结果:" + scanResultList.size());
-                if (scanResultList.isEmpty()) {
+                if (scanResultList.isEmpty() && mContext != null) {
                     TipDialog.show(mContext, "未发现设备", TipDialog.TYPE_ERROR);
                 }
             }
@@ -232,7 +232,8 @@ public class ScanDeviceActivity extends BaseActivity {
                     mImgBleScan.startAnimation(RxAnimationUtils.RotateAnim(15));
                     adapter.setNewData(null);
                 } else {
-//                    TipDialog.show(mContext, "扫描失败", TipDialog.TYPE_ERROR);
+                    if (mContext != null)
+                        TipDialog.show(mContext, "扫描失败", TipDialog.TYPE_ERROR);
                 }
             }
 
@@ -297,14 +298,11 @@ public class ScanDeviceActivity extends BaseActivity {
                                     protected void _onNext(byte[] bytes) {
                                         RxLogUtils.d("同步时间成功");
                                         WaitDialog.dismiss();
-                                        if (mContext != null) {
-                                            TipDialog tipDialog = TipDialog.build(mContext, "连接成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                                            tipDialog.setCanCancel(true);
-                                            tipDialog.showDialog();
-                                        }
                                         connectDevice();
                                         bindDevice(bleDevice.getMac());
                                         RxBus.getInstance().post(new ConnectStateBus(true));
+
+                                        RxActivityUtils.skipActivity(mContext, MainActivity.class);
                                     }
                                 });
                             }
@@ -345,6 +343,7 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             protected void _onNext(String s) {
                 SPUtils.put(SPKey.SP_BIND_DEVICE, macAddress);
+                RxBus.getInstance().post(new RefreshUserInfoBus());
             }
         });
     }

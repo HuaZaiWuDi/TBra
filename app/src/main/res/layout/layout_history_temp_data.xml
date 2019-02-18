@@ -255,6 +255,19 @@
     <!--/>-->
 
 
+    <FrameLayout
+        android:id="@+id/layout_click"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="126dp">
+
+    </FrameLayout>
+
+
     <com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar
         android:id="@+id/progress"
         android:layout_width="match_parent"

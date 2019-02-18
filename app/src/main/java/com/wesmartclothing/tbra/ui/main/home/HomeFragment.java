@@ -30,6 +30,7 @@ import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.RxUtils;
+import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.ExplainException;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
@@ -308,6 +309,11 @@ public class HomeFragment extends BaseAcFragment {
         });
     }
 
+    private boolean checkSameDate(long targetTime) {
+        return RxFormat.setFormatDate(System.currentTimeMillis(), RxFormat.Date)
+                .equals(RxFormat.setFormatDate(targetTime, RxFormat.Date));
+    }
+
     //一号更新月报，星期一更新周报
     private void getReportData(int position) {
         RxManager.getInstance().doNetSubscribe(
@@ -316,7 +322,7 @@ public class HomeFragment extends BaseAcFragment {
                 lifecycleSubject,
                 position == 0 ? "weekDataList" : "monthDataList",
                 ReportDataBean.class,
-                CacheStrategy.firstRemote()
+                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT_DAY)
         )
                 .subscribe(new RxSubscriber<ReportDataBean>() {
                     @Override
@@ -447,6 +453,7 @@ public class HomeFragment extends BaseAcFragment {
                 public void onError(Throwable e) {
                     super.onError(e);
                     RxLogUtils.d("异常");
+                    RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
                     if (mContext != null) {
                         TipDialog tipDialog = TipDialog.build(mContext, ((ExplainException) e).getMsg(), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
                         tipDialog.setCanCancel(true);

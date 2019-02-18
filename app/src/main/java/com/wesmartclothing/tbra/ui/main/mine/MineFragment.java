@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
-import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
@@ -133,11 +132,7 @@ public class MineFragment extends BaseAcFragment {
                     protected void _onNext(UserInfoBean userInfoBean) {
                         mTvUserName.setText(userInfoBean.getUserName());
                         mTvSign.setText(userInfoBean.getSignature());
-                        if (!RxDataUtils.isEmpty(userInfoBean.getMacAddrList()))
-                            mTvDeviceCount.setText(userInfoBean.getMacAddrList().get(0));
-                        else {
-                            mTvDeviceCount.setText(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""));
-                        }
+                        mTvDeviceCount.setText(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""));
                         GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
                     }
                 });

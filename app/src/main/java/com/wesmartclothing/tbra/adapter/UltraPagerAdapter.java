@@ -6,11 +6,11 @@ import android.support.v4.view.PagerAdapter;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.tmall.ultraviewpager.UltraViewPager;
 import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.view.layout.RxImageView;
+import com.vondear.rxtools.view.layout.RxTextView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.entity.CarouselPictureBean;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
@@ -52,11 +52,12 @@ public class UltraPagerAdapter extends PagerAdapter {
                 .setNormalColor(Color.WHITE)
                 .setRadius(RxUtils.dp2px(3));
         //设置indicator对齐方式
-        ultraViewPager.getIndicator().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        ultraViewPager.getIndicator().setMargin(0, 0, 0, RxUtils.dp2px(11));
-        ultraViewPager.getIndicator().setIndicatorPadding(RxUtils.dp2px(8));
+        ultraViewPager.getIndicator().setGravity(Gravity.END | Gravity.BOTTOM);
+        ultraViewPager.getIndicator().setMargin(0, 0, RxUtils.dp2px(8), RxUtils.dp2px(11));
+        ultraViewPager.getIndicator().setIndicatorPadding(RxUtils.dp2px(4));
         //构造indicator,绑定到UltraViewPager
         ultraViewPager.getIndicator().build();
+
 
         //设定页面循环播放
         ultraViewPager.setInfiniteLoop(true);
@@ -77,30 +78,30 @@ public class UltraPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        RxImageView rxImageView = new RxImageView(container.getContext());
-        RelativeLayout.MarginLayoutParams params = new RelativeLayout.LayoutParams(
-                RelativeLayout.MarginLayoutParams.MATCH_PARENT,
-                RelativeLayout.MarginLayoutParams.MATCH_PARENT
-        );
-        rxImageView.setLayoutParams(params);
-        rxImageView.getHelper().setCorner(RxUtils.dp2px(8));
+
+        View view = View.inflate(container.getContext(), R.layout.layout_wheel_planting, null);
+        RxImageView rxImageView = view.findViewById(R.id.img_details);
+        RxTextView rxTextView = view.findViewById(R.id.tv_details);
+
         GlideImageLoader.getInstance().displayImage(
                 container.getContext(),
                 carouselPictureBeans.get(position).getImgUrl(),
                 R.mipmap.ic_launcher,
                 rxImageView);
 
-        rxImageView.setOnClickListener(view -> {
+        rxTextView.setText(carouselPictureBeans.get(position).getTitle());
+
+        rxImageView.setOnClickListener(view1 -> {
             if (mSelectImgListener != null)
                 mSelectImgListener.selectItem(carouselPictureBeans.get(position));
         });
-        container.addView(rxImageView);
-        return rxImageView;
+        container.addView(view);
+        return view;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((RxImageView) object);
+        container.removeView((View) object);
     }
 
 }

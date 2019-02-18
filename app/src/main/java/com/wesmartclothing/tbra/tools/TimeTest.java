@@ -17,12 +17,41 @@ public class TimeTest {
 
     public static void main(String[] args) throws InterruptedException {
         testClock();
-		testInstant();
-		testLocalDateTime();
-		testZonedDateTime();
-		testDuration();
-		testChronology();
-		testNewOldDateConversion();
+        testInstant();
+        testLocalDateTime();
+        testZonedDateTime();
+        testDuration();
+        testChronology();
+        testNewOldDateConversion();
+
+        testDownLoadPath();
+
+    }
+
+    private static void testDownLoadPath() {
+//        //sd卡的路径
+//        System.out.println("getExternalStorageDirectory: " + Environment.getExternalStorageDirectory().getAbsolutePath());
+////        D/TAG: getExternalStorageDirectory: /storage/emulated/0
+////SD卡加载状态
+//
+//        System.out.println("getExternalStorageState: " + Environment.getExternalStorageState());
+////        D/TAG: getExternalStorageState: mounted
+////有SD卡的情况：应用的缓存目录
+//
+//        System.out.println("getExternalCacheDir: " + getExternalCacheDir().getAbsolutePath());
+////        D/TAG: getExternalCacheDir: /storage/emulated/0/Android/data/com.wesmartclothing.tbra/cache
+////无SD卡的情况：应用的缓存目录
+//
+//        System.out.println("getCacheDir: " + this.getCacheDir().getAbsolutePath());
+////        D/TAG: getCacheDir: /data/user/0/com.wesmartclothing.tbra/cache
+////有SD卡的情况：应用的存储目录
+//
+//        System.out.println("getExternalFilesDir: " + this.getExternalFilesDir("test").getAbsolutePath());
+////        D/TAG: getExternalFilesDir: /storage/emulated/0/Android/data/com.wesmartclothing.tbra/files/test
+////无SD卡的情况：应用的存储目录
+//        System.out.println("getFilesDir: " + this.getFilesDir().getAbsolutePath());
+////        D/TAG: getFilesDir: /data/user/0/com.wesmartclothing.tbra/files
+
     }
 
     public static void testClock() throws InterruptedException {

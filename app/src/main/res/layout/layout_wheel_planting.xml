@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="331dp"
+    android:layout_height="134dp"
+    >
+
+
+    <com.vondear.rxtools.view.layout.RxImageView
+        android:id="@+id/img_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:corner_radius="8dp"
+        />
+
+
+    <com.vondear.rxtools.view.layout.RxTextView
+        android:id="@+id/tv_details"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingLeft="14dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/white"
+        app:background_normal="#80000000"
+        app:corner_radius_bottom_left="8dp"
+        app:corner_radius_bottom_right="8dp"
+        tools:text="2222222"/>
+
+
+</RelativeLayout>

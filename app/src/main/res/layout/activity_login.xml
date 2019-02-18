@@ -1,247 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:background="@drawable/fade_bg">
 
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/fade_bg"
-        tools:context=".ui.login.LoginActivity">
+        android:layout_height="match_parent">
 
 
-        <com.vondear.rxtools.view.cardview.CardView
-            android:id="@+id/layout_register"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="240dp"
-            android:layout_marginRight="25dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardShadowColorEnd="#006A6F7B"
-            app:cardShadowColorStart="#1A6A6F7B">
+            android:layout_height="match_parent"
+            tools:context=".ui.login.LoginActivity">
 
 
-            <TextView
-                android:id="@+id/tv_register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:text="没有账号？立即注册"
-                android:textColor="@color/font_C3C5CA"
-                android:textSize="14sp"/>
-
-
-        </com.vondear.rxtools.view.cardview.CardView>
-
-
-        <com.vondear.rxtools.view.cardview.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="12dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="10dp"
-            app:cardShadowColorEnd="#006A6F7B"
-            app:cardShadowColorStart="#1A6A6F7B">
-
-
-            <LinearLayout
+            <com.vondear.rxtools.view.cardview.CardView
+                android:id="@+id/layout_register"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="22dp"
-                android:paddingBottom="33dp">
+                android:layout_height="300dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="240dp"
+                android:layout_marginRight="25dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="8dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
+
 
                 <TextView
+                    android:id="@+id/tv_register"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="登录"
-                    android:textColor="@color/font_475669"
-                    android:textSize="31sp"/>
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:text="没有账号？立即注册"
+                    android:textColor="@color/font_C3C5CA"
+                    android:textSize="14sp"/>
 
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="189dp"
-                    android:layout_height="26dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="19dp"
-                    android:layout_marginBottom="29dp"
-                    app:cardCornerRadius="13dp"
-                    app:cardElevation="2dp">
-
-                    <com.flyco.tablayout.CommonTabLayout
-                        android:id="@+id/commonTabLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/white"
-                        app:tl_indicator_anim_duration="500"
-                        app:tl_indicator_anim_enable="true"
-                        app:tl_indicator_bounce_enable="true"
-                        app:tl_indicator_color="@color/colortheme"
-                        app:tl_indicator_corner_radius="13dp"
-                        app:tl_indicator_height="26dp"
-                        app:tl_indicator_margin_top="0dp"
-                        app:tl_indicator_style="BLOCK"
-                        app:tl_textBold="SELECT"
-                        app:tl_textSelectColor="@color/white"
-                        app:tl_textUnselectColor="@color/font_6A6F7B"
-                        app:tl_textsize="12sp"
-                        tools:background="@color/gray"/>
-
-                </android.support.v7.widget.CardView>
+            </com.vondear.rxtools.view.cardview.CardView>
 
 
-                <com.vondear.rxtools.view.layout.RxEditText
-                    android:id="@+id/edit_phone"
-                    android:layout_width="265dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="20dp"
-                    android:hint="请输入手机号"
-                    android:inputType="phone"
-                    android:maxLength="11"
-                    android:paddingLeft="28dp"
-                    android:textColor="@color/color_8E8E93"
-                    android:textSize="13sp"
-                    app:background_normal="@color/color_F5F5F5"
-                    app:corner_radius="10dp"/>
+            <com.vondear.rxtools.view.cardview.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="10dp"
+                app:cardShadowColorEnd="#006A6F7B"
+                app:cardShadowColorStart="#1A6A6F7B">
 
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="29dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingTop="22dp"
+                    android:paddingBottom="33dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="登录"
+                        android:textColor="@color/font_475669"
+                        android:textSize="31sp"/>
+
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="189dp"
+                        android:layout_height="26dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="19dp"
+                        android:layout_marginBottom="29dp"
+                        app:cardCornerRadius="13dp"
+                        app:cardElevation="2dp">
+
+                        <com.flyco.tablayout.CommonTabLayout
+                            android:id="@+id/commonTabLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            app:tl_indicator_anim_duration="500"
+                            app:tl_indicator_anim_enable="true"
+                            app:tl_indicator_bounce_enable="true"
+                            app:tl_indicator_color="@color/colortheme"
+                            app:tl_indicator_corner_radius="13dp"
+                            app:tl_indicator_height="26dp"
+                            app:tl_indicator_margin_top="0dp"
+                            app:tl_indicator_style="BLOCK"
+                            app:tl_textBold="SELECT"
+                            app:tl_textSelectColor="@color/white"
+                            app:tl_textUnselectColor="@color/font_6A6F7B"
+                            app:tl_textsize="12sp"
+                            tools:background="@color/gray"/>
+
+                    </android.support.v7.widget.CardView>
+
 
                     <com.vondear.rxtools.view.layout.RxEditText
-                        android:id="@+id/edit_pwd_code"
+                        android:id="@+id/edit_phone"
                         android:layout_width="265dp"
                         android:layout_height="35dp"
-                        android:hint="请输入密码"
-                        android:inputType="textWebPassword"
+                        android:layout_marginLeft="20dp"
+                        android:hint="请输入手机号"
+                        android:inputType="phone"
+                        android:maxLength="11"
                         android:paddingLeft="28dp"
                         android:textColor="@color/color_8E8E93"
                         android:textSize="13sp"
                         app:background_normal="@color/color_F5F5F5"
-                        app:corner_radius="10dp"
-                        tools:text="22222"/>
+                        app:corner_radius="10dp"/>
 
-                    <com.vondear.rxtools.view.layout.RxTextView
-                        android:id="@+id/tv_pwd"
+
+                    <RelativeLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:layout_alignRight="@+id/edit_pwd_code"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="8dp"
-                        android:drawableTint="@color/white"
-                        android:gravity="center"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:visibility="visible"
-                        app:background_normal="@color/colortheme"
-                        app:corner_radius="10dp"
-                        app:icon_src_normal="@mipmap/ic_eye_close"
-                        app:ripple_color="@color/ripple_ECEAE6"
-                        />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="29dp">
+
+                        <com.vondear.rxtools.view.layout.RxEditText
+                            android:id="@+id/edit_pwd_code"
+                            android:layout_width="265dp"
+                            android:layout_height="35dp"
+                            android:hint="请输入密码"
+                            android:inputType="textWebPassword"
+                            android:paddingLeft="28dp"
+                            android:textColor="@color/color_8E8E93"
+                            android:textSize="13sp"
+                            app:background_normal="@color/color_F5F5F5"
+                            app:corner_radius="10dp"
+                            tools:text="22222"/>
+
+                        <com.vondear.rxtools.view.layout.RxTextView
+                            android:id="@+id/tv_pwd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:layout_alignRight="@+id/edit_pwd_code"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="8dp"
+                            android:drawableTint="@color/white"
+                            android:gravity="center"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:visibility="visible"
+                            app:background_normal="@color/colortheme"
+                            app:corner_radius="10dp"
+                            app:icon_src_normal="@mipmap/ic_eye_close"
+                            app:ripple_color="@color/ripple_ECEAE6"
+                            />
 
 
-                    <com.vondear.rxtools.view.layout.RxTextView
-                        android:id="@+id/tv_code"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:layout_alignRight="@+id/edit_pwd_code"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="8dp"
+                        <com.vondear.rxtools.view.layout.RxTextView
+                            android:id="@+id/tv_code"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:layout_alignRight="@+id/edit_pwd_code"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="8dp"
+                            android:gravity="center"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="@string/getVCode"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:visibility="gone"
+                            app:background_normal="@color/colortheme"
+                            app:corner_radius="10dp"
+                            app:ripple_color="@color/ripple_ECEAE6"
+                            />
+
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:alpha="0.6"
+                        android:background="@mipmap/ic_btn"
+                        android:enabled="false"
                         android:gravity="center"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
-                        android:text="@string/getVCode"
+                        android:text="登录"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:visibility="gone"
-                        app:background_normal="@color/colortheme"
-                        app:corner_radius="10dp"
-                        app:ripple_color="@color/ripple_ECEAE6"
+                        android:textSize="14sp"
                         />
 
 
-                </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_forgetPwd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="忘记密码\t？"
+                        android:textColor="@color/font_475669"
+                        android:textSize="14sp"/>
 
-                <TextView
-                    android:id="@+id/tv_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:alpha="0.6"
-                    android:background="@mipmap/ic_btn"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="登录"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    />
+                </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/tv_forgetPwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:text="忘记密码\t？"
-                    android:textColor="@color/font_475669"
-                    android:textSize="14sp"/>
+            </com.vondear.rxtools.view.cardview.CardView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_register"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:gravity="center">
+
+                <com.vondear.rxtools.view.layout.RxImageView
+                    android:id="@+id/img_WX"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:icon_src_normal="@mipmap/ic_wx"
+                    app:is_circle="true"/>
+
+                <com.vondear.rxtools.view.layout.RxImageView
+                    android:id="@+id/img_WB"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:visibility="gone"
+                    app:icon_src_normal="@mipmap/ic_wb"
+                    app:is_circle="true"/>
+
+                <com.vondear.rxtools.view.layout.RxImageView
+                    android:id="@+id/img_QQ"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:visibility="gone"
+                    app:icon_src_normal="@mipmap/ic_qq"
+                    app:is_circle="true"/>
 
             </LinearLayout>
 
 
-        </com.vondear.rxtools.view.cardview.CardView>
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/layout_register"
-            android:layout_marginTop="34dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center">
-
-            <com.vondear.rxtools.view.layout.RxImageView
-                android:id="@+id/img_WX"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:icon_src_normal="@mipmap/ic_wx"
-                app:is_circle="true"/>
-
-            <com.vondear.rxtools.view.layout.RxImageView
-                android:id="@+id/img_WB"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                app:icon_src_normal="@mipmap/ic_wb"
-                app:is_circle="true"/>
-
-            <com.vondear.rxtools.view.layout.RxImageView
-                android:id="@+id/img_QQ"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                app:icon_src_normal="@mipmap/ic_qq"
-                app:is_circle="true"/>
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-</android.support.v4.widget.NestedScrollView>
+</LinearLayout>
 
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.kongzue.dialog.v2.SelectDialog;
 import com.kongzue.dialog.v2.WaitDialog;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -28,7 +29,6 @@ import com.vondear.rxtools.utils.StatusBarUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.cardview.CardView;
-import com.vondear.rxtools.view.dialog.RxDialogSureCancel;
 import com.vondear.rxtools.view.layout.RxEditText;
 import com.vondear.rxtools.view.layout.RxImageView;
 import com.vondear.rxtools.view.layout.RxTextView;
@@ -152,12 +152,9 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        mEditPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b && !RxRegUtils.isMobileExact(phone)) {
-                    RxToast.warning(getString(R.string.phoneError));
-                }
+        mEditPhone.setOnFocusChangeListener((view, b) -> {
+            if (!b && !RxRegUtils.isMobileExact(phone)) {
+                RxToast.warning(getString(R.string.phoneError));
             }
         });
     }
@@ -350,16 +347,11 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void showDialog2settingPassword() {
-        RxDialogSureCancel rxDialog = new RxDialogSureCancel(mContext)
-                .setContent("该手机号还未设置密码")
-                .setSure("设置密码")
-                .setSureListener(v -> {
-                    //进入设置密码流程，跳转验证手机号
-//                        RxActivityUtils.skipActivity(mActivity, VerificationPhoneActivity.class);
-                })
-                .setCancel("验证码登录")
-                .setCancelListener(v -> mCommonTabLayout.setCurrentTab(1));
-        rxDialog.show();
+        SelectDialog.show(mContext, "提示", "该手机号还未设置密码", "设置密码", (dialog, i) -> {
+            RxActivityUtils.skipActivity(mActivity, ResetPwdActivity.class);
+        }, "验证码登录", ((dialogInterface, i) -> {
+            mCommonTabLayout.setCurrentTab(1);
+        }));
     }
 
 

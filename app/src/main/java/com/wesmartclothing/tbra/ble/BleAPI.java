@@ -337,7 +337,7 @@ public class BleAPI {
 
     private static double bytes2Temp(byte... bytes) {
         int i = ByteUtil.bytesToIntG2(bytes);
-        return -45.0 + 175 * i / 65536;
+        return -45.0 + 175f * i / 65536;
     }
 
 

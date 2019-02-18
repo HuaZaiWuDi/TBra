@@ -130,6 +130,7 @@ public class BleService extends Service {
             return;
         }
 
+
         try {
             final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
@@ -138,10 +139,11 @@ public class BleService extends Service {
                     .setScanTimeOut(-1)
                     .build();
             BleTools.getBleManager().initScanRule(bleConfig);
+
+            RxLogUtils.d("开始连接设备:" + SPUtils.getString(SPKey.SP_BIND_DEVICE, ""));
         } catch (Exception e) {
 
         }
-
 
         BleTools.getBleManager().scanAndConnect(new BleScanAndConnectCallback() {
             @Override

@@ -82,7 +82,6 @@
                 app:corner_radius="23dp"
                 />
 
-
         </LinearLayout>
 
         <LinearLayout

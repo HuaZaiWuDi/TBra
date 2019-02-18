@@ -2,12 +2,9 @@ package com.wesmartclothing.tbra.ui.main.mine;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.kongzue.dialog.v2.BottomMenu;
-import com.kongzue.dialog.v2.CustomDialog;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
@@ -23,9 +20,6 @@ import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 import com.zchu.rxcache.stategy.CacheStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -111,7 +105,7 @@ public class WarningSettingActivity extends BaseActivity {
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String bean) {
-                        CustomDialog.unloadAllDialog();
+                        onBackPressed();
                     }
 
                     @Override
@@ -127,14 +121,14 @@ public class WarningSettingActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_type:
-                List<String> list = new ArrayList<>();
-                list.add("单点累计异常次数");
-                list.add("多点累计异常次数");
-                BottomMenu.show((AppCompatActivity) mContext, list,
-                        (text, index) -> {
-                            mWarningRuleBean.setPointType((index + 1) + "");
-                            mTvType.setText(mWarningRuleBean.getPointType().equals("1") ? "单点累计异常次数" : "多点累计异常次数");
-                        }, true);
+//                List<String> list = new ArrayList<>();
+//                list.add("单点累计异常次数");
+//                list.add("多点累计异常次数");
+//                BottomMenu.show((AppCompatActivity) mContext, list,
+//                        (text, index) -> {
+//                            mWarningRuleBean.setPointType((index + 1) + "");
+//                            mTvType.setText(mWarningRuleBean.getPointType().equals("1") ? "单点累计异常次数" : "多点累计异常次数");
+//                        }, true);
 
                 break;
             case R.id.tv_complete:
@@ -143,6 +137,8 @@ public class WarningSettingActivity extends BaseActivity {
                     RxToast.normal("请输入1～100数字");
                     return;
                 }
+                //TODO 这里暂时没有多点，直接设置为单点
+                mWarningRuleBean.setPointType("1");
                 mWarningRuleBean.setBaseNum(stringToInt);
                 submitWarningRule();
                 break;

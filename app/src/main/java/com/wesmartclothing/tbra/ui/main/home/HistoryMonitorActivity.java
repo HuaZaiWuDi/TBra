@@ -88,7 +88,7 @@ public class HistoryMonitorActivity extends BaseActivity {
                     .setForegroundColor(ContextCompat.getColor(mContext, R.color.color_FE746E))
                     .into(mTvRightTemp);
 
-            mTvPointTime.setText(RxFormat.setFormatDate(bean.getCollectDate(), RxFormat.Date_Date2));
+            mTvPointTime.setText(RxFormat.setFormatDate(bean.getCollectDate(), RxFormat.Date));
 
             mHistoryTempView.setDoubleMode(bean.getPoint());
         });

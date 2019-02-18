@@ -43,16 +43,14 @@ public class BleTools {
     private static BleTools bleTools;
 
     private BleDevice bleDevice;
-    private Handler TimeOut = new Handler();
+    private Handler TimeOut;
     private static BleManager bleManager;
-
 
     private static final String TAG = "【BleTools】";
 
     private BleTools() {
-
+        TimeOut = new Handler();
     }
-
 
     public static BleManager getBleManager() {
         return BleManager.getInstance();
@@ -85,7 +83,8 @@ public class BleTools {
 //        if (!bleManager.isBlueEnable())
 //            bleManager.enableBluetooth();
 //        bleManager.disableBluetooth();//关闭蓝牙
-        bleManager.enableLog(BuildConfig.DEBUG);//是否开启蓝牙日志
+//        bleManager.enableLog(BuildConfig.DEBUG);//是否开启蓝牙日志
+        bleManager.enableLog(true);//是否开启蓝牙日志
         bleManager.setMaxConnectCount(1);
         bleManager.setOperateTimeout(1000);//设置操作超时时间
 

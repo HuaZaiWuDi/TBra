@@ -24,6 +24,7 @@ import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.CarouselPictureBean;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
@@ -110,12 +111,12 @@ public class MonitorFragment extends BaseAcFragment {
             mTvDeviceName.setText("设备名字：-\t-");
             mTvBindDevice.setText("去连接");
             mLayoutDeviceEmpty.setVisibility(View.VISIBLE);
+            mLayoutMonitorEmpty.setVisibility(View.VISIBLE);
             myTimer.stopTimer();
         } else {//已连接
-            mLayoutDeviceEmpty.setVisibility(View.GONE);
             mTvSwitchDevice.setText("切换设备\t\t>>");
             mPowerIcon.setVisibility(View.VISIBLE);
-            mTvDeviceName.setText("设备名字：" + BleTools.getInstance().getBleDevice().getMac());
+            mTvDeviceName.setText(BleTools.getInstance().getBleDevice().getMac());
             if (BleTools.getInstance().isConnected() && isVisibled())
                 myTimer.startTimer();
         }
@@ -131,7 +132,7 @@ public class MonitorFragment extends BaseAcFragment {
                 "fetchCarouselPictureList",
                 new TypeToken<List<CarouselPictureBean>>() {
                 }.getType(),
-                CacheStrategy.firstRemote()
+                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT_DAY)
         )
                 .subscribe(new RxNetSubscriber<List<CarouselPictureBean>>() {
                     @Override
@@ -202,7 +203,15 @@ public class MonitorFragment extends BaseAcFragment {
             protected void _onNext(WarningRuleBean warningRuleBean) {
                 if (warningRuleBean == null || RxDataUtils.isNullString(warningRuleBean.getPointType())) {
                     RxLogUtils.d("未设置告警规则");
-                    new UsedTipDialog(mContext, lifecycleSubject);
+                    UsedTipDialog usedTipDialog = new UsedTipDialog(mContext, lifecycleSubject);
+                    usedTipDialog.setRxNetSubscriber(new RxNetSubscriber<WarningRuleBean>() {
+                        @Override
+                        protected void _onNext(WarningRuleBean warningRuleBean) {
+                            mWarningRuleBean = warningRuleBean;
+                            if (BleTools.getInstance().isConnected() && isVisibled())
+                                myTimer.startTimer();
+                        }
+                    });
                     return;
                 }
                 mWarningRuleBean = warningRuleBean;
@@ -240,6 +249,8 @@ public class MonitorFragment extends BaseAcFragment {
 
         for (JsonDataBean bean : data.getDataList()) {
             double nodeTemp = bean.getNodeTemp();
+            bean.setNodeTemp(Math.max(0, Math.min(nodeTemp, 50)));
+
             int flag = -1;
             if (CheckTempErrorUtil.isValidTemperature(nodeTemp)) {
                 if (nodeTemp <= normTemps[1] && nodeTemp >= normTemps[0]) {

@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity {
 //        mLayoutTitle.setVisibility(position == 2 ? View.GONE : View.VISIBLE);
         if (position == 2) {
             RxAnimationUtils.animateHeight(RxUtils.dp2px(105), 0, mLayoutTitle);
-        } else if (mLayoutTitle.getHeight() == 0) {
+        } else if (mLayoutTitle.getHeight() < RxUtils.dp2px(105)) {
             RxAnimationUtils.animateHeight(0, RxUtils.dp2px(105), mLayoutTitle);
         }
 

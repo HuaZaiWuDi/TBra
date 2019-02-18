@@ -26,7 +26,22 @@
         android:layout_toRightOf="@+id/img_device"
         android:textColor="@color/font_6A6F7B"
         android:textSize="16sp"
-        tools:text="设备mac地址\n距离:0.6m"/>
+        tools:text="设备mac地址"/>
+
+
+    <com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar
+        android:id="@+id/pro_rssi"
+        android:layout_width="100dp"
+        android:layout_height="4dp"
+        android:layout_below="@+id/tv_deviceDetails"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/img_device"
+        app:rcBackgroundColor="#FFC3C5CA"
+        app:rcProgressColor="@color/colortheme"
+        app:rcRadius="2dp">
+
+    </com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar>
 
 
     <TextView

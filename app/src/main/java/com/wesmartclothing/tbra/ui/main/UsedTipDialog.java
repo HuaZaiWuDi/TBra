@@ -2,17 +2,16 @@ package com.wesmartclothing.tbra.ui.main;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.kongzue.dialog.v2.BottomMenu;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.vondear.rxtools.model.lifecycyle.LifeCycleEvent;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.layout.RxEditText;
+import com.vondear.rxtools.view.layout.RxTextView;
 import com.vondear.rxtools.view.wheelhorizontal.utils.DrawUtil;
 import com.vondear.rxtools.view.wheelhorizontal.view.DecimalScaleRulerView;
 import com.wesmartclothing.tbra.R;
@@ -20,9 +19,6 @@ import com.wesmartclothing.tbra.entity.WarningRuleBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -41,12 +37,17 @@ public class UsedTipDialog {
     private WarningRuleBean mWarningRuleBean;
     private float defaultTemp = 2f;
 
+    private RxNetSubscriber<WarningRuleBean> mRxNetSubscriber;
+
     public UsedTipDialog(Context context, BehaviorSubject<LifeCycleEvent> lifecycleSubject) {
         this.lifecycleSubject = lifecycleSubject;
         mContext = context;
         mWarningRuleBean = new WarningRuleBean();
         firstUsedTip();
+    }
 
+    public void setRxNetSubscriber(RxNetSubscriber<WarningRuleBean> rxNetSubscriber) {
+        mRxNetSubscriber = rxNetSubscriber;
     }
 
     private void firstUsedTip() {
@@ -86,14 +87,19 @@ public class UsedTipDialog {
             mWarningRuleBean.setBaseNum(stringToInt);
             submitWarningRule();
         });
-        rootView.findViewById(R.id.tv_type)
-                .setOnClickListener(view -> {
-                    List<String> list = new ArrayList<>();
-                    list.add("单点累计异常次数");
-                    list.add("多点累计异常次数");
-                    BottomMenu.show((AppCompatActivity) mContext, list, (text, index) ->
-                            mWarningRuleBean.setPointType((index + 1) + ""), true);
-                });
+
+        //TODO 这里暂时没有多点，直接设置为单点
+        mWarningRuleBean.setPointType("1");
+        RxTextView mTvType = rootView.findViewById(R.id.tv_type);
+//        mTvType.setOnClickListener(view -> {
+//            List<String> list = new ArrayList<>();
+//            list.add("单点累计异常次数");
+//            list.add("多点累计异常次数");
+//            BottomMenu.show((AppCompatActivity) mContext, list, (text, index) -> {
+//                mWarningRuleBean.setPointType((index + 1) + "");
+//                mTvType.setText(mWarningRuleBean.getPointType().equals("1") ? "单点累计异常次数" : "多点累计异常次数");
+//            }, true);
+//        });
 
         mWarningRuleBean.setTempNum(defaultTemp);
         DecimalScaleRulerView mRulerTemp = rootView.findViewById(R.id.ruler_temp);
@@ -115,7 +121,8 @@ public class UsedTipDialog {
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String bean) {
-                        CustomDialog.unloadAllDialog();
+                        dialog3.doDismiss();
+                        mRxNetSubscriber.onNext(mWarningRuleBean);
                     }
 
                     @Override

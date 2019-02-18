@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="66dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
     android:paddingLeft="14dp"
     android:paddingRight="14dp">
 
@@ -13,6 +11,7 @@
     <ImageView
         android:layout_width="33dp"
         android:layout_height="33dp"
+        android:layout_centerVertical="true"
         android:background="@drawable/shape_33dp_red"
         android:padding="8dp"
         android:src="@mipmap/ic_warning"
@@ -22,7 +21,8 @@
         android:id="@+id/tv_point_time"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="58dp"
         android:text="2018-12-01 12:02\n异常点位：L02"
         android:textColor="@color/font_6A6F7B"
         android:textSize="12sp"/>
@@ -31,9 +31,16 @@
         android:id="@+id/tv_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:text="异常温度：36.2°C"
         android:textColor="@color/font_6A6F7B"
         android:textSize="12sp"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="#FFF5F5F5"/>
 
-</LinearLayout>
+</RelativeLayout>

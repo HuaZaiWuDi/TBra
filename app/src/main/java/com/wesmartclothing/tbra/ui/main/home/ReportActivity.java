@@ -2,7 +2,6 @@ package com.wesmartclothing.tbra.ui.main.home;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
@@ -366,11 +365,10 @@ public class ReportActivity extends BaseActivity {
      */
     private void initPointDetail() {
         mRecyclerWarningPoint.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerWarningPoint.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
         errorPointDetailAdapter = new BaseQuickAdapter<ReportDetailBean.PointsListBean, BaseViewHolder>(R.layout.item_warning_point) {
             @Override
             protected void convert(BaseViewHolder helper, ReportDetailBean.PointsListBean item) {
-                String pointTime = RxFormat.setFormatDate(item.getCollectDate(), RxFormat.Date_Date2) + "\n" +
+                String pointTime = RxFormat.setFormatDate(item.getCollectDate(), RxFormat.Date) + "\n" +
                         "异常点位：" + item.getSide() + item.getPoint();
                 //异常温度通过最大，最小温度与平均温度的偏差对比，
                 double errorTemp = Math.abs(item.getMaxTemp() - item.getAvgTemp()) >

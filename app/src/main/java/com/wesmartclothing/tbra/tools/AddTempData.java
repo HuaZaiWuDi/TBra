@@ -7,6 +7,7 @@ import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.ExplainException;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.ble.BleAPI;
@@ -140,9 +141,8 @@ public class AddTempData {
     public void uploadCacheOrBleData() {
         RxCache.getDefault().<List<AddTempDataBean>>load(SPKey.SP_SAVE_TEMP_DATA, new TypeToken<List<AddTempDataBean>>() {
         }.getType())
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
                 .map(new CacheResult.MapFunc<>())
+                .compose(RxComposeUtils.rxThreadHelper())
                 .subscribe(new RxNetSubscriber<List<AddTempDataBean>>() {
                     @Override
                     protected void _onNext(List<AddTempDataBean> addTempDataBeans) {

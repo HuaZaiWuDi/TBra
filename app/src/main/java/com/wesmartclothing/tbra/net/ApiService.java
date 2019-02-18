@@ -10,6 +10,7 @@ import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.IllnessBean;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.entity.MonthOrWeekPointsBean;
+import com.wesmartclothing.tbra.entity.OtherLoginBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
 import com.wesmartclothing.tbra.entity.RelateAccountListBean;
@@ -146,6 +147,29 @@ public interface ApiService {
     @Multipart
     @POST("user/feedbackImg")
     Observable<HttpResult<String>> feedbackImg(@Part() List<MultipartBody.Part> parts);
+
+
+    /**
+     * 查询绑定第三方信息接口
+     */
+    @POST("user/fetchBindingOuterInfo")
+    Observable<HttpResult<List<OtherLoginBean>>> fetchBindingOuterInfo();
+
+
+    /**
+     * 绑定第三方信息接口
+     */
+    @POST("user/bindingOuterInfo")
+    Observable<HttpResult<String>> bindingOuterInfo(@Body OtherLoginBean bean);
+
+    /**
+     * 解除绑定第三方信息接口
+     */
+    @FormUrlEncoded
+    @POST("user/unbindOuterInfo")
+    Observable<HttpResult<String>> unbindOuterInfo(
+            @Field("userType") String userType
+    );
 
 
     ///////////////////////////////////////////////////////////////////////////

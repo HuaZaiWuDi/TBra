@@ -14,6 +14,9 @@ public class RefreshUserInfoBus {
 
     private UserInfoBean mUserInfoBean;
 
+    public RefreshUserInfoBus() {
+    }
+
     public RefreshUserInfoBus(UserInfoBean userInfoBean) {
         mUserInfoBean = userInfoBean;
     }

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.main.mine.AccountManagerActivity">
+
+    <com.vondear.rxtools.view.cardview.CardView
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
+        >
+
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:title="账号管理"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+    </com.vondear.rxtools.view.cardview.CardView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_F7F7F9"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/layout_phone"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/selector_ripple_bg"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_phone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="手机号"
+                android:textColor="@color/Gray"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/color_978E9D"
+                android:textSize="15sp"
+                tools:text="17665248850"/>
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="可绑定登录的第三方账号"
+            android:textColor="@color/color_978E9D"
+            android:textSize="13sp"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_wechat"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/selector_ripple_bg"
+            android:padding="16dp">
+
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/wechat"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:text="微信"
+                android:textColor="@color/Gray"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_wechatName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="102dp"
+                android:textColor="@color/color_978E9D"
+                android:textSize="15sp"
+                tools:text="17665248850"/>
+
+
+            <ImageView
+                android:id="@+id/iv_wechat_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_account_unbind"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_C3C5CA"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_QQ"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/selector_ripple_bg"
+            android:padding="16dp">
+
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/qq"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:text="QQ"
+                android:textColor="@color/Gray"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_QQName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="102dp"
+                android:textColor="@color/color_978E9D"
+                android:textSize="15sp"
+                tools:text="17665248850"/>
+
+
+            <ImageView
+                android:id="@+id/iv_QQ_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_account_unbind"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_C3C5CA"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_weibo"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/selector_ripple_bg"
+            android:padding="16dp">
+
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/weibo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:text="微博"
+                android:textColor="@color/Gray"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_weiboName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="102dp"
+                android:textColor="@color/color_978E9D"
+                android:textSize="15sp"
+                tools:text="17665248850"/>
+
+
+            <ImageView
+                android:id="@+id/iv_weibo_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_account_unbind"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
