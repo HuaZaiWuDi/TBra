@@ -160,7 +160,7 @@
         </activity>
         <activity android:name=".ui.login.InvitationCodeActivity">
         </activity>
-        <activity android:name=".ui.main.mine.ResetPwdActivity">
+        <activity android:name=".ui.login.ResetPwdActivity">
         </activity>
         <activity android:name=".ui.login.VerifyPhoneActivity">
         </activity>
@@ -195,7 +195,7 @@
         </activity>
         <activity android:name=".ui.main.mine.WarningRecordActivity">
         </activity>
-        <activity android:name=".ui.main.mine.relationphone.AddRelationPhoneActivity">
+        <activity android:name=".base.BaseTitleWebActivity">
         </activity>
         <activity android:name=".ui.main.mine.WarningSettingActivity">
         </activity>

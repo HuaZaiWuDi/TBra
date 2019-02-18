@@ -133,7 +133,7 @@ public class TimingMonitorView extends LinearLayout {
         for (int i = 0; i < valuesRight.size(); i++) {
             float tempDiff = valuesLeft.get(i).getY() - valuesRight.get(i).getY();
             tempDiffs.add(Math.abs(tempDiff));
-            valueLine.add(new Entry(i, normalTemp + Math.abs(tempDiff)));
+            valueLine.add(new Entry(i, Math.abs(tempDiff)));
         }
 
         mMBarChart.getXAxis().setValueFormatter((value, axis) ->

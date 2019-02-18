@@ -18,6 +18,8 @@ import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.base.BaseTitleWebActivity;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
 import com.wesmartclothing.tbra.ui.login.LoginActivity;
 
@@ -127,10 +129,16 @@ public class GuideActivity extends BaseActivity {
             rootView.findViewById(R.id.tv_agreement)
                     .setOnClickListener(view -> {
                         //协议1
+                        BaseTitleWebActivity.startBaseWebAc(mContext,
+                                "注册协议", Key.WEB_URL_Registration_Agreement);
                     });
             rootView.findViewById(R.id.tv_agreement2)
                     .setOnClickListener(view -> {
                         //协议2
+
+                        BaseTitleWebActivity.startBaseWebAc(mContext,
+                                "服务条款和隐私条款", Key.WEB_URL_Implicit_Clause);
+
                     });
             rootView.findViewById(R.id.img_agree)
                     .setOnClickListener(view -> {

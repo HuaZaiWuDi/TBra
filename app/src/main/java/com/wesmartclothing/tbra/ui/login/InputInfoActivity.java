@@ -32,7 +32,7 @@ public class InputInfoActivity extends BaseActivity {
     @BindView(R.id.tv_nextStep)
     TextView mTvNextStep;
 
-    public static UserInfoBean sInfoBean = new UserInfoBean();
+    public static UserInfoBean sInfoBean;
 
 
     @Override
@@ -52,6 +52,7 @@ public class InputInfoActivity extends BaseActivity {
 
     @Override
     public void initViews() {
+        sInfoBean = new UserInfoBean();
         initTitle(mRxTitle);
     }
 

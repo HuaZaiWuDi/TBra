@@ -123,13 +123,12 @@ public class BleService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void scanConnectDevice() {
+    private synchronized void scanConnectDevice() {
 
         if (BleTools.getInstance().isConnected()) {
             RxLogUtils.e("设备已连接");
             return;
         }
-
 
         try {
             final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()

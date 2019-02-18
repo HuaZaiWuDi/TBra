@@ -57,6 +57,8 @@ public class InvitationCodeActivity extends BaseActivity {
     public void initViews() {
         initTitle(mRxTitle);
         initEditText();
+
+
     }
 
     private void initEditText() {

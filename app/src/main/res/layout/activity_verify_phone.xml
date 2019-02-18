@@ -118,6 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="12dp"
+            android:autoLink="all"
             android:text="《威觅注册协议》和《法律声明及隐私权政策》"
             android:textColor="@color/font_475669"
             android:textSize="12sp"/>

@@ -318,7 +318,7 @@ public class UserInfoActivity extends BaseActivity {
             if (data != null && requestCode == IMAGE_PICKER) {
                 ArrayList<ImageItem> images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
 
-                GlideImageLoader.getInstance().displayImage(mActivity, images.get(0).path, R.mipmap.ic_launcher, mIvUserImg);
+                GlideImageLoader.getInstance().displayImage(mActivity, images.get(0).path, R.mipmap.ic_default_avater, mIvUserImg);
 
                 //成功后将本地图片设置到imageView中，并在退回到个人中心时，刷新贴图url
                 userInfo.setAvatar(images.get(0).path);

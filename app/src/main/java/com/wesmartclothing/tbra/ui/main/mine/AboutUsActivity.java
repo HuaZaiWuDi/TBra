@@ -13,7 +13,9 @@ import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.layout.RxTextView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.base.BaseTitleWebActivity;
 import com.wesmartclothing.tbra.ble.BleAPI;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 
 import butterknife.BindView;
@@ -62,7 +64,7 @@ public class AboutUsActivity extends BaseActivity {
                 .setUnderline()
                 .into(mTvTip);
         mTvAppVersion.setText("软件版本号 v" + RxDeviceUtils.getAppVersionName());
-        mTvClothingVersion.setText("固件版本号 v--");
+        mTvClothingVersion.setText("固件版本号 v-\t-");
     }
 
     @Override
@@ -90,6 +92,8 @@ public class AboutUsActivity extends BaseActivity {
             case R.id.btn_update:
                 break;
             case R.id.tv_tip:
+                BaseTitleWebActivity.startBaseWebAc(mContext,
+                        "服务条款和隐私条款", Key.WEB_URL_Implicit_Clause);
                 break;
             case R.id.btn_reUpdate:
                 mLayoutUpdateFail.setVisibility(View.GONE);

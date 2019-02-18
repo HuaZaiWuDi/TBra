@@ -93,7 +93,7 @@ public class ScanDeviceActivity extends BaseActivity {
             mRxTitle.setRightTextVisibility(true);
             mRxTitle.setLeftIconVisibility(false);
             mRxTitle.setRightTextOnClickListener(view -> {
-                RxActivityUtils.skipActivity(mContext, MainActivity.class);
+                RxActivityUtils.skipActivityAndFinishAll(mContext, MainActivity.class);
             });
         }
     }
@@ -130,7 +130,7 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             protected void convert(BaseViewHolder helper, DeviceConnectBean item) {
                 BleDevice bleDevice = item.getBleDevice();
-                String deviceDetail = bleDevice.getName() + "\t" +
+                String deviceDetail = bleDevice.getName() + ":" +
                         bleDevice.getMac().substring(12, bleDevice.getMac().length());
 
                 helper.setText(R.id.tv_deviceDetails, deviceDetail)

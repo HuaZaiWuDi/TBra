@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.ui.login;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxEncryptUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxRegUtils;
+import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxTitle;
@@ -20,9 +22,12 @@ import com.vondear.rxtools.view.layout.RxTextView;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.base.BaseTitleWebActivity;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.tools.CustomClickUrlSpan;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 
 import butterknife.BindView;
@@ -68,16 +73,33 @@ public class RegisterActivity extends BaseActivity {
     public void initViews() {
         initEdit();
         initTitle(mRxTitle);
+        initTextUrl();
+    }
+
+    private void initTextUrl() {
+        mTvAgreement.setMovementMethod(LinkMovementMethod.getInstance());
+
+        RxTextUtils.getBuilder("《威觅注册协议》")
+                .setUrl(Key.WEB_URL_Registration_Agreement)
+                .setClickSpan(new CustomClickUrlSpan(view -> {
+                    BaseTitleWebActivity.startBaseWebAc(mContext, "注册协议", Key.WEB_URL_Registration_Agreement);
+
+                }))
+                .append("和")
+                .append("《服务条款和隐私条款》")
+                .setUrl(Key.WEB_URL_Implicit_Clause)
+                .setClickSpan(new CustomClickUrlSpan(view -> {
+                    BaseTitleWebActivity.startBaseWebAc(mContext,
+                            "服务条款和隐私条款", Key.WEB_URL_Implicit_Clause);
+                }))
+                .into(mTvAgreement);
     }
 
     private void initEdit() {
-        mEditPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String phone = mEditPhone.getText().toString();
-                if (!b && !RxRegUtils.isMobileExact(phone)) {
-                    RxToast.warning(getString(R.string.phoneError));
-                }
+        mEditPhone.setOnFocusChangeListener((view, b) -> {
+            String phone = mEditPhone.getText().toString();
+            if (!b && !RxRegUtils.isMobileExact(phone)) {
+                RxToast.warning(getString(R.string.phoneError));
             }
         });
         mEditPhone.addTextChangedListener(new onEditTextChangeListener() {

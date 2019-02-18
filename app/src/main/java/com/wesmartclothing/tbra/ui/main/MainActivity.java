@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity {
                 .subscribe(new RxNetSubscriber<UserInfoBean>() {
                     @Override
                     protected void _onNext(UserInfoBean userInfoBean) {
-                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
+                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), R.mipmap.ic_default_avater, mImgUserImg);
                     }
                 });
     }

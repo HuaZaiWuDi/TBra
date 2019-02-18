@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".base.BaseTitleWebActivity">
+
+    <com.vondear.rxtools.view.cardview.CardView
+        android:id="@+id/layoutTitle"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        app:cardShadowColorEnd="#006A6F7B"
+        app:cardShadowColorStart="#1A6A6F7B"
+        >
+
+        <com.vondear.rxtools.view.RxTitle
+            android:id="@+id/rxTitle"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="bottom"
+            app:leftIcon="@drawable/ic_arrow_back_black_24dp"
+            app:titleColor="@color/line_333845"
+            app:titleSize="16sp"/>
+
+    </com.vondear.rxtools.view.cardview.CardView>
+
+
+    <FrameLayout
+        android:id="@+id/layout_frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+
+</LinearLayout>

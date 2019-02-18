@@ -11,7 +11,6 @@ import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.SPUtils;
-import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
@@ -133,7 +132,7 @@ public class MineFragment extends BaseAcFragment {
                         mTvUserName.setText(userInfoBean.getUserName());
                         mTvSign.setText(userInfoBean.getSignature());
                         mTvDeviceCount.setText(SPUtils.getString(SPKey.SP_BIND_DEVICE, ""));
-                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), mImgUserImg);
+                        GlideImageLoader.getInstance().displayImage(mContext, userInfoBean.getAvatar(), R.mipmap.ic_default_avater, mImgUserImg);
                     }
                 });
     }
@@ -153,10 +152,22 @@ public class MineFragment extends BaseAcFragment {
                 .into(mTvWarningCount);
 
         RxTextUtils.getBuilder("累计监测时长\n")
-                .append(RxFormat.setSec2HM(bean.getTotalCount() * 5 * 60))
+                .append(setSec2HM(bean.getTotalCount() * 5 * 60))
                 .setForegroundColor(ContextCompat.getColor(mContext, R.color.font_475669))
                 .setProportion(1.6f)
                 .into(mTvTimes);
+    }
+
+
+    /**
+     * 60h24min
+     *
+     * @param second
+     * @return
+     */
+    public static String setSec2HM(int second) {
+        int min = second / 60;
+        return min < 60 ? min + "min" : String.format("%02d", min / 60) + "h" + String.format("%02d", min % 60) + "min";
     }
 
 

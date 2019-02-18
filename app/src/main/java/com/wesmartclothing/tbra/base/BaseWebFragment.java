@@ -162,7 +162,12 @@ public class BaseWebFragment extends BaseAcFragment {
         } else { // default mode
             webView.loadUrl(url);
         }
+    }
 
+    @Override
+    public void onPause() {
+
+        super.onPause();
     }
 
     public void onRelease() {

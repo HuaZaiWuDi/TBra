@@ -15,16 +15,27 @@
         android:orientation="vertical"
         >
 
-
-        <com.tmall.ultraviewpager.UltraViewPager
-            android:id="@+id/ultraViewPager"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="134dp"
-            android:layout_margin="14dp"
-            android:nestedScrollingEnabled="true"
-            tools:background="@color/red">
+            android:layout_height="wrap_content"
+            >
 
-        </com.tmall.ultraviewpager.UltraViewPager>
+            <com.tmall.ultraviewpager.UltraViewPager
+                android:id="@+id/ultraViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="134dp"
+                android:layout_margin="14dp"
+                android:nestedScrollingEnabled="true">
+
+            </com.tmall.ultraviewpager.UltraViewPager>
+
+            <ImageView
+                android:id="@+id/img_informationEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="157dp"
+                android:src="@mipmap/bg_information_empty"/>
+
+        </FrameLayout>
 
 
         <TextView

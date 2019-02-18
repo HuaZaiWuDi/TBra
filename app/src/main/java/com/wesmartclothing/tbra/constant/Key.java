@@ -20,6 +20,11 @@ public interface Key {
     String LoginType_QQ = "ic_qq";
     String LoginType_WEIBO = "MicroBlog";
 
+    //    String WEB_URL_Registration_Agreement = "file:///android_asset/html/registration_agreement.html";
+    String WEB_URL_Registration_Agreement = "http://doc.wesmartclothing.com/terms/wemeet.html";
+
+    String WEB_URL_Implicit_Clause = "file:///android_asset/html/implicit_clause.html";
+
 
     //异常点的日期
     String BUNDLE_LATEST_TYPE = "BUNDLE_LATEST_TYPE";

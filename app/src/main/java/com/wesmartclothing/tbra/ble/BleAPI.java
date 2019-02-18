@@ -1,6 +1,7 @@
 package com.wesmartclothing.tbra.ble;
 
 import com.clj.fastble.utils.HexUtil;
+import com.vondear.rxtools.utils.RxFormatValue;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.aboutByte.ByteUtil;
 import com.vondear.rxtools.utils.net.RxSubscriber;
@@ -337,8 +338,8 @@ public class BleAPI {
 
     private static double bytes2Temp(byte... bytes) {
         int i = ByteUtil.bytesToIntG2(bytes);
-        return -45.0 + 175f * i / 65536;
+        double v = -45.0 + 175f * i / 65536;
+        return RxFormatValue.format4S5R(v, 1);
     }
-
 
 }

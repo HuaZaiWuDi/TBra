@@ -274,7 +274,7 @@
         android:layout_height="2dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="25dp"
         android:maxHeight="2dp"
         android:nestedScrollingEnabled="true"
         android:progressDrawable="@drawable/bg_seekbar"
@@ -292,7 +292,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@mipmap/ic_left"/>
@@ -302,7 +301,6 @@
         android:layout_width="30dp"
         android:layout_height="25dp"
         android:layout_marginStart="38dp"
-        android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_media_play"/>
@@ -312,7 +310,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
-        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@mipmap/ic_right"/>
@@ -334,7 +331,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="19dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="2dp"
         android:text="X2倍"
         android:textColor="@color/white"
         android:textSize="12sp"

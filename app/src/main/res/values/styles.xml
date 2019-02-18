@@ -20,7 +20,7 @@
 
     <style name="StartTheme" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@drawable/bg_start_up</item>
+        <!--<item name="android:windowBackground">@drawable/bg_start_up</item>-->
 
     </style>
 

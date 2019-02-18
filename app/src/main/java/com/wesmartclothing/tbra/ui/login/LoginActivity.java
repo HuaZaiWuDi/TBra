@@ -43,7 +43,6 @@ import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.LoginSuccessUtils;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
-import com.wesmartclothing.tbra.ui.main.mine.ResetPwdActivity;
 
 import java.util.ArrayList;
 import java.util.Map;

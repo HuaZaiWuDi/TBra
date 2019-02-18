@@ -19,6 +19,7 @@ import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.RxComposeTools;
 import com.wesmartclothing.tbra.ui.login.LoginActivity;
+import com.wesmartclothing.tbra.ui.login.ResetPwdActivity;
 import com.zchu.rxcache.RxCache;
 
 import butterknife.BindView;

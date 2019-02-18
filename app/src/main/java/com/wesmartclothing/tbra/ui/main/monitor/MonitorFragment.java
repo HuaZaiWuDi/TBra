@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.ui.main.monitor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -78,10 +79,11 @@ public class MonitorFragment extends BaseAcFragment {
     RelativeLayout mLayoutMonitorEmpty;
     @BindView(R.id.historyTempView)
     HistoryTempView mHistoryTempView;
+    @BindView(R.id.img_informationEmpty)
+    ImageView mImgInformationEmpty;
 
 
     private WarningRuleBean mWarningRuleBean;
-    private List<CarouselPictureBean> carouselPictureLists = new ArrayList<>();
     private UltraPagerAdapter adapter;
 
     public static MonitorFragment getInstance() {
@@ -126,6 +128,11 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initNetData() {
         getRuleDetail();
+        getInformationPhoto();
+
+    }
+
+    private void getInformationPhoto() {
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().fetchCarouselPictureList(),
                 lifecycleSubject,
@@ -137,9 +144,11 @@ public class MonitorFragment extends BaseAcFragment {
                 .subscribe(new RxNetSubscriber<List<CarouselPictureBean>>() {
                     @Override
                     protected void _onNext(List<CarouselPictureBean> carouselPictureBeans) {
-                        carouselPictureLists = carouselPictureBeans;
+                        if (!RxDataUtils.isEmpty(mImgInformationEmpty)) {
+                            mImgInformationEmpty.setVisibility(View.GONE);
+                        }
                         //UltraPagerAdapter 绑定子view到UltraViewPager
-                        adapter = new UltraPagerAdapter(carouselPictureLists, ultraViewPager);
+                        adapter = new UltraPagerAdapter(carouselPictureBeans, ultraViewPager);
                         adapter.setSelectImgListener(bean -> {
 
                         });
@@ -249,6 +258,7 @@ public class MonitorFragment extends BaseAcFragment {
 
         for (JsonDataBean bean : data.getDataList()) {
             double nodeTemp = bean.getNodeTemp();
+            //设定异常温度数值，在0-50之间
             bean.setNodeTemp(Math.max(0, Math.min(nodeTemp, 50)));
 
             int flag = -1;
