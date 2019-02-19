@@ -133,7 +133,7 @@ public class AddTempData {
         int unValidCount = 0;
         List<JsonDataBean> dataList = addTempDataBean.getDataList();
         for (JsonDataBean bean : dataList) {
-            if (bean.getWarningFlag() == -1) {
+            if (!CheckTempErrorUtil.isValidTemperature(bean.getNodeTemp())) {
                 unValidCount++;
             }
         }

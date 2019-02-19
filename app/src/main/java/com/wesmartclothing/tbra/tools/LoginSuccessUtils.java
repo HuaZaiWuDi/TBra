@@ -11,6 +11,7 @@ import com.wesmartclothing.tbra.entity.LoginInfoBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.tools.jpush.JPushUtils;
 import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.login.InvitationCodeActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
@@ -31,7 +32,9 @@ public class LoginSuccessUtils {
         SPUtils.put(SPKey.SP_UserId, bean.getUserId());
         SPUtils.put(SPKey.SP_token, bean.getToken());
 
+        NetManager.flushInstance();
         initUserInfo(lifecycleSubject);
+
     }
 
     //获取用户信息
@@ -49,6 +52,9 @@ public class LoginSuccessUtils {
                         if (!RxDataUtils.isEmpty(userInfo.getMacAddrList())) {
                             SPUtils.put(SPKey.SP_BIND_DEVICE, userInfo.getMacAddrList().get(0));
                         }
+
+                        JPushUtils.setAliasOrTags();
+
                         if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
                         } else if (userInfo.getAge() == 0) {
@@ -56,6 +62,7 @@ public class LoginSuccessUtils {
                         } else {
                             RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), MainActivity.class);
                         }
+
                     }
 
                     @Override

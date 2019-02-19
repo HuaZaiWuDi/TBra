@@ -22,6 +22,7 @@ import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.net.ServiceAPI;
+import com.wesmartclothing.tbra.tools.jpush.JPushUtils;
 import com.wesmartclothing.tbra.tools.soinc.SonicRuntimeImpl;
 import com.zchu.rxcache.RxCache;
 import com.zchu.rxcache.diskconverter.GsonDiskConverter;
@@ -73,6 +74,7 @@ public class APP extends Application {
                     BugLyInit();
                     initDialog();
                     initSonicWeb();
+                    JPushUtils.init(myApp);
                 });
     }
 

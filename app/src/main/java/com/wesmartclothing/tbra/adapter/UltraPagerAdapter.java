@@ -86,7 +86,6 @@ public class UltraPagerAdapter extends PagerAdapter {
         GlideImageLoader.getInstance().displayImage(
                 container.getContext(),
                 carouselPictureBeans.get(position).getImgUrl(),
-                R.mipmap.ic_launcher,
                 rxImageView);
 
         rxTextView.setText(carouselPictureBeans.get(position).getTitle());

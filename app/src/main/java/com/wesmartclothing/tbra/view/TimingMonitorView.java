@@ -21,6 +21,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.vondear.rxtools.utils.RxDataUtils;
+import com.vondear.rxtools.utils.RxFormatValue;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.tools.BarRoundChartRenderer;
@@ -131,7 +132,7 @@ public class TimingMonitorView extends LinearLayout {
         }
 
         for (int i = 0; i < valuesRight.size(); i++) {
-            float tempDiff = valuesLeft.get(i).getY() - valuesRight.get(i).getY();
+            float tempDiff = (float) RxFormatValue.format4S5R(valuesLeft.get(i).getY() - valuesRight.get(i).getY(), 1);
             tempDiffs.add(Math.abs(tempDiff));
             valueLine.add(new Entry(i, Math.abs(tempDiff)));
         }

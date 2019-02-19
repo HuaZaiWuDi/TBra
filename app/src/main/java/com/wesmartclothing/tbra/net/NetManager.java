@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.vondear.rxtools.utils.RxDeviceUtils;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.constant.SPKey;
@@ -71,6 +72,8 @@ public class NetManager {
             bigBuilder.addInterceptor(loggingInterceptor);
         }
 
+        RxLogUtils.d("刷新");
+
         builder.addInterceptor(NetInterceptor);
         bigBuilder.addInterceptor(NetInterceptor);
 
@@ -101,6 +104,11 @@ public class NetManager {
 
         mBigFileService = bigApiRetrofit.create(ApiService.class);
 
+    }
+
+    public static void flushInstance() {
+        netManager = null;
+        getInstance();
     }
 
     public static SystemService getSystemService() {

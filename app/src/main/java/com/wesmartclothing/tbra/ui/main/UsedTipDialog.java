@@ -123,6 +123,7 @@ public class UsedTipDialog {
                     protected void _onNext(String bean) {
                         dialog3.doDismiss();
                         mRxNetSubscriber.onNext(mWarningRuleBean);
+
                     }
 
                     @Override

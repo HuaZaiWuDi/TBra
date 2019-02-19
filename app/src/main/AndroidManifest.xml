@@ -43,36 +43,36 @@
         <!-- <service android:name="com.amap.api.location.APSService"/> -->
 
 
-        <!-- &lt;!&ndash; 极光通知广播 &ndash;&gt; -->
-        <!-- <receiver -->
-        <!-- android:name=".utils.jpush.MyJpushReceiver" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="false"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="cn.jpush.android.intent.REGISTRATION"/> -->
-        <!-- <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/> -->
-        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/> -->
-        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/> -->
-        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION"/> -->
+        <!-- 极光通知广播 -->
+        <receiver
+            android:name=".tools.jpush.MyJpushReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION"/>
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION"/>
 
 
-        <!-- &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt; -->
-        <!-- <action android:name="cn.jpush.android.intent.CONNECTION"/> -->
-        <!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> &lt;!&ndash; 开机广播 &ndash;&gt; -->
-        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> &lt;!&ndash; 网络状态改变广播 &ndash;&gt; -->
+                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="cn.jpush.android.intent.CONNECTION"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/> <!-- 开机广播 -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> <!-- 网络状态改变广播 -->
 
 
-        <!-- <category android:name="lab.wesmartclothing.wefit.flyso"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-        <!-- <receiver android:name=".utils.jpush.MyJPushMessageReceiver"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE"/> -->
+                <category android:name="com.wesmartclothing.tbra"/>
+            </intent-filter>
+        </receiver>
 
+        <receiver android:name=".tools.jpush.MyJPushMessageReceiver">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE"/>
 
-        <!-- <category android:name="lab.wesmartclothing.wefit.flyso"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+                <category android:name="com.wesmartclothing.tbra"/>
+            </intent-filter>
+        </receiver>
 
 
         <!-- &lt;!&ndash; DUF服务 &ndash;&gt; -->

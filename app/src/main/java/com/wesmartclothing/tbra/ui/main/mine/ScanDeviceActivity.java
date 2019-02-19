@@ -76,10 +76,12 @@ public class ScanDeviceActivity extends BaseActivity {
     private BindDeviceBean deviceBean = new BindDeviceBean();
     private int position = 0;
     private WaitDialog waitDialog;
+    public static boolean SCAN_BLE_DEVICE = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SCAN_BLE_DEVICE = true;
     }
 
     @Override
@@ -105,7 +107,7 @@ public class ScanDeviceActivity extends BaseActivity {
         initTitle(mRxTitle);
         initRecyclerView();
         initPermissions();
-
+        BleTools.getInstance().stopScan();
     }
 
     private void initPermissions() {
@@ -206,7 +208,7 @@ public class ScanDeviceActivity extends BaseActivity {
             return;
         }
 
-        BleTools.getInstance().stopScan();
+
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
                 .setDeviceName(true, BLEKey.DEVICE_NAME)
@@ -221,6 +223,7 @@ public class ScanDeviceActivity extends BaseActivity {
                 if (scanResultList.isEmpty() && mContext != null) {
                     TipDialog.show(mContext, "未发现设备", TipDialog.TYPE_ERROR);
                 }
+                mImgBleScan.clearAnimation();
             }
 
             @Override
@@ -232,8 +235,8 @@ public class ScanDeviceActivity extends BaseActivity {
                     mImgBleScan.startAnimation(RxAnimationUtils.RotateAnim(15));
                     adapter.setNewData(null);
                 } else {
-                    if (mContext != null)
-                        TipDialog.show(mContext, "扫描失败", TipDialog.TYPE_ERROR);
+//                    if (mContext != null)
+//                        TipDialog.show(mContext, "扫描失败", TipDialog.TYPE_ERROR);
                 }
             }
 
@@ -352,6 +355,7 @@ public class ScanDeviceActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         BleTools.getInstance().stopScan();
+        SCAN_BLE_DEVICE = true;
 //        BleTools.getBleManager().removeConnectGattCallback(BleTools.getInstance().getBleDevice());
         super.onDestroy();
     }

@@ -79,7 +79,7 @@ public class WarningSettingActivity extends BaseActivity {
                 lifecycleSubject,
                 "userRuleDetail",
                 WarningRuleBean.class,
-                CacheStrategy.firstCache()
+                CacheStrategy.firstRemote()
         )
                 .subscribe(new RxNetSubscriber<WarningRuleBean>() {
                     @Override

@@ -214,18 +214,21 @@ public class BleTools {
 
                 //命令数据
                 if (subscriber != null && data[3] == bytes[3]) {
-                    currentCount = 0;
                     subscriber.onNext(data);
+                    currentCount = 0;
                     TimeOut.removeCallbacks(reWrite);
                 }
 
                 //电池信息反馈
                 if (data[3] == 0x04) {
+                    currentCount = 0;
+                    TimeOut.removeCallbacks(reWrite);
+
                     DeviceBatteryInfoBean batteryInfoBean = new DeviceBatteryInfoBean();
-                    batteryInfoBean.setBatteryState(bytes[4]);
-                    batteryInfoBean.setBatteryValue(bytes[5]);
-                    batteryInfoBean.setBatteryVoltage(ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}));
-                    batteryInfoBean.setBatteryTemperature(ByteUtil.bytesToIntD2(new byte[]{bytes[8], bytes[9]}));
+                    batteryInfoBean.setBatteryState(data[4]);
+                    batteryInfoBean.setBatteryValue(data[5]);
+                    batteryInfoBean.setBatteryVoltage(ByteUtil.bytesToIntD2(new byte[]{data[6], data[7]}));
+                    batteryInfoBean.setBatteryTemperature(ByteUtil.bytesToIntD2(new byte[]{data[8], data[9]}));
                     RxLogUtils.d("电池温度信息：" + batteryInfoBean.toString());
 
                     RxBus.getInstance().post(batteryInfoBean);

@@ -33,6 +33,7 @@ import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
+import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
 
 public class BleService extends Service {
 
@@ -130,6 +131,11 @@ public class BleService extends Service {
             return;
         }
 
+        if (ScanDeviceActivity.SCAN_BLE_DEVICE) {
+            RxLogUtils.e("正在扫描界面");
+            return;
+        }
+
         try {
             final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
@@ -173,6 +179,11 @@ public class BleService extends Service {
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
                 RxLogUtils.d("断开连接：");
                 RxBus.getInstance().post(new ConnectStateBus(false));
+
+                TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
+                tipDialog.setCanCancel(true);
+                tipDialog.showDialog();
+
                 scanConnectDevice();
             }
 
