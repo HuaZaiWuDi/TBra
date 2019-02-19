@@ -73,6 +73,7 @@ public class AddTempData {
 
     /**
      * 2.15 修改逻辑，不在按照序号判断是否结束，判断命令行开头字符标识
+     * 2.17 所以每包温度数据都无效，则这条数据无效，不用上传
      */
     public void getTempData() {
         BleAPI.getTempData(SPUtils.getInt(SPKey.SP_LAST_INDEX, 0), maxCount, new RxSubscriber<AddTempDataBean>() {
@@ -93,8 +94,9 @@ public class AddTempData {
 //                    SPUtils.put(SPKey.SP_LAST_INDEX, 0);
 //                    BleAPI.clearTempData();
 //                }
-
-                tempDataBeans.add(addTempDataBean);
+                if (checkTempValid(addTempDataBean)) {
+                    tempDataBeans.add(addTempDataBean);
+                }
 
                 if (addTempDataBean.getPickageSign() == (byte) 0xc1) {
                     RxLogUtils.d("获取结束");
@@ -122,6 +124,28 @@ public class AddTempData {
         });
     }
 
+    /**
+     * 验证温度是否有效，所有点位均无效，则这条表示无效，不用上传
+     *
+     * @return 是否有效true有效
+     */
+    private boolean checkTempValid(AddTempDataBean addTempDataBean) {
+        int unValidCount = 0;
+        List<JsonDataBean> dataList = addTempDataBean.getDataList();
+        for (JsonDataBean bean : dataList) {
+            if (bean.getWarningFlag() == -1) {
+                unValidCount++;
+            }
+        }
+        return unValidCount != 16;
+    }
+
+
+    /**
+     * 保存数据到本地
+     *
+     * @param tempDataBeans
+     */
     private void saveCache(List<AddTempDataBean> tempDataBeans) {
         RxCache.getDefault().save(SPKey.SP_SAVE_TEMP_DATA, tempDataBeans)
                 .subscribeOn(Schedulers.io())

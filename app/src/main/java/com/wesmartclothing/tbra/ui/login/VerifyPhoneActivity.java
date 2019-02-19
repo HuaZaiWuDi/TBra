@@ -82,7 +82,6 @@ public class VerifyPhoneActivity extends BaseActivity {
                 .setUrl(Key.WEB_URL_Registration_Agreement)
                 .setClickSpan(new CustomClickUrlSpan(view -> {
                     BaseTitleWebActivity.startBaseWebAc(mContext, "注册协议", Key.WEB_URL_Registration_Agreement);
-
                 }))
                 .append("和")
                 .append("《服务条款和隐私条款》")
@@ -95,13 +94,10 @@ public class VerifyPhoneActivity extends BaseActivity {
     }
 
     private void initEdit() {
-        mEditPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String phone = mEditPhone.getText().toString();
-                if (!b && !RxRegUtils.isMobileExact(phone)) {
-                    RxToast.warning(getString(R.string.phoneError));
-                }
+        mEditPhone.setOnFocusChangeListener((view, b) -> {
+            String phone = mEditPhone.getText().toString();
+            if (!b && !RxRegUtils.isMobileExact(phone)) {
+                RxToast.warning(getString(R.string.phoneError));
             }
         });
         mEditPhone.addTextChangedListener(new onEditTextChangeListener() {

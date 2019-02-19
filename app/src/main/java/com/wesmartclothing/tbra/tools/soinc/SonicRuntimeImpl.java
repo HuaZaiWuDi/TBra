@@ -10,6 +10,7 @@ import android.webkit.WebResourceResponse;
 
 import com.tencent.sonic.sdk.SonicRuntime;
 import com.tencent.sonic.sdk.SonicSessionClient;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.wesmartclothing.tbra.BuildConfig;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class SonicRuntimeImpl extends SonicRuntime {
 
     /**
      * 获取用户UA信息
+     *
      * @return
      */
     @Override
@@ -38,6 +40,7 @@ public class SonicRuntimeImpl extends SonicRuntime {
 
     /**
      * 获取用户ID信息
+     *
      * @return
      */
     @Override
@@ -67,7 +70,7 @@ public class SonicRuntimeImpl extends SonicRuntime {
 
     @Override
     public Object createWebResourceResponse(String mimeType, String encoding, InputStream data, Map<String, String> headers) {
-        WebResourceResponse resourceResponse =  new WebResourceResponse(mimeType, encoding, data);
+        WebResourceResponse resourceResponse = new WebResourceResponse(mimeType, encoding, data);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             resourceResponse.setResponseHeaders(headers);
         }
@@ -76,12 +79,12 @@ public class SonicRuntimeImpl extends SonicRuntime {
 
     @Override
     public void showToast(CharSequence text, int duration) {
-
+        RxLogUtils.d("showToast：" + text);
     }
 
     @Override
     public void notifyError(SonicSessionClient client, String url, int errorCode) {
-
+        RxLogUtils.e("url:" + url + "-------errorCode:" + errorCode);
     }
 
     @Override
@@ -117,12 +120,12 @@ public class SonicRuntimeImpl extends SonicRuntime {
         if (BuildConfig.DEBUG) {
             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "sonic/";
             File file = new File(path.trim());
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.mkdir();
             }
             return file;
         }
-       return super.getSonicCacheDir();
+        return super.getSonicCacheDir();
     }
 
     @Override

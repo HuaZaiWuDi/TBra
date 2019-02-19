@@ -24,7 +24,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="96dp"
-        android:text="WEMEET助力每一次幸福的遇见"
+        android:text="Wemeet助力每一次幸福的遇见"
         android:textColor="@color/font_6A6F7B"
         android:textSize="13sp"/>
 

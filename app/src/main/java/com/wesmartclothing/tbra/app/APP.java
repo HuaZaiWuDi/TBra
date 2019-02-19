@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.kongzue.dialog.v2.DialogSettings;
 import com.tencent.bugly.Bugly;
+import com.tencent.sonic.sdk.SonicConfig;
+import com.tencent.sonic.sdk.SonicEngine;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.vondear.rxtools.activity.ActivityLifecycleImpl;
@@ -20,6 +22,7 @@ import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.net.ServiceAPI;
+import com.wesmartclothing.tbra.tools.soinc.SonicRuntimeImpl;
 import com.zchu.rxcache.RxCache;
 import com.zchu.rxcache.diskconverter.GsonDiskConverter;
 
@@ -69,8 +72,34 @@ public class APP extends Application {
                     BleTools.initBLE(myApp);
                     BugLyInit();
                     initDialog();
+                    initSonicWeb();
                 });
     }
+
+    private void initSonicWeb() {
+        // step 1: 必要时初始化sonic引擎，或者在创建应用程序时进行初始化
+        if (!SonicEngine.isGetInstanceAllowed()) {
+            SonicEngine.createInstance(new SonicRuntimeImpl(getApplicationContext()), new SonicConfig.Builder().build());
+        }
+//        //如果是脱机pkg模式，我们需要拦截会话连接
+//        SonicSessionConfig.Builder sessionConfigBuilder = new SonicSessionConfig.Builder();
+//        sessionConfigBuilder.setSupportLocalServer(true);
+//        sessionConfigBuilder.setCacheInterceptor(new SonicCacheInterceptor(null) {
+//            @Override
+//            public String getCacheData(SonicSession session) {
+//                return null; // offline pkg does not need cache
+//            }
+//        });
+//
+//        sessionConfigBuilder.setConnectionInterceptor(new SonicSessionConnectionInterceptor() {
+//            @Override
+//            public SonicSessionConnection getConnection(SonicSession session, Intent intent) {
+//                return new OfflinePkgSessionConnection(mContext, session, intent);
+//            }
+//        });
+
+    }
+
 
     private void initDialog() {
         DialogSettings.use_blur = false;

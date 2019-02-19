@@ -14,13 +14,17 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.tencent.sonic.sdk.SonicCacheInterceptor;
 import com.tencent.sonic.sdk.SonicConfig;
 import com.tencent.sonic.sdk.SonicEngine;
 import com.tencent.sonic.sdk.SonicSession;
 import com.tencent.sonic.sdk.SonicSessionConfig;
+import com.tencent.sonic.sdk.SonicSessionConnection;
+import com.tencent.sonic.sdk.SonicSessionConnectionInterceptor;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.constant.Key;
+import com.wesmartclothing.tbra.tools.soinc.OfflinePkgSessionConnection;
 import com.wesmartclothing.tbra.tools.soinc.SonicJavaScriptInterface;
 import com.wesmartclothing.tbra.tools.soinc.SonicRuntimeImpl;
 import com.wesmartclothing.tbra.tools.soinc.SonicSessionClientImpl;
@@ -73,6 +77,22 @@ public class BaseWebFragment extends BaseAcFragment {
         if (!SonicEngine.isGetInstanceAllowed()) {
             SonicEngine.createInstance(new SonicRuntimeImpl(mContext.getApplicationContext()), new SonicConfig.Builder().build());
         }
+        //如果是脱机pkg模式，我们需要拦截会话连接
+        SonicSessionConfig.Builder sessionConfigBuilder = new SonicSessionConfig.Builder();
+        sessionConfigBuilder.setSupportLocalServer(true);
+        sessionConfigBuilder.setCacheInterceptor(new SonicCacheInterceptor(null) {
+            @Override
+            public String getCacheData(SonicSession session) {
+                return null; // offline pkg does not need cache
+            }
+        });
+
+        sessionConfigBuilder.setConnectionInterceptor(new SonicSessionConnectionInterceptor() {
+            @Override
+            public SonicSessionConnection getConnection(SonicSession session, Intent intent) {
+                return new OfflinePkgSessionConnection(mContext, session, intent);
+            }
+        });
 
         // step 2: Create SonicSession
         sonicSession = SonicEngine.getInstance().createSession(url, new SonicSessionConfig.Builder().build());
@@ -154,6 +174,7 @@ public class BaseWebFragment extends BaseAcFragment {
         webSettings.setSaveFormData(false);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+        webSettings.setDefaultTextEncodingName("utf-8");
 
         // step 5: webview is ready now, just tell session client to bind
         if (sonicSessionClient != null) {

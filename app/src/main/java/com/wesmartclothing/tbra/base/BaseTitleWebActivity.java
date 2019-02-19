@@ -50,7 +50,7 @@ public class BaseTitleWebActivity extends BaseActivity {
         String title = bundle.getString(Key.BUNDLE_TITLE);
         RxLogUtils.d("title:" + title);
         RxLogUtils.d("url:" + url);
-//        String url = "http://mc.vip.qq.com/demo/indexv3";
+//        url = "http://mc.vip.qq.com/demo/indexv3";
         mRxTitle.setTitle(title);
         mRxTitle.setTitleVisibility(true);
         FragmentUtils.replace(getSupportFragmentManager(), BaseWebFragment.getInstance(url), R.id.layout_frameLayout);

@@ -135,10 +135,8 @@ public class GuideActivity extends BaseActivity {
             rootView.findViewById(R.id.tv_agreement2)
                     .setOnClickListener(view -> {
                         //协议2
-
                         BaseTitleWebActivity.startBaseWebAc(mContext,
                                 "服务条款和隐私条款", Key.WEB_URL_Implicit_Clause);
-
                     });
             rootView.findViewById(R.id.img_agree)
                     .setOnClickListener(view -> {
