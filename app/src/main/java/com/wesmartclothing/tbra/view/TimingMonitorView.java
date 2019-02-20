@@ -105,14 +105,15 @@ public class TimingMonitorView extends LinearLayout {
 
 
     private float maxValue = 45f;
-    private float minValue = 0f;
+    private float minValue = 10f;
+    private float maxDiffValue = 5f;
+    private float minDiffValue = 0f;
     private final float normalTemp = 35.0f;
 
     private void initView(Context context) {
         View view = View.inflate(context, R.layout.layout_timing_monitor, this);
         ButterKnife.bind(this, view);
         initChart();
-
     }
 
 
@@ -221,8 +222,8 @@ public class TimingMonitorView extends LinearLayout {
         mLineChart.getXAxis().setDrawAxisLine(false);
         mLineChart.getXAxis().setEnabled(false);
 
-        mLineChart.getAxisLeft().setAxisMaximum(maxValue);
-        mLineChart.getAxisLeft().setAxisMinimum(minValue);
+        mLineChart.getAxisLeft().setAxisMaximum(maxDiffValue);
+        mLineChart.getAxisLeft().setAxisMinimum(minDiffValue);
     }
 
 

@@ -1,7 +1,6 @@
 package com.wesmartclothing.tbra.tools.jpush;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.wesmartclothing.tbra.entity.NotifyDataBean;
+import com.wesmartclothing.tbra.ui.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,24 +83,11 @@ public class MyJpushReceiver extends BroadcastReceiver {
                 RxLogUtils.d("跳转首页:" + context.getPackageName());
 
                 //打开自定义的Activity
-//                RxActivityUtils.skipActivity(context, MainActivity.class, bundle);
-
-
-                //9.0不同包名启动四大组件
-                //https://blog.csdn.net/weixin_39178354/article/details/85099739
-                Intent intent1 = new Intent("android.intent.action.MAINAC");
-                intent1.setComponent(new ComponentName("com.wesmartclothing.tbra", "com.wesmartclothing.tbra.ui.main.MainActivity"));
-                context.startActivity(intent1);
-
-//                PackageManager manager = context.getPackageManager();
-//                Intent intent1 = manager.getLaunchIntentForPackage("com.wesmartclothing.tbra");
-//                intent1.putExtras(bundle);
-//                if (intent1 != null) {
-//                    context.startActivity(intent1);
-//                } else {
-//                    RxLogUtils.d("intent1 == null");
-//                }
-
+                //9.0非Activity跳转Ac需要加FLAG_ACTIVITY_NEW_TASK Flag
+                Intent intent2 = new Intent(context, MainActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent2.putExtras(bundle);
+                context.startActivity(intent2);
 
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
                 RxLogUtils.d(TAG, "[MyJpushReceiver] 用户收到到自定义图标的回调: " + bundle.getString(JPushInterface.EXTRA_EXTRA));

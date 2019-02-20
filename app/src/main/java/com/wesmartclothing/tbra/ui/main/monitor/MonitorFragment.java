@@ -85,6 +85,7 @@ public class MonitorFragment extends BaseAcFragment {
 
     private WarningRuleBean mWarningRuleBean;
     private UltraPagerAdapter adapter;
+    private boolean isConnected = false;
 
     public static MonitorFragment getInstance() {
         return new MonitorFragment();
@@ -103,10 +104,11 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initViews() {
         initViewPage();
-        bleConnectState(BleTools.getInstance().isConnected());
+        bleConnectState(isConnected);
     }
 
     private void bleConnectState(boolean isConnected) {
+        this.isConnected = isConnected;
         if (!isConnected) {//未连接
             mPowerIcon.setVisibility(View.GONE);
             mTvSwitchDevice.setText("连接设备\t\t>>");
@@ -120,7 +122,7 @@ public class MonitorFragment extends BaseAcFragment {
             mTvSwitchDevice.setText("切换设备\t\t>>");
             mPowerIcon.setVisibility(View.VISIBLE);
             mTvDeviceName.setText(BleTools.getInstance().getBleDevice().getMac());
-            if (BleTools.getInstance().isConnected() && isVisibled())
+            if (isVisibled())
                 myTimer.startTimer();
         }
     }
@@ -183,7 +185,7 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     protected void onVisible() {
         super.onVisible();
-        if (BleTools.getInstance().isConnected() && isVisibled())
+        if (isConnected && isVisibled())
             myTimer.startTimer();
         RxLogUtils.d("【MonitorFragment】onVisible");
     }
@@ -216,14 +218,14 @@ public class MonitorFragment extends BaseAcFragment {
                         @Override
                         protected void _onNext(WarningRuleBean warningRuleBean) {
                             mWarningRuleBean = warningRuleBean;
-                            if (BleTools.getInstance().isConnected() && isVisibled())
+                            if (isConnected && isVisibled())
                                 myTimer.startTimer();
                         }
                     });
                     return;
                 }
                 mWarningRuleBean = warningRuleBean;
-                if (BleTools.getInstance().isConnected() && isVisibled())
+                if (isConnected && isVisibled())
                     myTimer.startTimer();
             }
         });

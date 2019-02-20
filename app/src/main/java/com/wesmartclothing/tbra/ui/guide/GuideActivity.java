@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kongzue.dialog.v2.CustomDialog;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -32,6 +33,10 @@ public class GuideActivity extends BaseActivity {
 
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
+    @BindView(R.id.img_right)
+    ImageView mImgRight;
+    @BindView(R.id.tv_go)
+    TextView mTvGo;
 
 
     @Override
@@ -62,9 +67,26 @@ public class GuideActivity extends BaseActivity {
 
     private void initViewPager() {
         ArrayList<Object> mImageItems = new ArrayList<>();
-        mImageItems.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=87077840f66f6c7607074ad9d7681e80&imgtype=0&src=http%3A%2F%2Fpic.kekenet.com%2F2017%2F0323%2F24621490236152.png");
-        mImageItems.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=d7b02b4c46569e0197f5949164433c52&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Flarge%2F574ddb5egw1eqosahw1m6j20pa0g00w3.jpg");
-        mImageItems.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1546937098325&di=53404ec533a940868fef1c0793cc8a5d&imgtype=0&src=http%3A%2F%2Fwerkstette.dk%2Fwp-content%2Fuploads%2F2015%2F09%2FEntertainment_Weekly_Photographer_Marc_Hom_British_Actor_Charlie_Hunnam_as_King_Arthur_Retouch_Werkstette10-770x841.jpg");
+        mImageItems.add(R.drawable.bg_guide);
+        mImageItems.add(R.drawable.bg_guide);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                mImgRight.setVisibility(i == mImageItems.size() - 1 ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
 
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new PagerAdapter() {

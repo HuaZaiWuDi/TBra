@@ -46,7 +46,7 @@ public class BleTools {
     private BleDevice bleDevice;
     private Handler TimeOut;
     private static BleManager bleManager;
-
+    private boolean isConnencted = false;
     private static final String TAG = "【BleTools】";
 
     private BleTools() {
@@ -359,4 +359,11 @@ public class BleTools {
         }
     }
 
+    public boolean isConnencted() {
+        return isConnencted;
+    }
+
+    public void setConnencted(boolean connencted) {
+        isConnencted = connencted;
+    }
 }
