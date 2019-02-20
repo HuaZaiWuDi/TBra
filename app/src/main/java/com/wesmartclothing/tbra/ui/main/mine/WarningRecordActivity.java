@@ -17,6 +17,7 @@ import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.Key;
+import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.WarningRecordBean;
 import com.wesmartclothing.tbra.net.NetManager;
@@ -142,7 +143,7 @@ public class WarningRecordActivity extends BaseActivity {
 //        0-未读，1-已读
 
         RxManager.getInstance().doNetSubscribe(
-                NetManager.getApiService().warningInfoReaded(bean),
+                NetManager.getApiService().warningInfoReaded(new GidBean(bean.getGid())),
                 lifecycleSubject,
                 "warningInfoReaded" + bean.getGid(),
                 PointDataBean.class,

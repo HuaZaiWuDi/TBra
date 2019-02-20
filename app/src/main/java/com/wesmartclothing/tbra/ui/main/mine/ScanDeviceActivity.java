@@ -266,8 +266,8 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
                 WaitDialog.dismiss();
-                if (mContext != null) {
-                    TipDialog tipDialog = TipDialog.build(mContext, "连接失败", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                if (RxActivityUtils.currentActivity() != null) {
+                    TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "连接失败", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
                     tipDialog.setCanCancel(true);
                     tipDialog.showDialog();
                 }
@@ -307,6 +307,12 @@ public class ScanDeviceActivity extends BaseActivity {
 
                                         RxActivityUtils.skipActivity(mContext, MainActivity.class);
                                     }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+
+                                    }
                                 });
                             }
                         });
@@ -325,8 +331,8 @@ public class ScanDeviceActivity extends BaseActivity {
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
                 WaitDialog.dismiss();
-                if (mContext != null) {
-                    TipDialog tipDialog = TipDialog.build(mContext, "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                if (RxActivityUtils.currentActivity() != null) {
+                    TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
                     tipDialog.setCanCancel(true);
                     tipDialog.showDialog();
                 }
@@ -338,7 +344,6 @@ public class ScanDeviceActivity extends BaseActivity {
 
     private void bindDevice(String macAddress) {
         deviceBean.setMacAddr(macAddress);
-
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().bindDevice(deviceBean),
                 lifecycleSubject

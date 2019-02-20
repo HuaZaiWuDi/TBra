@@ -154,6 +154,10 @@ public class HomeFragment extends BaseAcFragment {
             uploadTempData();
         }
 
+        if (!isConnected && mLayoutSyncData.getHeight() > 0) {
+            RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
+        }
+
     }
 
     private void initErrorPoint() {

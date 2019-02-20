@@ -107,7 +107,7 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
 
     //蓝牙库
-    implementation 'com.clj.fastble:FastBleLib:2.3.2'
+    implementation 'com.clj.fastble:FastBleLib:2.3.4'
     implementation 'no.nordicsemi.android:dfu:1.6.1'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'

@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.ble;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothProfile;
 import android.os.Handler;
 import android.support.annotation.IntRange;
 import android.util.Log;
@@ -327,8 +328,13 @@ public class BleTools {
         return false;
     }
 
-    public boolean connectedState(BleDevice bleDevice) {
-        return getBleManager().getConnectState(bleDevice) == 1 || getBleManager().getConnectState(bleDevice) == 2;
+    public boolean connectedOrConnecting() {
+        if (bleDevice != null) {
+            RxLogUtils.d("连接状态：" + getBleManager().getConnectState(bleDevice));
+            return getBleManager().getConnectState(bleDevice) == BluetoothProfile.STATE_CONNECTED
+                    || getBleManager().getConnectState(bleDevice) == BluetoothProfile.STATE_CONNECTING;
+        }
+        return false;
     }
 
 

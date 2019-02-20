@@ -57,7 +57,7 @@ public class SplashActivity extends BaseActivity {
     public void initNetData() {
 
 //        RxActivityUtils.skipActivityAndFinish(mContext, MainActivity.class);
-//
+
         if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
             SPUtils.put(SPKey.SP_GUIDE, true);
             RxActivityUtils.skipActivityAndFinish(mActivity, GuideActivity.class);

@@ -116,6 +116,7 @@ public class MonitorFragment extends BaseAcFragment {
             mLayoutMonitorEmpty.setVisibility(View.VISIBLE);
             myTimer.stopTimer();
         } else {//已连接
+            mLayoutDeviceEmpty.setVisibility(View.GONE);
             mTvSwitchDevice.setText("切换设备\t\t>>");
             mPowerIcon.setVisibility(View.VISIBLE);
             mTvDeviceName.setText(BleTools.getInstance().getBleDevice().getMac());
@@ -196,8 +197,6 @@ public class MonitorFragment extends BaseAcFragment {
 
 
     private void initViewPage() {
-
-
     }
 
     private void getRuleDetail() {

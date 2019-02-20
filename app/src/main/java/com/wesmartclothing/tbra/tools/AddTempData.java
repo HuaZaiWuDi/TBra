@@ -79,29 +79,27 @@ public class AddTempData {
         BleAPI.getTempData(SPUtils.getInt(SPKey.SP_LAST_INDEX, 0), maxCount, new RxSubscriber<AddTempDataBean>() {
             @Override
             protected void _onNext(AddTempDataBean addTempDataBean) {
-                if (mRxSubscriber != null) {
-                    int progress = (int) (addTempDataBean.getIndex() * 100f / (maxCount - 1));
-                    mRxSubscriber.onNext(progress);
-                }
 
-//                if (tempDataBeans.size() < maxCount)
-//                    tempDataBeans.add(addTempDataBean);
-//
-//                if (tempDataBeans.size() == maxCount) {
-//                    RxLogUtils.d("获取结束");
-//                    uploadTempData();
-//                    saveCache(tempDataBeans);
-//                    SPUtils.put(SPKey.SP_LAST_INDEX, 0);
-//                    BleAPI.clearTempData();
-//                }
-                if (checkTempValid(addTempDataBean)) {
+                if (!checkTempValid(addTempDataBean)) {
+                    RxLogUtils.d("无效温度数据");
+                } else {
+                    if (mRxSubscriber != null) {
+                        int progress = (int) (addTempDataBean.getIndex() * 100f / (maxCount - 1));
+                        mRxSubscriber.onNext(progress);
+                    }
                     tempDataBeans.add(addTempDataBean);
                 }
 
-                if (addTempDataBean.getPickageSign() == (byte) 0xc1) {
+                if (addTempDataBean.getPickageSign() == (byte) 0xc1 || maxCount == 1) {
                     RxLogUtils.d("获取结束");
-                    uploadTempData();
-                    saveCache(tempDataBeans);
+
+                    if (RxDataUtils.isEmpty(tempDataBeans)) {
+                        if (mRxSubscriber != null)
+                            mRxSubscriber.onError(new ExplainException("无效数据", -4));
+                    } else {
+                        uploadTempData();
+                        saveCache(tempDataBeans);
+                    }
                     SPUtils.put(SPKey.SP_LAST_INDEX, 0);
                     BleAPI.clearTempData();
                 }
@@ -130,14 +128,13 @@ public class AddTempData {
      * @return 是否有效true有效
      */
     private boolean checkTempValid(AddTempDataBean addTempDataBean) {
-        int unValidCount = 0;
         List<JsonDataBean> dataList = addTempDataBean.getDataList();
         for (JsonDataBean bean : dataList) {
-            if (!CheckTempErrorUtil.isValidTemperature(bean.getNodeTemp())) {
-                unValidCount++;
+            if (CheckTempErrorUtil.isValidTemperature(bean.getNodeTemp())) {
+                return true;
             }
         }
-        return unValidCount != 16;
+        return false;
     }
 
 

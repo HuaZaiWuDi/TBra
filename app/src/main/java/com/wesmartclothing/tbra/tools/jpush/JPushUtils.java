@@ -52,7 +52,7 @@ public class JPushUtils {
     /**
      * 设置通知提示方式 - 基础属性
      */
-    private void setStyleBasic(Activity activity) {
+    public static void setStyleBasic(Activity activity) {
         BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(activity);
         builder.statusBarDrawable = R.mipmap.ic_share_app;
         builder.notificationFlags = Notification.FLAG_AUTO_CANCEL;  //设置为点击后自动消失

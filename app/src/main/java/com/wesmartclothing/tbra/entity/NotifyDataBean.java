@@ -12,7 +12,7 @@ public class NotifyDataBean {
 
     private String openTarget;
     private int operation;
-    private String msgId;
+    private String gid;
 
     public String getOpenTarget() {
         return openTarget;
@@ -30,11 +30,11 @@ public class NotifyDataBean {
         this.operation = operation;
     }
 
-    public String getMsgId() {
-        return msgId;
+    public String getGId() {
+        return gid;
     }
 
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
+    public void setGId(String msgId) {
+        this.gid = msgId;
     }
 }

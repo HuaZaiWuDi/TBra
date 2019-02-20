@@ -125,7 +125,7 @@ public interface ApiService {
      * 告警信息已读
      */
     @POST("user/warningInfoReaded")
-    Observable<HttpResult<PointDataBean>> warningInfoReaded(@Body WarningRecordBean.ListBean bean);
+    Observable<HttpResult<PointDataBean>> warningInfoReaded(@Body GidBean bean);
 
 
     /**

@@ -136,9 +136,9 @@ public class NetManager {
     //在请求头添加参数
     private static Interceptor NetInterceptor = chain -> {
         Request request = chain.request().newBuilder()
-                .header("userId", SPUtils.getString(SPKey.SP_UserId))
+//                .header("userId", SPUtils.getString(SPKey.SP_UserId))
 //                    .header("userId", "255bd665a36e461294aa9f66959fbbbb")
-//                .header("userId", "4d974e25cebe4535bde4e23302ba0dd2")
+                .header("userId", "4d974e25cebe4535bde4e23302ba0dd2")
                 .header("version", RxDeviceUtils.getAppVersionName())
                 .header("phoneType", RxDeviceUtils.getBuildMANUFACTURER())
                 .header("system", "Android")

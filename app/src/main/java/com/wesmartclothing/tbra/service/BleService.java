@@ -3,6 +3,7 @@ package com.wesmartclothing.tbra.service;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothGatt;
+import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +12,9 @@ import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.IBinder;
 
+import com.clj.fastble.callback.BleGattCallback;
 import com.clj.fastble.callback.BleMtuChangedCallback;
-import com.clj.fastble.callback.BleScanAndConnectCallback;
+import com.clj.fastble.callback.BleScanCallback;
 import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
@@ -35,8 +37,11 @@ import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
 
+import java.util.List;
+
 public class BleService extends Service {
 
+    private int currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
     private static boolean isFirstJoin = true;
 
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -49,6 +54,7 @@ public class BleService extends Service {
                         BleTools.getInstance().stopScan();
 
                     } else if (state == BluetoothAdapter.STATE_ON) {
+                        RxLogUtils.d("蓝牙开启");
                         scanConnectDevice();
                     } else if (state == BluetoothAdapter.STATE_TURNING_ON) {//正在开启蓝牙
                     }
@@ -94,17 +100,6 @@ public class BleService extends Service {
     public void onCreate() {
         super.onCreate();
         initBroadcast();
-
-        RxBus.getInstance().register2(ConnectStateBus.class)
-                .subscribe(new RxSubscriber<ConnectStateBus>() {
-                    @Override
-                    protected void _onNext(ConnectStateBus connectStateBus) {
-                        //断开连接重连
-                        if (!connectStateBus.isConnect()) {
-                            scanConnectDevice();
-                        }
-                    }
-                });
     }
 
     private void initBroadcast() {
@@ -120,19 +115,28 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        RxLogUtils.d("启动Service");
         scanConnectDevice();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private synchronized void scanConnectDevice() {
 
-        if (BleTools.getInstance().isConnected()) {
-            RxLogUtils.e("设备已连接");
-            return;
-        }
+        RxLogUtils.d("开始连接");
 
         if (ScanDeviceActivity.SCAN_BLE_DEVICE) {
             RxLogUtils.e("正在扫描界面");
+            return;
+        }
+//
+//        if (BleTools.getBleManager().getScanSate() == BleScanState.STATE_SCANNING) {
+//            RxLogUtils.e("正在扫描");
+//            return;
+//        }
+
+        if (currentConnectState == BluetoothProfile.STATE_CONNECTED ||
+                currentConnectState == BluetoothProfile.STATE_CONNECTING) {
+            RxLogUtils.e("设备已连接或正在连接:");
             return;
         }
 
@@ -150,41 +154,12 @@ public class BleService extends Service {
 
         }
 
-        BleTools.getBleManager().scanAndConnect(new BleScanAndConnectCallback() {
+        BleTools.getBleManager().scan(new BleScanCallback() {
             @Override
-            public void onScanFinished(BleDevice scanResult) {
+            public void onScanFinished(List<BleDevice> scanResultList) {
                 RxLogUtils.d("扫描结束：");
-            }
 
-            @Override
-            public void onStartConnect() {
-                RxLogUtils.d("开始连接：");
-            }
 
-            @Override
-            public void onConnectFail(BleDevice bleDevice, BleException exception) {
-                RxLogUtils.d("连接失败：");
-                RxBus.getInstance().post(new ConnectStateBus(false));
-                scanConnectDevice();
-            }
-
-            @Override
-            public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                RxLogUtils.d("连接成功：");
-                BleTools.getInstance().stopScan();
-                new Handler().postDelayed(() -> connectSuccess(), 300);
-            }
-
-            @Override
-            public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
-                RxLogUtils.d("断开连接：");
-                RxBus.getInstance().post(new ConnectStateBus(false));
-
-                TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
-                tipDialog.setCanCancel(true);
-                tipDialog.showDialog();
-
-                scanConnectDevice();
             }
 
             @Override
@@ -195,11 +170,57 @@ public class BleService extends Service {
             @Override
             public void onScanning(BleDevice bleDevice) {
                 RxLogUtils.d("正在扫描：" + bleDevice.getMac());
+
+                BleTools.getInstance().stopScan();
+                startConnect(bleDevice);
+
+            }
+        });
+
+    }
+
+    private void startConnect(BleDevice bleDevice) {
+        BleTools.getBleManager().connect(bleDevice, new BleGattCallback() {
+            @Override
+            public void onStartConnect() {
+                RxLogUtils.d("开始连接：" + Thread.currentThread().getName());
+                currentConnectState = BluetoothProfile.STATE_CONNECTING;
+            }
+
+            @Override
+            public void onConnectFail(BleDevice bleDevice, BleException exception) {
+                currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
+                RxLogUtils.d("连接失败：");
+                RxBus.getInstance().post(new ConnectStateBus(false));
+                //连接失败或断开连接给3000的延迟
+                new Handler().postDelayed(() -> scanConnectDevice(), 3000);
+            }
+
+            @Override
+            public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
+                currentConnectState = BluetoothProfile.STATE_CONNECTED;
+                RxLogUtils.d("连接成功：" + Thread.currentThread().getName());
+
+                new Handler().postDelayed(() -> connectSuccess(), 300);
+            }
+
+            @Override
+            public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
+                currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
+                RxLogUtils.d("断开连接：");
+                RxBus.getInstance().post(new ConnectStateBus(false));
+
+                TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                tipDialog.setCanCancel(true);
+                tipDialog.showDialog();
+
+                new Handler().postDelayed(() -> scanConnectDevice(), 3000);
             }
         });
     }
 
-    private void connectSuccess() {
+
+    private synchronized void connectSuccess() {
         BleTools.getInstance().openNotify(new RxSubscriber<Boolean>() {
             @Override
             protected void _onNext(Boolean aBoolean) {
@@ -222,7 +243,19 @@ public class BleService extends Service {
                                         tipDialog.showDialog();
                                         RxBus.getInstance().post(new ConnectStateBus(true));
                                     }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        super.onError(e);
+                                        errorReConnect();
+                                    }
                                 });
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                super.onError(e);
+                                errorReConnect();
                             }
                         });
                     }
@@ -240,7 +273,7 @@ public class BleService extends Service {
 
 
     private void errorReConnect() {
-        BleTools.getInstance().disConnect();
+        BleTools.getBleManager().disconnectAllDevice();
     }
 
     @Override

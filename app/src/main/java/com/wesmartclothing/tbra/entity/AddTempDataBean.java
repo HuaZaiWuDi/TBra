@@ -59,4 +59,14 @@ public class AddTempDataBean {
         this.dataList = dataList;
     }
 
+
+    @Override
+    public String toString() {
+        return "AddTempDataBean{" +
+                "collectTime='" + collectTime + '\'' +
+                ", dataList=" + dataList +
+                ", index=" + index +
+                ", pickageSign=" + pickageSign +
+                '}';
+    }
 }

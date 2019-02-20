@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -28,24 +29,35 @@ import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.layout.RxImageView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
+import com.wesmartclothing.tbra.entity.GidBean;
+import com.wesmartclothing.tbra.entity.NotifyDataBean;
+import com.wesmartclothing.tbra.entity.PointDataBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
+import com.wesmartclothing.tbra.tools.jpush.JPushUtils;
+import com.wesmartclothing.tbra.ui.guide.SplashActivity;
+import com.wesmartclothing.tbra.ui.main.home.ErrorPointActivity;
 import com.wesmartclothing.tbra.ui.main.home.HomeFragment;
 import com.wesmartclothing.tbra.ui.main.mine.MessageActivity;
 import com.wesmartclothing.tbra.ui.main.mine.MineFragment;
 import com.wesmartclothing.tbra.ui.main.monitor.MonitorFragment;
 import com.zchu.rxcache.RxCache;
 import com.zchu.rxcache.data.CacheResult;
+import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends BaseActivity {
 
@@ -69,7 +81,7 @@ public class MainActivity extends BaseActivity {
     private ArrayList<CustomTabEntity> mBottomTabItems = new ArrayList<>();
     private List<Fragment> mFragments = new ArrayList<>();
     private int position = 1;
-
+    private Intent serviceIntent;
 
     @Override
     public int layoutId() {
@@ -78,14 +90,46 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initBundle(Bundle bundle) {
+        initPush(bundle);
+    }
 
+    /**
+     * 点击推送跳转界面
+     *
+     * @param bundle
+     */
+    private void initPush(Bundle bundle) {
+        String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
+        RxLogUtils.d("点击通知：" + extra);
+        NotifyDataBean notifyDataBean = JSON.parseObject(extra, NotifyDataBean.class);
+        if (notifyDataBean == null) return;
+        String openTarget = notifyDataBean.getOpenTarget();
+        int type = notifyDataBean.getOperation();
+        String gid = notifyDataBean.getGId();
+
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().warningInfoReaded(new GidBean(gid)),
+                lifecycleSubject,
+                "warningInfoReaded" + gid,
+                PointDataBean.class,
+                CacheStrategy.firstCache()
+        ).subscribe(new RxNetSubscriber<PointDataBean>() {
+            @Override
+            protected void _onNext(PointDataBean pointDataBean) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Key.BUNDLE_LATEST_TYPE, "warningInfoReaded" + gid);
+                RxActivityUtils.skipActivity(mContext, ErrorPointActivity.class, bundle);
+            }
+        });
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         RxLogUtils.e("加载：MainActivity：" + savedInstanceState);
-
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            RxActivityUtils.skipActivityAndFinish(mContext, SplashActivity.class);
+        }
     }
 
     private void initFragment() {
@@ -101,8 +145,8 @@ public class MainActivity extends BaseActivity {
         initBottomBar();
         setDefaultFragment();
         initSystemConfig();
-
-        startService(new Intent(mContext, BleService.class));
+        serviceIntent = new Intent(mContext, BleService.class);
+        startService(serviceIntent);
     }
 
 
@@ -153,6 +197,9 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onTabReselect(int position) {
+                if (position == 1) {
+                    JPushUtils.setStyleBasic(mActivity);
+                }
             }
         });
     }
@@ -175,7 +222,6 @@ public class MainActivity extends BaseActivity {
             default:
                 break;
         }
-
     }
 
 
@@ -247,6 +293,12 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        stopService(serviceIntent);
+        super.onDestroy();
+
+    }
 
     @OnClick(R.id.img_message)
     public void onViewClicked() {
