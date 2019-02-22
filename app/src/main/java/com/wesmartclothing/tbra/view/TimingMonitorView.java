@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.Utils;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxFormatValue;
+import com.vondear.rxtools.utils.RxUtils;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.entity.JsonDataBean;
 import com.wesmartclothing.tbra.tools.BarRoundChartRenderer;
@@ -103,11 +104,10 @@ public class TimingMonitorView extends LinearLayout {
     ArrayList<Entry> valueLine = new ArrayList<>();
     ArrayList<Float> tempDiffs = new ArrayList<>();
 
-
-    private float maxValue = 45f;
+    private float maxValue = 42f;
     private float minValue = 10f;
-    private float maxDiffValue = 5f;
-    private float minDiffValue = 0f;
+    private float maxDiffValue = 2f;
+    private float minDiffValue = -1f;
     private final float normalTemp = 35.0f;
 
     private void initView(Context context) {
@@ -140,6 +140,7 @@ public class TimingMonitorView extends LinearLayout {
 
         mMBarChart.getXAxis().setValueFormatter((value, axis) ->
                 tempDiffs.get(Math.min(Math.max((int) value, 0), tempDiffs.size() - 1)) + "");
+
 
         setData();
 
@@ -179,7 +180,7 @@ public class TimingMonitorView extends LinearLayout {
                 mMBarChart.getAnimator(),
                 mMBarChart.getViewPortHandler(),
                 true,
-                150f
+                10f
         ));
         mMBarChart.setNoDataText("");
         mMBarChart.getDescription().setEnabled(false);
@@ -212,7 +213,7 @@ public class TimingMonitorView extends LinearLayout {
         mLineChart.getLegend().setEnabled(false);
         mLineChart.getDescription().setEnabled(false);
         mLineChart.setScaleEnabled(false);
-        mLineChart.setViewPortOffsets(0, 0, 0, 0);
+        mLineChart.setViewPortOffsets(RxUtils.dp2px(20), 0, RxUtils.dp2px(20), RxUtils.dp2px(5));
 
         mLineChart.getAxisLeft().setEnabled(false);
 
@@ -222,12 +223,15 @@ public class TimingMonitorView extends LinearLayout {
         mLineChart.getXAxis().setDrawAxisLine(false);
         mLineChart.getXAxis().setEnabled(false);
 
-        mLineChart.getAxisLeft().setAxisMaximum(maxDiffValue);
-        mLineChart.getAxisLeft().setAxisMinimum(minDiffValue);
     }
 
 
     private void setLine() {
+
+
+//        mLineChart.getAxisLeft().setAxisMaximum(maxDiffValue);
+        mLineChart.getAxisLeft().setAxisMinimum(minDiffValue);
+
         LineDataSet set;
         if (mLineChart.getData() != null) {
             set = (LineDataSet) mLineChart.getData().getDataSetByLabel("lineChart", false);
@@ -251,6 +255,7 @@ public class TimingMonitorView extends LinearLayout {
             set.setDrawCircleHole(false);
             set.setDrawCircles(false);
             set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+//            set.setMode(LineDataSet.Mode.LINEAR);
             set.setDrawValues(false);
             LineData d = new LineData();
             d.addDataSet(set);
@@ -289,7 +294,6 @@ public class TimingMonitorView extends LinearLayout {
             data.setBarWidth(0.2f);
 
             mMBarChart.setData(data);
-
         }
 
         float groupSpace = 0.3f;

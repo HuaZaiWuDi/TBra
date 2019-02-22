@@ -95,7 +95,7 @@ public class AddTempData {
 
                     if (RxDataUtils.isEmpty(tempDataBeans)) {
                         if (mRxSubscriber != null)
-                            mRxSubscriber.onError(new ExplainException("无效数据", -4));
+                            mRxSubscriber.onError(new ExplainException("无效数据", -5));
                     } else {
                         uploadTempData();
                         saveCache(tempDataBeans);
@@ -222,7 +222,7 @@ public class AddTempData {
                     public void onError(Throwable e) {
                         super.onError(e);
                         if (mRxSubscriber != null)
-                            mRxSubscriber.onError(new ExplainException("上传失败", -4));
+                            mRxSubscriber.onError(new ExplainException("上传失败", -6));
                         //上传出现异常，刷新本地缓存，清空已经上传的数据源
                         saveCache(tempDataBeans.subList(Math.max(endIndex - 200, 0), tempDataBeans.size()));
 
@@ -295,7 +295,7 @@ public class AddTempData {
                     public void onError(Throwable e) {
                         super.onError(e);
                         if (mRxSubscriber != null)
-                            mRxSubscriber.onError(new ExplainException("上传失败", -4));
+                            mRxSubscriber.onError(new ExplainException("上传失败", -6));
                     }
                 });
     }

@@ -97,7 +97,7 @@ public class UserInfoActivity extends BaseActivity {
     RxRelativeLayout mLayoutUserSign;
 
 
-    private UserInfoBean userInfo;
+    private UserInfoBean userInfo = new UserInfoBean();
     private boolean userImgIsChange = false;//是否需要上传头像
     private boolean userInfoChange = false;//是否需要上传头像
 
@@ -341,7 +341,6 @@ public class UserInfoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        RxLogUtils.d("用户数据：" + userInfo.toString());
         if (userInfoChange) {
             SelectDialog.show(mContext, "提示", "您已经修改信息\n是否保存？"
                     , "保存", (dialogInterface, i) -> {

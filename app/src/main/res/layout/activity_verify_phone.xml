@@ -51,6 +51,7 @@
             android:layout_marginTop="38dp"
             android:hint="请输入手机号"
             android:inputType="phone"
+            android:maxLength="11"
             android:paddingLeft="28dp"
             android:textColor="@color/color_8E8E93"
             android:textSize="13sp"

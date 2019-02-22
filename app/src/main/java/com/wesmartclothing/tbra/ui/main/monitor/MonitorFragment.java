@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -70,7 +69,7 @@ public class MonitorFragment extends BaseAcFragment {
     @BindView(R.id.tv_bindDevice)
     TextView mTvBindDevice;
     @BindView(R.id.layout_device_empty)
-    LinearLayout mLayoutDeviceEmpty;
+    RelativeLayout mLayoutDeviceEmpty;
     @BindView(R.id.layout_device)
     CardView mLayoutDevice;
     @BindView(R.id.timingMonitorView)
@@ -86,6 +85,7 @@ public class MonitorFragment extends BaseAcFragment {
     private WarningRuleBean mWarningRuleBean;
     private UltraPagerAdapter adapter;
     private boolean isConnected = false;
+
 
     public static MonitorFragment getInstance() {
         return new MonitorFragment();
@@ -103,7 +103,7 @@ public class MonitorFragment extends BaseAcFragment {
 
     @Override
     public void initViews() {
-        initViewPage();
+        setTGA("【MonitorFragment】");
         bleConnectState(isConnected);
     }
 
@@ -112,19 +112,18 @@ public class MonitorFragment extends BaseAcFragment {
         if (!isConnected) {//未连接
             mPowerIcon.setVisibility(View.GONE);
             mTvSwitchDevice.setText("连接设备\t\t>>");
-            mTvDeviceName.setText("设备名字：-\t-");
+            mTvDeviceName.setText("");
             mTvBindDevice.setText("去连接");
             mLayoutDeviceEmpty.setVisibility(View.VISIBLE);
             mLayoutMonitorEmpty.setVisibility(View.VISIBLE);
-            myTimer.stopTimer();
         } else {//已连接
             mLayoutDeviceEmpty.setVisibility(View.GONE);
             mTvSwitchDevice.setText("切换设备\t\t>>");
             mPowerIcon.setVisibility(View.VISIBLE);
             mTvDeviceName.setText(BleTools.getInstance().getBleDevice().getMac());
-            if (isVisibled())
-                myTimer.startTimer();
+            RxLogUtils.d("是否显示：" + isVisibled());
         }
+        isStartTimer();
     }
 
 
@@ -132,7 +131,6 @@ public class MonitorFragment extends BaseAcFragment {
     public void initNetData() {
         getRuleDetail();
         getInformationPhoto();
-
     }
 
     private void getInformationPhoto() {
@@ -185,21 +183,26 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     protected void onVisible() {
         super.onVisible();
-        if (isConnected && isVisibled())
-            myTimer.startTimer();
-        RxLogUtils.d("【MonitorFragment】onVisible");
+        isStartTimer();
     }
+
 
     @Override
     protected void onInvisible() {
-        RxLogUtils.d("【MonitorFragment】onInvisible");
         super.onInvisible();
-        myTimer.stopTimer();
+        isStartTimer();
     }
 
 
-    private void initViewPage() {
+    private void isStartTimer() {
+        if (isConnected && isVisibled()) {
+            myTimer.startTimer();
+        } else {
+            myTimer.stopTimer();
+        }
+        RxLogUtils.d("【MonitorFragment】开始：" + isVisibled());
     }
+
 
     private void getRuleDetail() {
         RxManager.getInstance().doNetSubscribe(
@@ -218,15 +221,13 @@ public class MonitorFragment extends BaseAcFragment {
                         @Override
                         protected void _onNext(WarningRuleBean warningRuleBean) {
                             mWarningRuleBean = warningRuleBean;
-                            if (isConnected && isVisibled())
-                                myTimer.startTimer();
+                            isStartTimer();
                         }
                     });
                     return;
                 }
                 mWarningRuleBean = warningRuleBean;
-                if (isConnected && isVisibled())
-                    myTimer.startTimer();
+                isStartTimer();
             }
         });
     }
@@ -284,8 +285,6 @@ public class MonitorFragment extends BaseAcFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_switchDevice:
-                RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
-                break;
             case R.id.tv_bindDevice:
                 if (!BleTools.getBleManager().isBlueEnable()) {
                     CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.SPUtils;
+import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
@@ -17,6 +18,8 @@ import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.login.InvitationCodeActivity;
 import com.wesmartclothing.tbra.ui.login.LoginActivity;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
+import com.zchu.rxcache.RxCache;
+import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
 
 import java.util.concurrent.TimeUnit;
@@ -70,9 +73,7 @@ public class SplashActivity extends BaseActivity {
         initUserInfo();
         otherSetting();
 
-
     }
-
 
     private void otherSetting() {
         new AddTempData().uploadCacheOrBleData();
@@ -106,7 +107,27 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     protected void _onError(String error, int code) {
-                        RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
+                        if (RxCache.getDefault().containsKey(SPKey.SP_UserInfo)) {
+                            RxCache.getDefault().<UserInfoBean>load(SPKey.SP_UserInfo, UserInfoBean.class)
+                                    .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                                    .map(new CacheResult.MapFunc<>())
+                                    .subscribe(new RxNetSubscriber<UserInfoBean>() {
+                                        @Override
+                                        protected void _onNext(UserInfoBean userInfo) {
+                                            if (!RxDataUtils.isEmpty(userInfo.getMacAddrList())) {
+                                                SPUtils.put(SPKey.SP_BIND_DEVICE, userInfo.getMacAddrList().get(0));
+                                            }
+                                            if (RxDataUtils.isNullString(userInfo.getInvitationCode())) {
+                                                RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InvitationCodeActivity.class);
+                                            } else if (userInfo.getAge() == 0) {
+                                                RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), InputInfoActivity.class);
+                                            } else {
+                                                RxActivityUtils.skipActivityAndFinish(RxActivityUtils.currentActivity(), MainActivity.class);
+                                            }
+                                        }
+                                    });
+                        } else
+                            RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
                     }
                 });
     }

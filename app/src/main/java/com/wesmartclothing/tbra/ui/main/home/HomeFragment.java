@@ -1,8 +1,8 @@
 package com.wesmartclothing.tbra.ui.main.home;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,7 +21,6 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.gson.reflect.TypeToken;
-import com.kongzue.dialog.v2.CustomDialog;
 import com.kongzue.dialog.v2.TipDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxAnimationUtils;
@@ -102,6 +101,8 @@ public class HomeFragment extends BaseAcFragment {
     RelativeLayout mLayoutSyncData;
     @BindView(R.id.scrollView)
     NestedScrollView mScrollView;
+    @BindView(R.id.tv_keyError)
+    TextView mTvKeyError;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -157,7 +158,6 @@ public class HomeFragment extends BaseAcFragment {
         if (!isConnected && mLayoutSyncData.getHeight() > 0) {
             RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
         }
-
     }
 
     private void initErrorPoint() {
@@ -168,24 +168,45 @@ public class HomeFragment extends BaseAcFragment {
             protected void convert(BaseViewHolder helper, String item) {
                 helper.setText(R.id.tv_errorPoint, item)
                         .setTextColor(R.id.tv_errorPoint, ContextCompat.getColor(mActivity,
-                                helper.getAdapterPosition() >= 3 ? R.color.font_C3C5CA : R.color.colortheme));
+                                helper.getLayoutPosition() >= 3 ? R.color.font_C3C5CA : R.color.colortheme));
             }
         };
         mErrorRecyclerView.setAdapter(errorPointAdapter);
 
         mHistoryTempView.setOnErrorPointListener(errorPoints -> {
-            if (errorPoints != null) {
+            if (!RxDataUtils.isEmpty(errorPoints)) {
+                //2-21号修改逻辑只显示一排8个数据
                 List<String> errorPoint = new ArrayList<>(errorPoints.keySet());
+                errorPoint = errorPoint.subList(0, Math.min(errorPoint.size(), 8));
                 errorPointAdapter.setNewData(errorPoint);
+
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < errorPoint.size(); i++) {
+                    if (i > 2) {
+                        break;
+                    }
+                    sb.append(errorPoint.get(i) + ",");
+                }
+
+                mTvKeyError.setText("重点关注“" + sb.toString().substring(0, sb.length() - 1) + "”");
+            } else {
+
+                RxTextUtils.getBuilder("！暂无异常数据\n")
+                        .setProportion(0.9f)
+                        .setForegroundColor(Color.parseColor("#FFC3C5CA"))
+                        .append("重点关注“无”")
+                        .into(mTvKeyError);
+
+                errorPointAdapter.setNewData(null);
             }
         });
+
         mHistoryTempView.setOnSelectParentListener(() -> {
             Bundle bundle = new Bundle();
             bundle.putString(Key.BUNDLE_LATEST_TYPE, ((BottomTabItem) mTitleTabItems.get(mTitleCommonTabLayout.getCurrentTab())).getTag());
             RxActivityUtils.skipActivity(mContext, HistoryMonitorActivity.class, bundle);
         });
     }
-
 
     /**
      * 周报月报
@@ -422,11 +443,6 @@ public class HomeFragment extends BaseAcFragment {
                     super.onSubscribe(d);
                     RxLogUtils.d("有未同步的数据");
 
-                    CustomDialog show = CustomDialog.show(mContext, R.layout.dialog_data_sync);
-                    new Handler().postDelayed(() -> {
-                        show.doDismiss();
-                    }, 1500);
-
                     RxAnimationUtils.animateHeight(RxUtils.dp2px(1), RxUtils.dp2px(39), mLayoutSyncData);
                 }
 
@@ -458,7 +474,8 @@ public class HomeFragment extends BaseAcFragment {
                     super.onError(e);
                     RxLogUtils.d("异常");
                     RxAnimationUtils.animateHeight(RxUtils.dp2px(39), RxUtils.dp2px(0), mLayoutSyncData);
-                    if (mContext != null) {
+                    //无效数据异常不提示
+                    if (mContext != null && ((ExplainException) e).getCode() != -5) {
                         TipDialog tipDialog = TipDialog.build(mContext, ((ExplainException) e).getMsg(), TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
                         tipDialog.setCanCancel(true);
                         tipDialog.showDialog();

@@ -37,7 +37,7 @@ public class WarningSettingActivity extends BaseActivity {
     @BindView(R.id.tv_complete)
     TextView mTvComplete;
 
-    private float defaultTemp = 2f;
+    private float defaultTemp = 0.5f;
     private WarningRuleBean mWarningRuleBean;
 
     @Override
@@ -67,7 +67,7 @@ public class WarningSettingActivity extends BaseActivity {
                 ContextCompat.getColor(mContext, R.color.line_C3C5CA), ContextCompat.getColor(mContext, R.color.colortheme));
         mRulerTemp.setParam(DrawUtil.dip2px(10), DrawUtil.dip2px(60), DrawUtil.dip2px(40),
                 DrawUtil.dip2px(25), DrawUtil.dip2px(1), DrawUtil.dip2px(12));
-        mRulerTemp.initViewParam(defaultTemp, 0f, 4f, 1);
+        mRulerTemp.initViewParam(defaultTemp, 0f, 2f, 1);
         mRulerTemp.setValueChangeListener(value -> mWarningRuleBean.setTempNum(value));
     }
 

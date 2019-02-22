@@ -360,7 +360,7 @@ public class ScanDeviceActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         BleTools.getInstance().stopScan();
-        SCAN_BLE_DEVICE = true;
+        SCAN_BLE_DEVICE = false;
 //        BleTools.getBleManager().removeConnectGattCallback(BleTools.getInstance().getBleDevice());
         super.onDestroy();
     }

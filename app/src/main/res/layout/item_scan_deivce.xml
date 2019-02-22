@@ -10,10 +10,10 @@
 
     <com.vondear.rxtools.view.layout.RxImageView
         android:id="@+id/img_device"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
-        app:icon_src_normal="@mipmap/ic_device_default"
+        app:icon_src_normal="@drawable/ic_device"
         />
 
     <TextView

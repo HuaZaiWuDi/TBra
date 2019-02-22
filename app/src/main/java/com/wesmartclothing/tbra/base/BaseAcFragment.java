@@ -38,6 +38,7 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
      */
     private boolean isVisible;
 
+
     /**
      * 标志位，View已经初始化完成。
      */
@@ -73,7 +74,9 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
             initBundle(arguments);
         }
         isPrepared = true;
-        lazyLoad();
+        onVisible();
+
+
         return view;
     }
 
@@ -173,10 +176,11 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         RxLogUtils.i(TGA + "：onResume");
         lifecycleSubject.onNext(LifeCycleEvent.RESUME);
 
-//        //已经准备好，并且只有第一次会调用这个
-//        if (isPrepared && isFirstLoad) {
-//            onVisible();
-//        }
+        //只有之前是显示的Fragment才会回调显示的方法
+        if (isVisible) {
+            onVisible();
+        }
+        RxLogUtils.d(TGA, "isVisible:" + isVisible);
         super.onResume();
     }
 
@@ -185,15 +189,21 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
         RxLogUtils.i(TGA + "：onPause");
         lifecycleSubject.onNext(LifeCycleEvent.STOP);
         super.onPause();
+
+        RxLogUtils.d(TGA, "isVisible:" + isVisible);
     }
 
 
     @Override
     public void onStop() {
-        onInvisible();
+        if (!isVisible) {
+            onInvisible();
+        }
         RxLogUtils.i(TGA + "：onStop");
         lifecycleSubject.onNext(LifeCycleEvent.STOP);
         super.onStop();
+
+        RxLogUtils.d(TGA, "isVisible:" + isVisible);
     }
 
 
@@ -227,16 +237,17 @@ public abstract class BaseAcFragment extends Fragment implements IBase {
 
 
     protected void onVisible() {
-        isVisible = true;
+        RxLogUtils.d(TGA, "onVisible");
         lazyLoad();
     }
 
     protected void onInvisible() {
-        isVisible = false;
+        RxLogUtils.d(TGA, "onInvisible");
     }
 
     public boolean isVisibled() {
-        return isVisible;
+        RxLogUtils.d(TGA, "isVisibled:" + (isVisible && isResumed()));
+        return isVisible && isResumed();
     }
 
 

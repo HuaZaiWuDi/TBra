@@ -15,6 +15,7 @@ import com.kongzue.dialog.v2.WaitDialog;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
@@ -122,13 +123,14 @@ public class AccountManagerActivity extends BaseActivity {
         public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
             RxLogUtils.d("login:onComplete: ");
             WaitDialog.dismiss();
-            Set<String> strings = map.keySet();
-            for (String s : strings) {
-                RxLogUtils.d("s: " + s + "--value" + map.get(s));
+            if (!RxDataUtils.isEmpty(map)) {
+                Set<String> strings = map.keySet();
+                for (String s : strings) {
+                    RxLogUtils.d("s: " + s + "--value" + map.get(s));
+                }
+
+                bindOther(new LoginResult(map, share_media));
             }
-
-            bindOther(new LoginResult(map, share_media));
-
         }
 
         @Override
@@ -202,6 +204,8 @@ public class AccountManagerActivity extends BaseActivity {
                         if (mSwitchBindListener != null) {
                             mSwitchBindListener.complete("");
                         }
+                        UMShareAPI.get(mContext).deleteOauth(mActivity, otherType, mUMAuthListener);
+
                     }
 
                     @Override

@@ -15,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 import com.vondear.rxtools.model.timer.MyTimer;
 import com.vondear.rxtools.model.timer.MyTimerListener;
 import com.vondear.rxtools.utils.RxDataUtils;
-import com.vondear.rxtools.utils.RxFormatValue;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
@@ -56,11 +55,6 @@ public class HistoryTempView extends LinearLayout {
     public static final int SPEED_X1 = 1;
     public static final int SPEED_X1_5 = 2;
     public static final int SPEED_X2 = 3;
-
-
-    public interface OnSelectParentListener {
-        void select();
-    }
 
 
     @BindView(R.id.tv_L1)
@@ -126,6 +120,11 @@ public class HistoryTempView extends LinearLayout {
         void errorPoint(Map<String, Integer> errorPoints);
     }
 
+    public interface OnSelectParentListener {
+        void select();
+    }
+
+
     public void setOnErrorPointListener(OnErrorPointListener onErrorPointListener) {
         mOnErrorPointListener = onErrorPointListener;
     }
@@ -133,6 +132,7 @@ public class HistoryTempView extends LinearLayout {
     public void setOnSelectParentListener(OnSelectParentListener onSelectParentListener) {
         mOnSelectParentListener = onSelectParentListener;
     }
+
 
     public HistoryTempView(Context context) {
         this(context, null);
@@ -225,7 +225,11 @@ public class HistoryTempView extends LinearLayout {
                 .append("/" + RxFormat.setSec2MS(list.size()))
                 .setForegroundColor(Color.parseColor("#99FFFFFF"))
                 .into(mTvPlayTime);
-        mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(speed / 1000, 1) + "倍");
+
+
+        mTvPlaySpeed.setText(mode2String(modeSpeed));
+
+        errorPointMap.clear();
 
 //        setPlay(true);
 //
@@ -267,6 +271,7 @@ public class HistoryTempView extends LinearLayout {
                 mMyTimer.stopTimer();
                 isPlay = false;
                 mImgPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                errorPointMap.clear();
             }
         }
     });
@@ -400,42 +405,26 @@ public class HistoryTempView extends LinearLayout {
         setPlay(false);
     }
 
-    private int setmodeSpeed(int modeSpeed) {
-        int speed = 1000;
-        switch (modeSpeed) {
-            case 0:
-                speed = 2000;
-                break;
-            case 1:
-                speed = 1000;
-                break;
-            case 2:
-                speed = 666;
-                break;
-            case 3:
-                speed = 500;
-                break;
-        }
-        return speed;
-    }
-
 
     @OnClick({R.id.img_left, R.id.img_play_pause, R.id.img_right, R.id.parent, R.id.layout_click})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.img_right:
                 modeSpeed++;
-                speed = setmodeSpeed(modeSpeed);
-                mImgLeft.setAlpha(1f);
-                mImgLeft.setEnabled(true);
+                speed = mode2Speek(modeSpeed);
+
                 mMyTimer.stopTimer();
                 mMyTimer.setPeriodAndDelay(speed, 0);
                 mMyTimer.startTimer();
-                mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(1000f / speed, 1) + "倍");
+
+                mTvPlaySpeed.setText(mode2String(modeSpeed));
                 if (modeSpeed >= SPEED_X2) {
                     mImgRight.setAlpha(0.6f);
                     mImgRight.setEnabled(false);
                 }
+                mImgLeft.setAlpha(1f);
+                mImgLeft.setEnabled(true);
+
                 if (!RxDataUtils.isEmpty(mPointDataBeans))
                     setPlay(true);
                 break;
@@ -445,17 +434,20 @@ public class HistoryTempView extends LinearLayout {
                 break;
             case R.id.img_left:
                 modeSpeed--;
-                speed = setmodeSpeed(modeSpeed);
-                mImgRight.setAlpha(1f);
-                mImgRight.setEnabled(true);
+                speed = mode2Speek(modeSpeed);
+
                 mMyTimer.stopTimer();
                 mMyTimer.setPeriodAndDelay(speed, 0);
                 mMyTimer.startTimer();
-                mTvPlaySpeed.setText("X" + RxFormatValue.fromat4S5R(1000f / speed, 1) + "倍");
+                mTvPlaySpeed.setText(mode2String(modeSpeed));
+
                 if (modeSpeed <= SPEED_X0_5) {
                     mImgLeft.setAlpha(0.6f);
                     mImgLeft.setEnabled(false);
                 }
+                mImgRight.setAlpha(1f);
+                mImgRight.setEnabled(true);
+
                 if (!RxDataUtils.isEmpty(mPointDataBeans))
                     setPlay(true);
                 break;
@@ -470,5 +462,43 @@ public class HistoryTempView extends LinearLayout {
                 }
                 break;
         }
+    }
+
+    private int mode2Speek(int modeSpeed) {
+        int speek = 1000;
+        switch (modeSpeed) {
+            case SPEED_X0_5:
+                speek = 2000;
+                break;
+            case SPEED_X1:
+                speek = 1000;
+                break;
+            case SPEED_X1_5:
+                speek = 666;
+                break;
+            case SPEED_X2:
+                speek = 500;
+                break;
+        }
+        return speek;
+    }
+
+    private String mode2String(int modeSpeed) {
+        String modeName = "x1 倍";
+        switch (modeSpeed) {
+            case SPEED_X0_5:
+                modeName = "x0.5 倍";
+                break;
+            case SPEED_X1:
+                modeName = "x1 倍";
+                break;
+            case SPEED_X1_5:
+                modeName = "x1.5 倍";
+                break;
+            case SPEED_X2:
+                modeName = "x2 倍";
+                break;
+        }
+        return modeName;
     }
 }

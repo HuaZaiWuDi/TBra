@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.vondear.rxtools.utils.RxUtils;
 import com.vondear.rxtools.view.layout.RxTextView;
 import com.wesmartclothing.tbra.R;
 
@@ -39,7 +40,7 @@ public class BatteryView extends RelativeLayout {
     public void setBatteryValue(@IntRange(from = 0, to = 100) int batteryValue) {
 
         ViewGroup.LayoutParams params = mTvBattery.getLayoutParams();
-        params.width = (int) (params.width * batteryValue / 100f);
+        params.width = (int) (RxUtils.dp2px(18.5f) * batteryValue / 100f);
         mTvBattery.setLayoutParams(params);
         //低电量
         if (batteryValue <= 15) {

@@ -228,13 +228,13 @@ public class MainActivity extends BaseActivity {
     private void setDefaultFragment() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.frameLayout, mFragments.get(position));
         transaction.add(R.id.frameLayout, mFragments.get(0));
+        transaction.add(R.id.frameLayout, mFragments.get(1));
         transaction.add(R.id.frameLayout, mFragments.get(2));
         transaction.hide(mFragments.get(0));
         transaction.hide(mFragments.get(1));
         transaction.hide(mFragments.get(2));
-        transaction.show(mFragments.get(1));
+        transaction.show(mFragments.get(position));
         transaction.commit();
     }
 
@@ -295,7 +295,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        stopService(serviceIntent);
+        if (serviceIntent != null)
+            stopService(serviceIntent);
         super.onDestroy();
 
     }

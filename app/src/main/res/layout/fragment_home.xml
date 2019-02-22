@@ -91,7 +91,7 @@
 
         <com.vondear.rxtools.view.cardview.CardView
             android:layout_width="match_parent"
-            android:layout_height="330dp"
+            android:layout_height="350dp"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_marginBottom="14dp"
@@ -177,6 +177,19 @@
                     android:layout_height="wrap_content">
 
                 </android.support.v7.widget.RecyclerView>
+
+
+                <TextView
+                    android:id="@+id/tv_keyError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="12dp"
+                    android:text="重点关注“无”"
+                    android:textColor="#FF666666"
+                    android:textSize="13sp"/>
 
             </LinearLayout>
 

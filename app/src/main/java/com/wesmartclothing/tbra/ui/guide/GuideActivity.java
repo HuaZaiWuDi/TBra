@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +38,8 @@ public class GuideActivity extends BaseActivity {
     ImageView mImgRight;
     @BindView(R.id.tv_go)
     TextView mTvGo;
+    @BindView(R.id.layout_logo)
+    FrameLayout mLayoutLogo;
 
 
     @Override
@@ -79,6 +82,7 @@ public class GuideActivity extends BaseActivity {
             @Override
             public void onPageSelected(int i) {
                 mImgRight.setVisibility(i == mImageItems.size() - 1 ? View.GONE : View.VISIBLE);
+                mLayoutLogo.setVisibility(i == mImageItems.size() - 1 ? View.GONE : View.VISIBLE);
             }
 
             @Override

@@ -93,13 +93,6 @@
                     android:src="@mipmap/bg_ble_scan"/>
 
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/ic_launcher"/>
-
-
             </FrameLayout>
 
 

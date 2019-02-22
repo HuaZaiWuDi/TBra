@@ -52,7 +52,7 @@
         <com.vondear.rxtools.view.cardview.CardView
             android:id="@+id/layout_device"
             android:layout_width="match_parent"
-            android:layout_height="248dp"
+            android:layout_height="255dp"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_marginBottom="6dp"
@@ -65,12 +65,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="248dp"
                 android:orientation="vertical"
-                android:padding="12dp"
                 >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="38dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
                     >
 
                     <TextView
@@ -78,7 +79,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="设备名字：-\t-"
                         android:textColor="@color/font_475669"
                         android:textSize="12sp"/>
 
@@ -100,63 +100,70 @@
                         android:layout_centerVertical="true"
                         android:drawablePadding="4dp"
                         android:gravity="center"
-                        android:text="切换设备\t>>"
+                        android:text="切换设备 >>"
                         android:textColor="@color/colortheme"
                         android:textSize="12sp"
                         />
 
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/line_C3C5CA"/>
-
                 </RelativeLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/line_C3C5CA"/>
 
-                <com.wesmartclothing.tbra.view.HistoryTempView
-                    android:id="@+id/historyTempView"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="11dp"
                     >
 
-                </com.wesmartclothing.tbra.view.HistoryTempView>
+                    <com.wesmartclothing.tbra.view.HistoryTempView
+                        android:id="@+id/historyTempView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="18dp"
+                        android:gravity="center_horizontal"
+                        >
+
+                    </com.wesmartclothing.tbra.view.HistoryTempView>
 
 
-            </LinearLayout>
+                    <RelativeLayout
+                        android:id="@+id/layout_device_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:visibility="gone"
+                        tools:visibility="visible">
 
-            <LinearLayout
-                android:id="@+id/layout_device_empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@mipmap/ic_p"
-                    android:drawablePadding="14dp"
-                    android:text="请打开蓝牙并允许新的连接"
-                    android:textColor="@color/font_C3C5CA"
-                    android:textSize="12sp"/>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="132dp"
+                            android:drawablePadding="14dp"
+                            android:gravity="center"
+                            android:src="@drawable/bg_unknown_device"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"/>
 
 
-                <TextView
-                    android:id="@+id/tv_bindDevice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@mipmap/ic_btn"
-                    android:gravity="center"
-                    android:text="去连接"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    />
+                        <TextView
+                            android:id="@+id/tv_bindDevice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="115dp"
+                            android:background="@mipmap/ic_btn"
+                            android:gravity="center"
+                            android:text="去连接"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            />
+
+                    </RelativeLayout>
+
+                </FrameLayout>
+
 
             </LinearLayout>
 

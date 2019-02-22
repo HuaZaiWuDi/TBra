@@ -103,22 +103,16 @@ public class ResetPwdActivity extends BaseActivity {
     }
 
     private void initEdit() {
-        mEditPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                String phone = mEditPhone.getText().toString();
-                if (!b && !RxRegUtils.isMobileExact(phone)) {
-                    RxToast.warning(getString(R.string.phoneError));
-                }
+        mEditPhone.setOnFocusChangeListener((view, b) -> {
+            String phone = mEditPhone.getText().toString();
+            if (!b && !RxRegUtils.isMobileExact(phone)) {
+                RxToast.warning(getString(R.string.phoneError));
             }
         });
-        mEditPwdAgain.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (!b && !RxDataUtils.isNullString(password)
-                        && !password.equals(againPassword)) {
-                    RxToast.normal("两次密码输入不一致");
-                }
+        mEditPwdAgain.setOnFocusChangeListener((view, b) -> {
+            if (!b && !RxDataUtils.isNullString(password)
+                    && !password.equals(againPassword)) {
+                RxToast.normal("两次密码输入不一致");
             }
         });
 
