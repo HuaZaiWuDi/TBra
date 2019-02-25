@@ -57,12 +57,7 @@ public class LocationActivity extends BaseActivity {
     public void initViews() {
         initTitle(mRxTitle);
         //跳过
-        mRxTitle.setRightTextOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveUserInfo(true);
-            }
-        });
+        mRxTitle.setRightTextOnClickListener(view -> saveUserInfo(true));
     }
 
     @Override
@@ -106,11 +101,12 @@ public class LocationActivity extends BaseActivity {
                 .subscribe(new RxNetSubscriber<String>() {
                     @Override
                     protected void _onNext(String s) {
-                        InputInfoActivity.sInfoBean = null;
+//                        InputInfoActivity.sInfoBean = null;
                         //跳转扫描界面
                         Bundle bundle = new Bundle();
                         bundle.putBoolean(Key.BUNDLE_CAN_SKIP, true);
-                        RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class, bundle);
+                        RxActivityUtils.skipActivitySingleTop(mContext, ScanDeviceActivity.class, bundle);
+                        mActivity.finish();
                     }
 
                     @Override

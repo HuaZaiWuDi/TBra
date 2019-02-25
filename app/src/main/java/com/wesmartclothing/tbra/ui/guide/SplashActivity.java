@@ -1,5 +1,6 @@
 package com.wesmartclothing.tbra.ui.guide;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
@@ -13,6 +14,7 @@ import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.tools.AddTempData;
 import com.wesmartclothing.tbra.ui.login.InputInfoActivity;
 import com.wesmartclothing.tbra.ui.login.InvitationCodeActivity;
@@ -59,7 +61,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void initNetData() {
 
-//        RxActivityUtils.skipActivityAndFinish(mContext, MainActivity.class);
+//        RxActivityUtils.skipActivityAndFinish(mContext, ScanDeviceActivity.class);
 
         if (!SPUtils.getBoolean(SPKey.SP_GUIDE)) {
             SPUtils.put(SPKey.SP_GUIDE, true);
@@ -73,6 +75,7 @@ public class SplashActivity extends BaseActivity {
         initUserInfo();
         otherSetting();
 
+        startService(new Intent(mContext, BleService.class));
     }
 
     private void otherSetting() {

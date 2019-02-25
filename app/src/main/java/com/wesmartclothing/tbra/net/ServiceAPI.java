@@ -24,15 +24,15 @@ public class ServiceAPI {
 
 
     //上线
-    public static final String BASE_RELEASE = "https://api.wesmartclothing.com/mix/";//上线版本
+    public static final String BASE_RELEASE = "http://tbra-dev.wesmartclothing.com/";//上线版本
 
 
     public static final String BASE_DEBUG = "http://tbra-dev.wesmartclothing.com/";//测试版本
 
 
-    public static String BASE_URL = BASE_DEBUG;
+    public static String BASE_URL = BASE_URL_192;
 
-    public static String BASE_SERVICE = BASE_URL;
+    public static String BASE_SERVICE = BASE_URL.replace("mix", "system");
 
 
     public static void switchURL(String baseUrl) {

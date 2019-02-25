@@ -104,7 +104,7 @@ public class MonitorFragment extends BaseAcFragment {
     @Override
     public void initViews() {
         setTGA("【MonitorFragment】");
-        bleConnectState(isConnected);
+        bleConnectState(BleTools.getInstance().isConnected());
     }
 
     private void bleConnectState(boolean isConnected) {
@@ -295,7 +295,7 @@ public class MonitorFragment extends BaseAcFragment {
                                     })).setCanCancel(true).showDialog();
                 } else {
                     //去绑定或者连接
-                    RxActivityUtils.skipActivity(mContext, ScanDeviceActivity.class);
+                    RxActivityUtils.skipActivitySingleTop(mContext, ScanDeviceActivity.class);
                 }
                 break;
         }

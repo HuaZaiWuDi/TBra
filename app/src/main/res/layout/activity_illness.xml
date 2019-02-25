@@ -23,7 +23,6 @@
             android:elevation="1dp"
             android:translationZ="2dp"
             app:leftIcon="@drawable/ic_arrow_back_black_24dp"
-            app:title="个人信息验证"
             app:titleColor="@color/line_333845"
             app:titleSize="16sp"/>
 

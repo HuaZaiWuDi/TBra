@@ -18,6 +18,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.qqtheme.framework.picker.DatePicker;
 
 public class InputInfoActivity extends BaseActivity {
 
@@ -32,7 +33,7 @@ public class InputInfoActivity extends BaseActivity {
     @BindView(R.id.tv_nextStep)
     TextView mTvNextStep;
 
-    public static UserInfoBean sInfoBean;
+    public static UserInfoBean sInfoBean = new UserInfoBean();
 
 
     @Override
@@ -52,7 +53,6 @@ public class InputInfoActivity extends BaseActivity {
 
     @Override
     public void initViews() {
-        sInfoBean = new UserInfoBean();
         initTitle(mRxTitle);
     }
 
@@ -78,20 +78,17 @@ public class InputInfoActivity extends BaseActivity {
         RxLogUtils.d("日期：" + sInfoBean.getBirthday());
         datePicker.setTextColor(getResources().getColor(R.color.Gray));
         datePicker.setSelectedItem(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-        datePicker.setOnDatePickListener(new cn.qqtheme.framework.picker.DatePicker.OnYearMonthDayPickListener() {
-            @Override
-            public void onDatePicked(String year, String month, String day) {
-                RxLogUtils.d("年：" + year + "------月：" + month + "---------日：" + day);
+        datePicker.setOnDatePickListener((DatePicker.OnYearMonthDayPickListener) (year, month, day) -> {
+            RxLogUtils.d("年：" + year + "------月：" + month + "---------日：" + day);
 
-                Date date = RxFormat.setParseDate(year + "-" + month + "-" + day, RxFormat.Date);
-                sInfoBean.setBirthday(date.getTime());
-                mTvNextStep.setEnabled(true);
-                mTvNextStep.setAlpha(1f);
+            Date date = RxFormat.setParseDate(year + "-" + month + "-" + day, RxFormat.Date);
+            sInfoBean.setBirthday(date.getTime());
+            mTvNextStep.setEnabled(true);
+            mTvNextStep.setAlpha(1f);
 
-                mTvYear.setText(year + "年");
-                mTvMonth.setText(month + "月");
-                mTvDay.setText(day + "日");
-            }
+            mTvYear.setText(year + "年");
+            mTvMonth.setText(month + "月");
+            mTvDay.setText(day + "日");
         });
         datePicker.show();
     }

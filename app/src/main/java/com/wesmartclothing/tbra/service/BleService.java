@@ -32,17 +32,22 @@ import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectDeviceBus;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
-import com.wesmartclothing.tbra.ui.main.mine.ScanDeviceActivity;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+
 public class BleService extends Service {
+
+    public static final String TAG = "【BleService】";
 
     private int currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
     private static boolean isFirstJoin = true;
+    private Handler reConnectHandler = new Handler();
 
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -98,8 +103,32 @@ public class BleService extends Service {
 
     @Override
     public void onCreate() {
+        RxLogUtils.d(TAG, "onCreate");
         super.onCreate();
         initBroadcast();
+        initRxBus();
+    }
+
+    private Disposable mDisposable;
+
+    private void initRxBus() {
+        RxBus.getInstance().register2(ConnectDeviceBus.class)
+                .subscribe(new RxSubscriber<ConnectDeviceBus>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        super.onSubscribe(d);
+                        RxLogUtils.d("Disposable：" + d);
+                        mDisposable = d;
+                    }
+
+                    @Override
+                    protected void _onNext(ConnectDeviceBus connectDeviceBus) {
+                        //开始连接
+                        RxLogUtils.d(TAG, "RxBus:ConnectDeviceBus" + connectDeviceBus);
+                        startConnect(connectDeviceBus.mBleDevice);
+                    }
+                });
     }
 
     private void initBroadcast() {
@@ -115,28 +144,21 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        RxLogUtils.d("启动Service");
+        RxLogUtils.d(TAG, "onStartCommand");
         scanConnectDevice();
         return super.onStartCommand(intent, flags, startId);
     }
 
     private synchronized void scanConnectDevice() {
-
-        RxLogUtils.d("开始连接");
-
-        if (ScanDeviceActivity.SCAN_BLE_DEVICE) {
-            RxLogUtils.e("正在扫描界面");
-            return;
-        }
-//
-//        if (BleTools.getBleManager().getScanSate() == BleScanState.STATE_SCANNING) {
-//            RxLogUtils.e("正在扫描");
-//            return;
-//        }
+        RxLogUtils.d("开始扫描");
 
         if (currentConnectState == BluetoothProfile.STATE_CONNECTED ||
                 currentConnectState == BluetoothProfile.STATE_CONNECTING) {
             RxLogUtils.e("设备已连接或正在连接:");
+            return;
+        }
+        if (!BleTools.checkMac(SPUtils.getString(SPKey.SP_BIND_DEVICE))) {
+            RxLogUtils.e("没有绑定设备:");
             return;
         }
 
@@ -158,8 +180,6 @@ public class BleService extends Service {
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
                 RxLogUtils.d("扫描结束：");
-
-
             }
 
             @Override
@@ -173,18 +193,20 @@ public class BleService extends Service {
 
                 BleTools.getInstance().stopScan();
                 startConnect(bleDevice);
-
             }
         });
-
     }
 
-    private void startConnect(BleDevice bleDevice) {
+
+    private synchronized void startConnect(BleDevice bleDevice) {
+        //清除重连消息
+        reConnectHandler.removeCallbacksAndMessages(null);
         BleTools.getBleManager().connect(bleDevice, new BleGattCallback() {
             @Override
             public void onStartConnect() {
                 RxLogUtils.d("开始连接：" + Thread.currentThread().getName());
                 currentConnectState = BluetoothProfile.STATE_CONNECTING;
+                BleTools.getInstance().disConnect();
             }
 
             @Override
@@ -193,7 +215,8 @@ public class BleService extends Service {
                 RxLogUtils.d("连接失败：");
                 RxBus.getInstance().post(new ConnectStateBus(false));
                 //连接失败或断开连接给3000的延迟
-                new Handler().postDelayed(() -> scanConnectDevice(), 3000);
+                reConnectHandler.postDelayed(() -> scanConnectDevice(), 3000);
+
             }
 
             @Override
@@ -202,6 +225,7 @@ public class BleService extends Service {
                 RxLogUtils.d("连接成功：" + Thread.currentThread().getName());
 
                 new Handler().postDelayed(() -> connectSuccess(), 300);
+
             }
 
             @Override
@@ -214,7 +238,8 @@ public class BleService extends Service {
                 tipDialog.setCanCancel(true);
                 tipDialog.showDialog();
 
-                new Handler().postDelayed(() -> scanConnectDevice(), 3000);
+                reConnectHandler.postDelayed(() -> scanConnectDevice(), 3000);
+
             }
         });
     }
@@ -242,6 +267,7 @@ public class BleService extends Service {
                                         tipDialog.setCanCancel(true);
                                         tipDialog.showDialog();
                                         RxBus.getInstance().post(new ConnectStateBus(true));
+
                                     }
 
                                     @Override
@@ -271,15 +297,19 @@ public class BleService extends Service {
         });
     }
 
-
     private void errorReConnect() {
         BleTools.getBleManager().disconnectAllDevice();
     }
 
     @Override
     public void onDestroy() {
+        RxLogUtils.d(TAG, "onDestroy");
         unregisterReceiver(mBroadcastReceiver);
+        BleTools.getInstance().disConnect();
         BleTools.getBleManager().destroy();
+        if (mDisposable != null) {
+            mDisposable.dispose();
+        }
         super.onDestroy();
     }
 

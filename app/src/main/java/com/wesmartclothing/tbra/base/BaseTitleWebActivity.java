@@ -52,7 +52,6 @@ public class BaseTitleWebActivity extends BaseActivity {
         RxLogUtils.d("url:" + url);
 //        url = "http://mc.vip.qq.com/demo/indexv3";
         mRxTitle.setTitle(title);
-        mRxTitle.setTitleVisibility(true);
         FragmentUtils.replace(getSupportFragmentManager(), BaseWebFragment.getInstance(url), R.id.layout_frameLayout);
     }
 

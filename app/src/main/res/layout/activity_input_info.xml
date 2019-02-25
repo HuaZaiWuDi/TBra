@@ -23,7 +23,7 @@
             android:layout_height="42dp"
             android:layout_gravity="bottom"
             app:leftIcon="@drawable/ic_arrow_back_black_24dp"
-            app:title="个人信息验证"
+            app:leftIconVisibility="true"
             app:titleColor="@color/line_333845"
             app:titleSize="16sp"/>
 
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="231dp"
-            android:text="请选择您的性别"
+            android:text="请选择您的生日"
             android:textColor="@color/font_475669"
             android:textSize="15sp"/>
 

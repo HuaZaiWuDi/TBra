@@ -13,7 +13,6 @@ import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.cardview.CardView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
-import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -87,7 +86,8 @@ public class SettingActivity extends BaseActivity {
                             e.printStackTrace();
                         }
                         SPUtils.put(SPKey.SP_UserId, "");
-                        BleTools.getInstance().disConnect();
+                        SPUtils.put(SPKey.SP_BIND_DEVICE, "");
+
                         RxActivityUtils.skipActivityAndFinishAll(mActivity, LoginActivity.class);
                     }
                 });

@@ -40,6 +40,7 @@ import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
+import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
 import com.wesmartclothing.tbra.constant.SPKey;
@@ -130,6 +131,7 @@ public class HomeFragment extends BaseAcFragment {
         initTab();
         initRecyclerView();
         initErrorPoint();
+        bleConnectState(BleTools.getInstance().isConnected());
 
         mRecyclerView.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -375,6 +377,15 @@ public class HomeFragment extends BaseAcFragment {
 
                         pointDatalist = list;
                         mHistoryTempView.setData(list);
+
+                        if (RxDataUtils.isEmpty(pointDatalist)) {
+                            mTvSeeMore.setAlpha(0.6f);
+                            mTvSeeMore.setEnabled(false);
+                        } else {
+                            mTvSeeMore.setAlpha(1f);
+                            mTvSeeMore.setEnabled(true);
+                        }
+
                     }
 
                     @Override

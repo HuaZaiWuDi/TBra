@@ -107,7 +107,7 @@ public class InvitationCodeActivity extends BaseActivity {
                                             if (mUserInfo != null && mUserInfo.getAge() == 0) {
                                                 RxActivityUtils.skipActivity(mActivity, InputInfoActivity.class);
                                             } else {
-                                                RxActivityUtils.skipActivity(mActivity, MainActivity.class);
+                                                RxActivityUtils.skipActivityAndFinish(mActivity, MainActivity.class);
                                             }
                                         }
                                     });

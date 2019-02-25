@@ -1,7 +1,6 @@
 package com.wesmartclothing.tbra.ui.main.mine;
 
 import android.Manifest;
-import android.bluetooth.BluetoothGatt;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
@@ -15,11 +14,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.clj.fastble.callback.BleGattCallback;
-import com.clj.fastble.callback.BleMtuChangedCallback;
 import com.clj.fastble.callback.BleScanCallback;
 import com.clj.fastble.data.BleDevice;
-import com.clj.fastble.exception.BleException;
 import com.clj.fastble.scan.BleScanRuleConfig;
 import com.kongzue.dialog.v2.CustomDialog;
 import com.kongzue.dialog.v2.MessageDialog;
@@ -39,13 +35,13 @@ import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
-import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.BLEKey;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.DeviceConnectBean;
+import com.wesmartclothing.tbra.entity.rxbus.ConnectDeviceBus;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
 import com.wesmartclothing.tbra.net.NetManager;
@@ -77,6 +73,8 @@ public class ScanDeviceActivity extends BaseActivity {
     private int position = 0;
     private WaitDialog waitDialog;
     public static boolean SCAN_BLE_DEVICE = false;
+    private boolean flagSkip = false;
+    private BleDevice mBleDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +89,7 @@ public class ScanDeviceActivity extends BaseActivity {
 
     @Override
     public void initBundle(Bundle bundle) {
+        flagSkip = bundle.getBoolean(Key.BUNDLE_CAN_SKIP);
         if (bundle.getBoolean(Key.BUNDLE_CAN_SKIP)) {
             mRxTitle.setRightTextVisibility(true);
             mRxTitle.setLeftIconVisibility(false);
@@ -108,6 +107,7 @@ public class ScanDeviceActivity extends BaseActivity {
         initRecyclerView();
         initPermissions();
         BleTools.getInstance().stopScan();
+
     }
 
     private void initPermissions() {
@@ -145,8 +145,11 @@ public class ScanDeviceActivity extends BaseActivity {
         mDeviceRecyclerView.setTag(-1);
         adapter.setOnItemClickListener((adapter, view, position) -> {
                     this.position = position;
-                    BleTools.getInstance().disConnect();
-                    connectDevice(((DeviceConnectBean) adapter.getItem(position)).getBleDevice().getMac());
+
+                    mBleDevice = ((DeviceConnectBean) adapter.getItem(position)).getBleDevice();
+                    //通知后台服务设备
+                    RxBus.getInstance().post(new ConnectDeviceBus(mBleDevice));
+                    waitDialog = WaitDialog.show(RxActivityUtils.currentActivity(), "正在连接");
                 }
         );
     }
@@ -187,6 +190,30 @@ public class ScanDeviceActivity extends BaseActivity {
                             deviceBean.setProvince(address.getAdminArea());
                             deviceBean.setCity(address.getLocality());
                             deviceBean.setCountry("中国");
+                        }
+                    }
+                });
+
+        RxBus.getInstance().register2(ConnectStateBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxNetSubscriber<ConnectStateBus>() {
+                    @Override
+                    protected void _onNext(ConnectStateBus connectStateBus) {
+                        WaitDialog.dismiss();
+                        if (connectStateBus.isConnect()) {
+                            connectDevice();
+                            bindDevice(mBleDevice);
+
+                            if (flagSkip) {
+                                RxActivityUtils.skipActivityAndFinishAll(mContext, MainActivity.class);
+                            } else {
+                                RxActivityUtils.skipActivityAndFinish(mContext, MainActivity.class);
+                            }
+                        } else {
+                            TipDialog tipDialog = TipDialog.build(mContext, "连接失败", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                            tipDialog.setCanCancel(true);
+                            tipDialog.showDialog();
+
                         }
                     }
                 });
@@ -255,94 +282,8 @@ public class ScanDeviceActivity extends BaseActivity {
         });
     }
 
-
-    private void connectDevice(String mac) {
-        BleTools.getBleManager().connect(mac, new BleGattCallback() {
-            @Override
-            public void onStartConnect() {
-                waitDialog = WaitDialog.show(RxActivityUtils.currentActivity(), "正在连接");
-            }
-
-            @Override
-            public void onConnectFail(BleDevice bleDevice, BleException exception) {
-                WaitDialog.dismiss();
-                if (RxActivityUtils.currentActivity() != null) {
-                    TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "连接失败", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
-                    tipDialog.setCanCancel(true);
-                    tipDialog.showDialog();
-                }
-                startScan();
-                RxBus.getInstance().post(new ConnectStateBus(false));
-            }
-
-            @Override
-            public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
-                BleTools.getInstance().stopScan();
-
-//                RxLogUtils.d(TAG, "连接成功");
-//                bindDevice(bleDevice.getMac());
-
-                BleTools.getInstance().openNotify(new RxSubscriber<Boolean>() {
-                    @Override
-                    protected void _onNext(Boolean aBoolean) {
-                        BleTools.getInstance().setMTU(200, new BleMtuChangedCallback() {
-                            @Override
-                            public void onSetMTUFailure(BleException exception) {
-                                waitDialog.setText("连接异常，正在重连");
-                                BleTools.getInstance().disConnect();
-                                connectDevice(mac);
-                            }
-
-                            @Override
-                            public void onMtuChanged(int mtu) {
-                                RxLogUtils.d("连接成功");
-                                BleAPI.syncTime(new RxSubscriber<byte[]>() {
-                                    @Override
-                                    protected void _onNext(byte[] bytes) {
-                                        RxLogUtils.d("同步时间成功");
-                                        WaitDialog.dismiss();
-                                        connectDevice();
-                                        bindDevice(bleDevice.getMac());
-                                        RxBus.getInstance().post(new ConnectStateBus(true));
-
-                                        RxActivityUtils.skipActivity(mContext, MainActivity.class);
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        super.onError(e);
-
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        super.onError(e);
-                        waitDialog.setText("连接异常，正在重连");
-                        BleTools.getInstance().disConnect();
-                        connectDevice(mac);
-                    }
-                });
-            }
-
-            @Override
-            public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
-                WaitDialog.dismiss();
-                if (RxActivityUtils.currentActivity() != null) {
-                    TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
-                    tipDialog.setCanCancel(true);
-                    tipDialog.showDialog();
-                }
-
-                RxBus.getInstance().post(new ConnectStateBus(false));
-            }
-        });
-    }
-
-    private void bindDevice(String macAddress) {
+    private void bindDevice(BleDevice mBleDevice) {
+        String macAddress = mBleDevice == null ? "" : mBleDevice.getMac();
         deviceBean.setMacAddr(macAddress);
         RxManager.getInstance().doNetSubscribe(
                 NetManager.getApiService().bindDevice(deviceBean),

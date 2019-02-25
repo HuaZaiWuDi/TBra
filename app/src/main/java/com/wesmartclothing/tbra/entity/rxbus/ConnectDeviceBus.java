@@ -1,5 +1,7 @@
 package com.wesmartclothing.tbra.entity.rxbus;
 
+import com.clj.fastble.data.BleDevice;
+
 /**
  * @Package com.wesmartclothing.tbra.entity.rxbus
  * @FileName ConnectDeviceBus
@@ -10,9 +12,9 @@ package com.wesmartclothing.tbra.entity.rxbus;
  */
 public class ConnectDeviceBus {
 
-    public String connectMac;
+    public BleDevice mBleDevice;
 
-    public ConnectDeviceBus(String connectMac) {
-        this.connectMac = connectMac;
+    public ConnectDeviceBus(BleDevice mBleDevice) {
+        this.mBleDevice = mBleDevice;
     }
 }
