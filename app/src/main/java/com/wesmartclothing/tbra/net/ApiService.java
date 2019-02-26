@@ -4,6 +4,7 @@ import com.vondear.rxtools.utils.net.HttpResult;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.CarouselPictureBean;
+import com.wesmartclothing.tbra.entity.DevuceLinkBean;
 import com.wesmartclothing.tbra.entity.ErrorRecordPointDetailBean;
 import com.wesmartclothing.tbra.entity.FeedBackBean;
 import com.wesmartclothing.tbra.entity.GidBean;
@@ -458,4 +459,16 @@ public interface ApiService {
      */
     @POST("dataRecord/monthOrWeekPointsInfo")
     Observable<HttpResult<List<ReportDetailBean.PointsListBean>>> monthOrWeekPointsInfo(@Body MonthOrWeekPointsBean bean);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // 统计
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 设备在线信息统计
+     */
+    @POST("appData/deviceLink")
+    Observable<HttpResult<String>> deviceLink(@Body DevuceLinkBean bean);
+
+
 }

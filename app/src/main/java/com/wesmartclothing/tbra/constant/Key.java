@@ -27,6 +27,8 @@ public interface Key {
 //    String WEB_URL_Implicit_Clause = "http://doc.wesmartclothing.com/terms/wemeet-policy.html";
 
 
+    String DEVICE_NO = "ZS-TBRA-0001";
+
     //异常点的日期
     String BUNDLE_LATEST_TYPE = "BUNDLE_LATEST_TYPE";
 

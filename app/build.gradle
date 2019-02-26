@@ -53,10 +53,12 @@ android {
     buildTypes {
         release {
             buildConfigField "boolean", "LeakCanary", "false"//9月5号演示版本置为true
+            signingConfig signingConfigs.debug
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            signingConfig signingConfigs.debug
             buildConfigField "boolean", "LeakCanary", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -97,7 +99,7 @@ dependencies {
 
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.jackUtil:RxTools:1.1.6'
+    implementation 'com.jackUtil:RxTools:1.1.7'
     //友盟社会分享
     implementation 'com.umeng.umsdk:share-core:6.9.4'
     implementation 'com.umeng.umsdk:share-qq:6.9.4'

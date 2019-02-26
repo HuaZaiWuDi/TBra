@@ -31,15 +31,16 @@ public class LocationIntentService extends IntentService {
     private String country = "loading...";
     private String locality = "loading...";
     private String street = "loading...";
+    public static Address mAddress;
     private RxLocationUtils.OnLocationChangeListener mOnLocationChangeListener = new RxLocationUtils.OnLocationChangeListener() {
         @Override
         public void getLastKnownLocation(Location location) {
             lastLatitude = String.valueOf(location.getLatitude());
             lastLongitude = String.valueOf(location.getLongitude());
 
-            Address address = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(lastLatitude), Double.parseDouble(lastLongitude));
-            RxBus.getInstance().post(address);
-            RxLogUtils.d(TAG, "last地址位置：" + address.toString());
+            mAddress = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(lastLatitude), Double.parseDouble(lastLongitude));
+            RxBus.getInstance().post(mAddress);
+            RxLogUtils.d(TAG, "last地址位置：" + mAddress.toString());
         }
 
         @Override
@@ -51,10 +52,9 @@ public class LocationIntentService extends IntentService {
             locality = RxLocationUtils.getLocality(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
             street = RxLocationUtils.getStreet(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
 
-
-            Address address = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
-            RxLogUtils.d(TAG, "地址位置：" + address.toString());
-            RxBus.getInstance().post(address);
+            mAddress = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
+            RxLogUtils.d(TAG, "地址位置：" + mAddress.toString());
+            RxBus.getInstance().post(mAddress);
         }
 
         @Override

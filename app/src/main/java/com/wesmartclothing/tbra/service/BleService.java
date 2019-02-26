@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Address;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.IBinder;
@@ -26,16 +27,21 @@ import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxNetUtils;
 import com.vondear.rxtools.utils.RxSystemBroadcastUtil;
 import com.vondear.rxtools.utils.SPUtils;
+import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.SPKey;
 import com.wesmartclothing.tbra.entity.BleDeviceInfoBean;
+import com.wesmartclothing.tbra.entity.DevuceLinkBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectDeviceBus;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
 import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
+import com.wesmartclothing.tbra.net.NetManager;
+import com.wesmartclothing.tbra.net.RxManager;
 
 import java.util.List;
 
@@ -82,8 +88,6 @@ public class BleService extends Service {
                     if (isFirstJoin) {
                         isFirstJoin = false;
                         if (workType != -1 && workType != 5) {
-
-                        } else {
                             if (ActivityLifecycleImpl.APP_IS_FOREGROUND)
                                 RxToast.normal(RxNetUtils.getNetType(workType));
                         }
@@ -263,6 +267,8 @@ public class BleService extends Service {
                                 BleAPI.getSettingInfo(new RxSubscriber<BleDeviceInfoBean>() {
                                     @Override
                                     protected void _onNext(BleDeviceInfoBean bleDeviceInfoBean) {
+                                        deviceLink(bleDeviceInfoBean);
+
                                         TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "连接成功", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_FINISH);
                                         tipDialog.setCanCancel(true);
                                         tipDialog.showDialog();
@@ -300,6 +306,35 @@ public class BleService extends Service {
     private void errorReConnect() {
         BleTools.getBleManager().disconnectAllDevice();
     }
+
+
+    /**
+     * 设备连接统计
+     *
+     * @param infoBean
+     */
+    private void deviceLink(BleDeviceInfoBean infoBean) {
+        DevuceLinkBean linkBean = new DevuceLinkBean();
+        linkBean.setFirmwareVersion(infoBean.getFWAppVersion());
+        linkBean.setDeviceNo(Key.DEVICE_NO);
+        linkBean.setMacAddr(BleTools.getInstance().getBleDevice().getMac());
+        Address mAddress = LocationIntentService.mAddress;
+        if (mAddress != null) {
+            linkBean.setCountry("中国");
+            linkBean.setProvince(mAddress.getAdminArea());
+            linkBean.setCity(mAddress.getLocality());
+        }
+
+        RxManager.getInstance().doNetSubscribe(
+                NetManager.getApiService().deviceLink(linkBean)
+        ).subscribe(new RxNetSubscriber<String>() {
+            @Override
+            protected void _onNext(String s) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onDestroy() {

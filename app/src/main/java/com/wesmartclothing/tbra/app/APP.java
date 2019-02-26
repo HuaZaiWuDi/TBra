@@ -64,11 +64,11 @@ public class APP extends Application {
     private void asynInit() {
         new RxThreadPoolUtils(RxThreadPoolUtils.Type.SingleThread, 1)
                 .execute(() -> {
-                    RxUtils.init(myApp);
-                    RxLogUtils.setLogSwitch(true);
-                    initUM();
                     switchURL();
+                    RxUtils.init(myApp);
+                    RxLogUtils.setLogSwitch(BuildConfig.DEBUG);
                     initRxCache();
+                    initUM();
                     registerActivityLifecycleCallbacks(new ActivityLifecycleImpl());
                     BleTools.initBLE(myApp);
                     BugLyInit();
@@ -116,7 +116,7 @@ public class APP extends Application {
          * AppKey：c2a63b7c-6ed7-4da5-b778-1acdbcf30bbd
          * */
         String[] androidIds = {"171e7dfb5b3005f2", "54409e1a3d1be330"};
-        boolean isDevelopmentDevice = BuildConfig.DEBUG && Arrays.asList(androidIds).contains(RxDeviceUtils.getAndroidId());
+        boolean isDevelopmentDevice = Arrays.asList(androidIds).contains(RxDeviceUtils.getAndroidId());
         RxLogUtils.d("是否是开发设备：" + isDevelopmentDevice);
 
 
@@ -155,7 +155,7 @@ public class APP extends Application {
     }
 
     private void initUM() {
-        UMConfigure.setLogEnabled(true);
+        UMConfigure.setLogEnabled(BuildConfig.DEBUG);
         UMConfigure.init(myApp, "5c662a98b465f543d1001245", "Umeng", UMConfigure.DEVICE_TYPE_PHONE, "");
         PlatformConfig.setWeixin("wx940e7690d27085d8", "3156b46cbc94d76f1d73266db8683a4b");
         PlatformConfig.setQQZone("1106924585", "RGcOhc7q8qZMrhxz");

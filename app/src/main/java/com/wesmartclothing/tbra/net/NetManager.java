@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.vondear.rxtools.utils.RxDeviceUtils;
-import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.constant.SPKey;
@@ -60,19 +59,13 @@ public class NetManager {
             //日志显示级别
             HttpLoggingInterceptor.Level level = HttpLoggingInterceptor.Level.BODY;
             //新建log拦截器
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                @Override
-                public void log(String message) {
-                    Log.w("【NetManager】", message);
-                }
-            });
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> Log.w("【NetManager】", message));
             loggingInterceptor.setLevel(level);
             //OkHttp进行添加拦截器loggingInterceptor
             builder.addInterceptor(loggingInterceptor);
             bigBuilder.addInterceptor(loggingInterceptor);
         }
 
-        RxLogUtils.d("刷新");
 
         builder.addInterceptor(NetInterceptor);
         bigBuilder.addInterceptor(NetInterceptor);
