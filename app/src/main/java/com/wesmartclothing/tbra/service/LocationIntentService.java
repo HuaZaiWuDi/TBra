@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLocationUtils;
@@ -70,6 +72,10 @@ public class LocationIntentService extends IntentService {
     }
 
     private void initLocation() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_FINE_LOCATION") != 0
+                && ActivityCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_COARSE_LOCATION") != 0) {
+            return;
+        }
         isSuccess = RxLocationUtils.register(getApplicationContext(), 0, 0, mOnLocationChangeListener);
         if (isSuccess) {
             RxLogUtils.d("init success");

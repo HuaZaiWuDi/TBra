@@ -21,7 +21,6 @@ import com.kongzue.dialog.v2.CustomDialog;
 import com.kongzue.dialog.v2.MessageDialog;
 import com.kongzue.dialog.v2.TipDialog;
 import com.kongzue.dialog.v2.WaitDialog;
-import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxAnimationUtils;
@@ -102,7 +101,7 @@ public class ScanDeviceActivity extends BaseActivity {
     @Override
     public void initViews() {
         mRxTitle.setRightTextVisibility(false);
-        startService(new Intent(this, LocationIntentService.class));
+
         initTitle(mRxTitle);
         initRecyclerView();
         initPermissions();
@@ -113,14 +112,16 @@ public class ScanDeviceActivity extends BaseActivity {
     private void initPermissions() {
         //判断是否有权限
         new RxPermissions(mActivity)
-                .requestEach(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-                .compose(RxComposeUtils.<Permission>bindLife(lifecycleSubject))
-                .subscribe(new RxSubscriber<Permission>() {
+                .request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<Boolean>() {
                     @Override
-                    protected void _onNext(Permission aBoolean) {
+                    protected void _onNext(Boolean aBoolean) {
                         RxLogUtils.e("是否开启了权限：" + aBoolean);
-                        if (!aBoolean.granted) {
+                        if (!aBoolean) {
                             MessageDialog.show(mContext, "提示", "未开启定位权限无法搜索到蓝牙设备");
+                        } else {
+                            startService(new Intent(mContext, LocationIntentService.class));
                         }
                     }
                 });
@@ -160,16 +161,20 @@ public class ScanDeviceActivity extends BaseActivity {
             //之前的item
             if (lastPosition >= 0) {
                 DeviceConnectBean lastItem = (DeviceConnectBean) adapter.getItem(lastPosition);
-                lastItem.setConnect(!lastItem.isConnect());
-                adapter.setData(lastPosition, lastItem);
+                if (lastItem != null) {
+                    lastItem.setConnect(!lastItem.isConnect());
+                    adapter.setData(lastPosition, lastItem);
+                }
             }
 
             //当前的item
             DeviceConnectBean currentItem = (DeviceConnectBean) adapter.getItem(position);
-            currentItem.setConnect(!currentItem.isConnect());
-            adapter.setData(position, currentItem);
+            if (currentItem != null) {
+                currentItem.setConnect(!currentItem.isConnect());
+                adapter.setData(position, currentItem);
 
-            mDeviceRecyclerView.setTag(position);
+                mDeviceRecyclerView.setTag(position);
+            }
         }
     }
 

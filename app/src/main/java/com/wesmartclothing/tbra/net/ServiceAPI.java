@@ -30,7 +30,7 @@ public class ServiceAPI {
     public static final String BASE_DEBUG = "http://tbra-dev.wesmartclothing.com/";//测试版本
 
 
-    public static String BASE_URL = BASE_URL_192;
+    public static String BASE_URL = BASE_DEBUG;
 
     public static String BASE_SERVICE = BASE_URL.replace("mix", "system");
 
@@ -42,32 +42,6 @@ public class ServiceAPI {
     }
 
 
-    //商城地址
-    public static String Store_Addr = "https://weidian.com/?userid=1063198383";
-
-    //商城订单URL
-    public static String Order_Url = "";
-
-    public static String Shopping_Address = "";
-
-    //查看报告地址
-    public static String SHARE_INFORM_URL = "";
-
-    //app下载链接
-    public static String APP_DOWN_LOAD_URL = "";
-
-
-    //发现URL   判断网址是否隐藏底部导航栏，需要网址后面加/
-    public static String FIND_Addr = "http://39.108.152.50:8088/find/";
-//    public static String FIND_Addr = "http://10.10.11.208:8208/";
-
-
-    //服务协议
-//    public static String Term_Service = "file:///android_asset/TermService.html";
-    public static String Term_Service = "";
-
-    //收藏地址
-    public static String Detail = "";
 
 
 }

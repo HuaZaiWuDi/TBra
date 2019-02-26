@@ -411,11 +411,7 @@ public class HistoryTempView extends LinearLayout {
         switch (view.getId()) {
             case R.id.img_right:
                 modeSpeed++;
-                speed = mode2Speek(modeSpeed);
-
-                mMyTimer.stopTimer();
-                mMyTimer.setPeriodAndDelay(speed, 0);
-                mMyTimer.startTimer();
+                speed = mode2Speed(modeSpeed);
 
                 mTvPlaySpeed.setText(mode2String(modeSpeed));
                 if (modeSpeed >= SPEED_X2) {
@@ -434,11 +430,8 @@ public class HistoryTempView extends LinearLayout {
                 break;
             case R.id.img_left:
                 modeSpeed--;
-                speed = mode2Speek(modeSpeed);
+                speed = mode2Speed(modeSpeed);
 
-                mMyTimer.stopTimer();
-                mMyTimer.setPeriodAndDelay(speed, 0);
-                mMyTimer.startTimer();
                 mTvPlaySpeed.setText(mode2String(modeSpeed));
 
                 if (modeSpeed <= SPEED_X0_5) {
@@ -464,7 +457,7 @@ public class HistoryTempView extends LinearLayout {
         }
     }
 
-    private int mode2Speek(int modeSpeed) {
+    private int mode2Speed(int modeSpeed) {
         int speek = 1000;
         switch (modeSpeed) {
             case SPEED_X0_5:

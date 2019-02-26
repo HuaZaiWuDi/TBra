@@ -1,13 +1,18 @@
 apply plugin: 'com.android.application'
 
+//Git每次提交的版本号
+def cmd = 'git rev-list HEAD --count'
+def gitVersion = cmd.execute().text.trim().toInteger()
+
+
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.wesmartclothing.tbra"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode gitVersion
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         //极光推送：
@@ -48,7 +53,7 @@ android {
     buildTypes {
         release {
             buildConfigField "boolean", "LeakCanary", "false"//9月5号演示版本置为true
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {

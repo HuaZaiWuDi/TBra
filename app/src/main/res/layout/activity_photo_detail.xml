@@ -23,7 +23,7 @@
             android:layout_height="42dp"
             android:layout_gravity="bottom"
             app:leftIcon="@drawable/ic_arrow_back_black_24dp"
-            app:rightIcon="@drawable/ic_img_delete_black_24dp"
+            app:rightIcon="@drawable/ic_delete"
             app:title="问题与建议"
             app:titleColor="@color/line_333845"
             app:titleSize="16sp"/>

@@ -167,7 +167,7 @@ public class MineFragment extends BaseAcFragment {
      */
     public static String setSec2HM(int second) {
         int min = second / 60;
-        return min < 60 ? min + "min" : String.format("%02d", min / 60) + "h" + String.format("%02d", min % 60) + "min";
+        return min < 60 ? min + "分钟" : String.format("%02d", min / 60) + "小时";
     }
 
 

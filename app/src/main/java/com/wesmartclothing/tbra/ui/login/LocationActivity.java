@@ -1,5 +1,6 @@
 package com.wesmartclothing.tbra.ui.login;
 
+import android.Manifest;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
@@ -7,11 +8,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kongzue.dialog.v2.MessageDialog;
 import com.kongzue.dialog.v2.WaitDialog;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
+import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxTitle;
 import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
@@ -116,6 +121,25 @@ public class LocationActivity extends BaseActivity {
                 });
     }
 
+    private void initPermissions() {
+        //判断是否有权限
+        new RxPermissions(mActivity)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxSubscriber<Boolean>() {
+                    @Override
+                    protected void _onNext(Boolean aBoolean) {
+                        RxLogUtils.e("是否开启了权限：" + aBoolean);
+                        if (!aBoolean) {
+                            WaitDialog.dismiss();
+                            MessageDialog.show(mContext, "提示", "未开启定位权限无法搜索到蓝牙设备");
+                        } else {
+                            startService(new Intent(mContext, LocationIntentService.class));
+                        }
+                    }
+                });
+    }
+
 
     @OnClick({R.id.tv_nextStep, R.id.img_location})
     public void onViewClicked(View view) {
@@ -125,7 +149,8 @@ public class LocationActivity extends BaseActivity {
                 break;
             case R.id.img_location:
                 WaitDialog.show(mContext, "正在定位");
-                startService(new Intent(this, LocationIntentService.class));
+
+                initPermissions();
                 break;
         }
     }
