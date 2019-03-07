@@ -227,8 +227,6 @@ public class TimingMonitorView extends LinearLayout {
 
 
     private void setLine() {
-
-
 //        mLineChart.getAxisLeft().setAxisMaximum(maxDiffValue);
         mLineChart.getAxisLeft().setAxisMinimum(minDiffValue);
 
@@ -303,6 +301,8 @@ public class TimingMonitorView extends LinearLayout {
         mMBarChart.invalidate();
 
     }
+
+
 
 
 }

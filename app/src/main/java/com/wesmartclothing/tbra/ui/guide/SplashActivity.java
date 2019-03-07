@@ -76,6 +76,10 @@ public class SplashActivity extends BaseActivity {
         otherSetting();
 
         startService(new Intent(mContext, BleService.class));
+
+
+//        getLifecycle().addObserver(new LifecycleTest());
+
     }
 
     private void otherSetting() {

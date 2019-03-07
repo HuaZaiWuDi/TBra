@@ -105,7 +105,6 @@ public class ScanDeviceActivity extends BaseActivity {
         initTitle(mRxTitle);
         initRecyclerView();
         initPermissions();
-        BleTools.getInstance().stopScan();
 
     }
 
@@ -251,9 +250,11 @@ public class ScanDeviceActivity extends BaseActivity {
         BleTools.getBleManager().scan(new BleScanCallback() {
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-                RxLogUtils.d("扫描结果:" + scanResultList.size());
+                RxLogUtils.d("扫描结果:" + scanResultList.size() + "线程名称：" + Thread.currentThread().getName());
                 if (scanResultList.isEmpty() && mContext != null) {
-                    TipDialog.show(mContext, "未发现设备", TipDialog.TYPE_ERROR);
+                    TipDialog tipDialog = TipDialog.build(mContext, "未发现设备", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
+                    tipDialog.setCanCancel(true);
+                    tipDialog.showDialog();
                 }
                 mImgBleScan.clearAnimation();
             }
@@ -302,6 +303,12 @@ public class ScanDeviceActivity extends BaseActivity {
         });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BleTools.getInstance().stopScan();
+    }
 
     @Override
     protected void onDestroy() {

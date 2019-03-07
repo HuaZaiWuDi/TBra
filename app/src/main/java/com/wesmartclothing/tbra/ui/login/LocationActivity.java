@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kongzue.dialog.v2.MessageDialog;
+import com.kongzue.dialog.v2.TipDialog;
 import com.kongzue.dialog.v2.WaitDialog;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
@@ -77,10 +78,10 @@ public class LocationActivity extends BaseActivity {
                 .subscribe(new RxNetSubscriber<Address>() {
                     @Override
                     protected void _onNext(Address address) {
+                        WaitDialog.dismiss();
                         if (address != null) {
                             mTvLocation.setVisibility(View.VISIBLE);
                             mTvLocation.setText(address.getAdminArea() + address.getLocality());
-                            WaitDialog.dismiss();
                             mTvNextStep.setEnabled(true);
                             mTvNextStep.setAlpha(1f);
                             if (InputInfoActivity.sInfoBean != null) {
@@ -88,6 +89,8 @@ public class LocationActivity extends BaseActivity {
                                 InputInfoActivity.sInfoBean.setProvince(address.getAdminArea());
                                 InputInfoActivity.sInfoBean.setCity(address.getLocality());
                             }
+                        } else {
+                            TipDialog.show(mContext, "地理位置获取失败", TipDialog.TYPE_ERROR);
                         }
                     }
                 });

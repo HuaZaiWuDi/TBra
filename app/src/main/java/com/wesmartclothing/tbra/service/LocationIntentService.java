@@ -80,7 +80,7 @@ public class LocationIntentService extends IntentService {
         if (isSuccess) {
             RxLogUtils.d("init success");
         } else {
-            initLocation();
+            RxBus.getInstance().post(mAddress);
         }
     }
 

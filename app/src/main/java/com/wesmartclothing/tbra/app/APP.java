@@ -62,20 +62,21 @@ public class APP extends Application {
      * 异步初始化
      */
     private void asynInit() {
-        new RxThreadPoolUtils(RxThreadPoolUtils.Type.SingleThread, 1)
-                .execute(() -> {
-                    switchURL();
-                    RxUtils.init(myApp);
-                    RxLogUtils.setLogSwitch(BuildConfig.DEBUG);
-                    initRxCache();
-                    initUM();
-                    registerActivityLifecycleCallbacks(new ActivityLifecycleImpl());
-                    BleTools.initBLE(myApp);
-                    BugLyInit();
-                    initDialog();
-                    initSonicWeb();
-                    JPushUtils.init(myApp);
-                });
+        RxThreadPoolUtils threadPoolUtils = new RxThreadPoolUtils(RxThreadPoolUtils.Type.SingleThread, 1);
+        threadPoolUtils.execute(() -> {
+            RxUtils.init(myApp);
+            RxLogUtils.setLogSwitch(BuildConfig.DEBUG);
+            switchURL();
+            initRxCache();
+            initUM();
+            registerActivityLifecycleCallbacks(new ActivityLifecycleImpl());
+            BleTools.initBLE(myApp);
+            BugLyInit();
+            initDialog();
+            initSonicWeb();
+            JPushUtils.init(myApp);
+            threadPoolUtils.shutDownNow();
+        });
     }
 
     private void initSonicWeb() {

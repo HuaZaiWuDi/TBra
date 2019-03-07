@@ -22,7 +22,7 @@ public class RxComposeTools {
 
     public static <T> ObservableTransformer<T, T> showDialog(final Context mContext) {
         return observable -> observable.doOnSubscribe(disposable ->
-                WaitDialog.show(mContext, "正在加载"))
+                WaitDialog.show(mContext, "数据加载中"))
                 .doFinally((Action) () -> {
                     WaitDialog.dismiss();
                 });
@@ -33,7 +33,7 @@ public class RxComposeTools {
         return observable -> observable.doOnSubscribe(disposable -> {
             RxLogUtils.d("showDialog当前线程：" + Thread.currentThread().getName());
             if (!RxCache.getDefault().containsKey(cacheKey)) {
-                WaitDialog.show(mContext, "正在加载");
+                WaitDialog.show(mContext, "数据加载中");
             }
         })
                 .doFinally((Action) () -> {

@@ -209,7 +209,7 @@ public class MainActivity extends BaseActivity {
         if (position == 2) {
             RxAnimationUtils.animateHeight(RxUtils.dp2px(105), 0, mLayoutTitle);
         } else if (mLayoutTitle.getHeight() < RxUtils.dp2px(105)) {
-            RxAnimationUtils.animateHeight(0, RxUtils.dp2px(105), mLayoutTitle);
+            RxAnimationUtils.animateHeight(RxUtils.dp2px(95), RxUtils.dp2px(105), mLayoutTitle);
         }
 
         switch (position) {
@@ -300,6 +300,12 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
 
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
 
     @OnClick(R.id.img_message)
     public void onViewClicked() {

@@ -6,8 +6,10 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 
-    <!--极光-->
 
+
+
+    <!--极光-->
     <!-- Required -->
     <permission
         android:name="com.wesmartclothing.tbra.permission.JPUSH_MESSAGE"
@@ -18,8 +20,6 @@
 
 
     <!--极光-->
-
-
     <application
         android:name=".app.APP"
         android:allowBackup="true"
@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="label,icon,roundIcon,theme">
+        android:appComponentFactory="appComponentFactory"
+        tools:replace="label,icon,roundIcon,theme,appComponentFactory">
 
         <!-- android7.0适配 -->
         <provider
@@ -269,23 +270,41 @@
 
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.LoginActivity">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.RegisterActivity">
+        <activity
+            android:name=".ui.login.RegisterActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.SettingActivity">
+        <activity
+            android:name=".ui.main.mine.SettingActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.InvitationCodeActivity">
+        <activity
+            android:name=".ui.login.InvitationCodeActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.ResetPwdActivity">
+        <activity
+            android:name=".ui.login.ResetPwdActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.VerifyPhoneActivity">
+        <activity
+            android:name=".ui.login.VerifyPhoneActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.InputInfoActivity">
+        <activity
+            android:name=".ui.login.InputInfoActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.IllnessActivity">
+        <activity
+            android:name=".ui.login.IllnessActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.login.LocationActivity">
+        <activity
+            android:name=".ui.login.LocationActivity"
+            android:launchMode="singleTop">
         </activity>
 
         <service
@@ -293,11 +312,17 @@
             android:exported="false">
         </service>
 
-        <activity android:name=".ui.main.mine.ScanDeviceActivity">
+        <activity
+            android:name=".ui.main.mine.ScanDeviceActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.relationphone.RelationPhoneActivity">
+        <activity
+            android:name=".ui.main.mine.relationphone.RelationPhoneActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.relationphone.EditPhoneActivity">
+        <activity
+            android:name=".ui.main.mine.relationphone.EditPhoneActivity"
+            android:launchMode="singleTop">
         </activity>
 
         <service
@@ -306,33 +331,61 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".ui.main.home.HistoryMonitorActivity">
+        <activity
+            android:name=".ui.main.home.HistoryMonitorActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.MessageActivity">
+        <activity
+            android:name=".ui.main.mine.MessageActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.WarningRecordActivity">
+        <activity
+            android:name=".ui.main.mine.WarningRecordActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".base.BaseTitleWebActivity">
+        <activity
+            android:name=".base.BaseTitleWebActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.WarningSettingActivity">
+        <activity
+            android:name=".ui.main.mine.WarningSettingActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.home.ErrorPointActivity">
+        <activity
+            android:name=".ui.main.home.ErrorPointActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.guide.GuideActivity">
+        <activity
+            android:name=".ui.guide.GuideActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.home.ReportActivity">
+        <activity
+            android:name=".ui.main.home.ReportActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.UserInfoActivity">
+        <activity
+            android:name=".ui.main.mine.UserInfoActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.EditInfoActivity">
+        <activity
+            android:name=".ui.main.mine.EditInfoActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.FeedbackActivity">
+        <activity
+            android:name=".ui.main.mine.FeedbackActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.PhotoDetailActivity">
+        <activity
+            android:name=".ui.main.mine.PhotoDetailActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.AboutUsActivity">
+        <activity
+            android:name=".ui.main.mine.AboutUsActivity"
+            android:launchMode="singleTop">
         </activity>
-        <activity android:name=".ui.main.mine.AccountManagerActivity">
+        <activity
+            android:name=".ui.main.mine.AccountManagerActivity"
+            android:launchMode="singleTop">
         </activity>
     </application>
 

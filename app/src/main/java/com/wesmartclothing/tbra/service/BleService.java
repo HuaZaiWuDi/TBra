@@ -87,7 +87,7 @@ public class BleService extends Service {
                     int workType = RxNetUtils.getNetWorkType(context);
                     if (isFirstJoin) {
                         isFirstJoin = false;
-                        if (workType != -1 && workType != 5) {
+                        if (workType == -1 || workType == 5) {
                             if (ActivityLifecycleImpl.APP_IS_FOREGROUND)
                                 RxToast.normal(RxNetUtils.getNetType(workType));
                         }
