@@ -42,6 +42,7 @@ import com.wesmartclothing.tbra.entity.BindDeviceBean;
 import com.wesmartclothing.tbra.entity.DeviceConnectBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectDeviceBus;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
+import com.wesmartclothing.tbra.entity.rxbus.LocationBus;
 import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -185,11 +186,12 @@ public class ScanDeviceActivity extends BaseActivity {
 
     @Override
     public void initRxBus2() {
-        RxBus.getInstance().register2(Address.class)
-                .compose(RxComposeUtils.<Address>bindLife(lifecycleSubject))
-                .subscribe(new RxNetSubscriber<Address>() {
+        RxBus.getInstance().register2(LocationBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxNetSubscriber<LocationBus>() {
                     @Override
-                    protected void _onNext(Address address) {
+                    protected void _onNext(LocationBus locationBus) {
+                        Address address = locationBus.getAddress();
                         if (address != null) {
                             deviceBean.setProvince(address.getAdminArea());
                             deviceBean.setCity(address.getLocality());

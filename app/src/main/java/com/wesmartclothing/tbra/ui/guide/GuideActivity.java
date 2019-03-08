@@ -138,7 +138,6 @@ public class GuideActivity extends BaseActivity {
                 });
     }
 
-
     @Override
     public void initNetData() {
 

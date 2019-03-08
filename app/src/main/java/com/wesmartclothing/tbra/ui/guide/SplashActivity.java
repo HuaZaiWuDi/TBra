@@ -40,7 +40,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
 
@@ -76,10 +75,6 @@ public class SplashActivity extends BaseActivity {
         otherSetting();
 
         startService(new Intent(mContext, BleService.class));
-
-
-//        getLifecycle().addObserver(new LifecycleTest());
-
     }
 
     private void otherSetting() {

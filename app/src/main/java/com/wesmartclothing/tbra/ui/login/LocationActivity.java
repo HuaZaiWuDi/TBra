@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kongzue.dialog.v2.MessageDialog;
-import com.kongzue.dialog.v2.TipDialog;
 import com.kongzue.dialog.v2.WaitDialog;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
@@ -23,6 +22,7 @@ import com.vondear.rxtools.view.RxToast;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.Key;
+import com.wesmartclothing.tbra.entity.rxbus.LocationBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.service.LocationIntentService;
@@ -73,12 +73,13 @@ public class LocationActivity extends BaseActivity {
 
     @Override
     public void initRxBus2() {
-        RxBus.getInstance().register2(Address.class)
-                .compose(RxComposeUtils.<Address>bindLife(lifecycleSubject))
-                .subscribe(new RxNetSubscriber<Address>() {
+        RxBus.getInstance().register2(LocationBus.class)
+                .compose(RxComposeUtils.bindLife(lifecycleSubject))
+                .subscribe(new RxNetSubscriber<LocationBus>() {
                     @Override
-                    protected void _onNext(Address address) {
+                    protected void _onNext(LocationBus locationBus) {
                         WaitDialog.dismiss();
+                        Address address = locationBus.getAddress();
                         if (address != null) {
                             mTvLocation.setVisibility(View.VISIBLE);
                             mTvLocation.setText(address.getAdminArea() + address.getLocality());
@@ -89,8 +90,6 @@ public class LocationActivity extends BaseActivity {
                                 InputInfoActivity.sInfoBean.setProvince(address.getAdminArea());
                                 InputInfoActivity.sInfoBean.setCity(address.getLocality());
                             }
-                        } else {
-                            TipDialog.show(mContext, "地理位置获取失败", TipDialog.TYPE_ERROR);
                         }
                     }
                 });

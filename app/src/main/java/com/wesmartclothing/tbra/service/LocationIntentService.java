@@ -1,16 +1,23 @@
 package com.wesmartclothing.tbra.service;
 
 import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLocationUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
+import com.vondear.rxtools.view.dialog.RxDialogGPSCheck;
+import com.wesmartclothing.tbra.entity.rxbus.LocationBus;
+
+import androidx.annotation.Nullable;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -19,7 +26,7 @@ import com.vondear.rxtools.utils.RxLogUtils;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class LocationIntentService extends IntentService {
+public class LocationIntentService extends Service {
 
     final String TAG = "【LocationIntentService】";
 
@@ -39,8 +46,9 @@ public class LocationIntentService extends IntentService {
             lastLongitude = String.valueOf(location.getLongitude());
 
             mAddress = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(lastLatitude), Double.parseDouble(lastLongitude));
-            RxBus.getInstance().post(mAddress);
+            RxBus.getInstance().post(new LocationBus(mAddress));
             RxLogUtils.d(TAG, "last地址位置：" + mAddress.toString());
+            stopSelf();
         }
 
         @Override
@@ -54,7 +62,8 @@ public class LocationIntentService extends IntentService {
 
             mAddress = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
             RxLogUtils.d(TAG, "地址位置：" + mAddress.toString());
-            RxBus.getInstance().post(mAddress);
+            RxBus.getInstance().post(new LocationBus(mAddress));
+            stopSelf();
         }
 
         @Override
@@ -68,19 +77,34 @@ public class LocationIntentService extends IntentService {
     public void onCreate() {
         RxLogUtils.d(TAG, "onCreate");
         super.onCreate();
+
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         initLocation();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void initLocation() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_FINE_LOCATION") != 0
                 && ActivityCompat.checkSelfPermission(getApplicationContext(), "android.permission.ACCESS_COARSE_LOCATION") != 0) {
+            RxBus.getInstance().post(new LocationBus(mAddress));
             return;
         }
-        isSuccess = RxLocationUtils.register(getApplicationContext(), 0, 0, mOnLocationChangeListener);
+        if (!RxLocationUtils.isLocationEnabled(getApplicationContext())) {
+            new RxDialogGPSCheck(RxActivityUtils.currentActivity())
+                    .show();
+            RxBus.getInstance().post(new LocationBus(mAddress));
+            return;
+        }
+
+        isSuccess = RxLocationUtils.register(getApplicationContext(), 1000, 0, mOnLocationChangeListener);
         if (isSuccess) {
             RxLogUtils.d("init success");
         } else {
-            RxBus.getInstance().post(mAddress);
+            RxBus.getInstance().post(new LocationBus(mAddress));
         }
     }
 
@@ -94,19 +118,12 @@ public class LocationIntentService extends IntentService {
         super.onDestroy();
     }
 
-
-    public LocationIntentService() {
-        super("LocationIntentService");
-    }
-
-
+    @Nullable
+    @android.support.annotation.Nullable
     @Override
-    protected void onHandleIntent(Intent intent) {
-        RxLogUtils.d(TAG, "onHandleIntent");
-        if (intent != null) {
-            final String action = intent.getAction();
-
-        }
+    public IBinder onBind(Intent intent) {
+        return null;
     }
+
 
 }
