@@ -391,6 +391,7 @@ public class HistoryTempView extends LinearLayout {
     private void setPlay(boolean play) {
         isPlay = play;
         if (isPlay) {
+            mMyTimer.stopTimer();
             mMyTimer.setPeriodAndDelay(speed, 0);
             mMyTimer.startTimer();
             mImgPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);

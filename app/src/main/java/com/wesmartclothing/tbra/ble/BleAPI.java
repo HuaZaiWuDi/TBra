@@ -169,38 +169,32 @@ public class BleAPI {
         bytes[7] = ByteUtil.intToBytesD2(end)[1];
 
         RxLogUtils.d("【获取温度信息】", HexUtil.encodeHexStr(bytes));
-        BleTools.getInstance().write(bytes, new RxSubscriber<byte[]>() {
-            @Override
-            protected void _onNext(byte[] bytes) {
-                AddTempDataBean dataBean = new AddTempDataBean();
-                dataBean.setPickageSign(bytes[0]);
-                String dateStr = ByteUtil.bytesToIntD2(new byte[]{bytes[6], bytes[7]}) + "-" +
-                        dateFormat(bytes[8]) + "-" + dateFormat(bytes[9]) + " " + dateFormat(bytes[10]) + ":" +
-                        dateFormat(bytes[11]) + ":" + dateFormat(bytes[12]);
-                dataBean.setCollectTime(dateStr);
-                dataBean.setIndex(ByteUtil.bytesToIntD2(new byte[]{bytes[4], bytes[5]}));
-                List<JsonDataBean> dataList = new ArrayList<>();
-                dataBean.setDataList(dataList);
-                for (int i = 13; i < bytes.length; i = i + 2) {
-                    JsonDataBean bean = new JsonDataBean();
-                    if (i < (13 + 16)) {
-                        bean.setNodeName("L0" + ((i - 13) / 2 + 1));
-                    } else {
-                        bean.setNodeName("R0" + ((i - 13 - 16) / 2 + 1));
-                    }
-                    bean.setNodeTemp(bytes2Temp(bytes[i], bytes[i + 1]));
-                    dataList.add(bean);
-                }
-                RxLogUtils.d("内衣数据：" + dataBean.toString());
-                subscriber.onNext(dataBean);
-            }
+        BleTools.getInstance().write(bytes, null);
 
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                subscriber.onError(e);
+        BleTools.getInstance().setBleCallBack(data -> {
+            AddTempDataBean dataBean = new AddTempDataBean();
+            dataBean.setPickageSign(data[0]);
+            String dateStr = ByteUtil.bytesToIntD2(new byte[]{data[6], data[7]}) + "-" +
+                    dateFormat(data[8]) + "-" + dateFormat(data[9]) + " " + dateFormat(data[10]) + ":" +
+                    dateFormat(data[11]) + ":" + dateFormat(data[12]);
+            dataBean.setCollectTime(dateStr);
+            dataBean.setIndex(ByteUtil.bytesToIntD2(new byte[]{data[4], data[5]}));
+            List<JsonDataBean> dataList = new ArrayList<>();
+            dataBean.setDataList(dataList);
+            for (int i = 13; i < data.length; i = i + 2) {
+                JsonDataBean bean = new JsonDataBean();
+                if (i < (13 + 16)) {
+                    bean.setNodeName("L0" + ((i - 13) / 2 + 1));
+                } else {
+                    bean.setNodeName("R0" + ((i - 13 - 16) / 2 + 1));
+                }
+                bean.setNodeTemp(bytes2Temp(data[i], data[i + 1]));
+                dataList.add(bean);
             }
+            RxLogUtils.d("内衣数据：" + dataBean.toString());
+            subscriber.onNext(dataBean);
         });
+
     }
 
 
@@ -316,8 +310,6 @@ public class BleAPI {
                     RxLogUtils.d("内衣数据：" + bean.toString());
                     dataList.add(bean);
                 }
-//                RxLogUtils.d("内衣数据：" + dataBean.toString());
-
                 subscriber.onNext(dataBean);
             }
 

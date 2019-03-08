@@ -220,6 +220,11 @@ public class BleTools {
                     TimeOut.removeCallbacks(reWrite);
                 }
 
+                //蓝牙历史数据同步回调
+                if (mBleCallBack != null && data[3] == 0x05) {
+                    mBleCallBack.onNotify(data);
+                }
+
                 //电池信息反馈
                 if (data[3] == 0x04) {
                     currentCount = 0;

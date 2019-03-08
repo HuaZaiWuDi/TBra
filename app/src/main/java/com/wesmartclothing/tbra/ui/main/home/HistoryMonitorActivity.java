@@ -90,7 +90,6 @@ public class HistoryMonitorActivity extends BaseActivity {
 
             mTvPointTime.setText(RxFormat.setFormatDate(bean.getCollectDate(), RxFormat.Date));
 
-            mHistoryTempView.setDoubleMode(bean.getPoint());
         });
     }
 
@@ -126,6 +125,8 @@ public class HistoryMonitorActivity extends BaseActivity {
                 mRecyclerPoint.setTag(position);
 
                 selectItem(curItem.getText());
+
+                mHistoryTempView.setDoubleMode("0" + (position + 1));
             }
         });
         adapter.addData(new SingleSelectBean("01", true));
@@ -134,6 +135,7 @@ public class HistoryMonitorActivity extends BaseActivity {
         }
 
         mRecyclerPoint.setAdapter(adapter);
+        mHistoryTempView.setDoubleMode("0" + 1);
     }
 
 

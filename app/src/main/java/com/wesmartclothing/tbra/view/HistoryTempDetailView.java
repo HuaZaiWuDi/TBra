@@ -179,7 +179,7 @@ public class HistoryTempDetailView extends RelativeLayout {
 
 
         //初始化线条
-        mLineChart.setNoDataText("没有实时监测数据，\n穿上监测内衣试试吧!");
+        mLineChart.setNoDataText("没有历史监测数据");
         mLineChart.getDescription().setEnabled(false);
         mLineChart.setNoDataTextColor(ContextCompat.getColor(mLineChart.getContext(), R.color.color_444A59));
         mLineChart.getLegend().setEnabled(false);

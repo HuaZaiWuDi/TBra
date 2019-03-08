@@ -120,10 +120,9 @@ public class APP extends Application {
         boolean isDevelopmentDevice = Arrays.asList(androidIds).contains(RxDeviceUtils.getAndroidId());
         RxLogUtils.d("是否是开发设备：" + isDevelopmentDevice);
 
-
-        Bugly.init(getApplicationContext(), "838d015ddb", BuildConfig.DEBUG && !isDevelopmentDevice);
-        Bugly.setIsDevelopmentDevice(myApp, isDevelopmentDevice);
-
+        if (!isDevelopmentDevice) {
+            Bugly.init(getApplicationContext(), "838d015ddb", BuildConfig.DEBUG);
+        }
     }
 
     private void initRxCache() {

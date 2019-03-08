@@ -10,11 +10,11 @@ import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import com.kongzue.dialog.v2.SelectDialog;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxBus;
 import com.vondear.rxtools.utils.RxLocationUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
-import com.vondear.rxtools.view.dialog.RxDialogGPSCheck;
 import com.wesmartclothing.tbra.entity.rxbus.LocationBus;
 
 import androidx.annotation.Nullable;
@@ -42,17 +42,21 @@ public class LocationIntentService extends Service {
     private RxLocationUtils.OnLocationChangeListener mOnLocationChangeListener = new RxLocationUtils.OnLocationChangeListener() {
         @Override
         public void getLastKnownLocation(Location location) {
+            if (location == null) return;
             lastLatitude = String.valueOf(location.getLatitude());
             lastLongitude = String.valueOf(location.getLongitude());
 
             mAddress = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(lastLatitude), Double.parseDouble(lastLongitude));
-            RxBus.getInstance().post(new LocationBus(mAddress));
-            RxLogUtils.d(TAG, "last地址位置：" + mAddress.toString());
-            stopSelf();
+            if (mAddress != null) {
+                RxBus.getInstance().post(new LocationBus(mAddress));
+                RxLogUtils.d(TAG, "last地址位置：" + mAddress.toString());
+                stopSelf();
+            }
         }
 
         @Override
         public void onLocationChanged(final Location location) {
+            if (location == null) return;
             latitude = String.valueOf(location.getLatitude());
             longitude = String.valueOf(location.getLongitude());
 
@@ -61,9 +65,11 @@ public class LocationIntentService extends Service {
             street = RxLocationUtils.getStreet(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
 
             mAddress = RxLocationUtils.getAddress(getApplicationContext(), Double.parseDouble(latitude), Double.parseDouble(longitude));
-            RxLogUtils.d(TAG, "地址位置：" + mAddress.toString());
-            RxBus.getInstance().post(new LocationBus(mAddress));
-            stopSelf();
+            if (mAddress != null) {
+                RxLogUtils.d(TAG, "地址位置：" + mAddress.toString());
+                RxBus.getInstance().post(new LocationBus(mAddress));
+                stopSelf();
+            }
         }
 
         @Override
@@ -77,7 +83,6 @@ public class LocationIntentService extends Service {
     public void onCreate() {
         RxLogUtils.d(TAG, "onCreate");
         super.onCreate();
-
     }
 
 
@@ -94,8 +99,12 @@ public class LocationIntentService extends Service {
             return;
         }
         if (!RxLocationUtils.isLocationEnabled(getApplicationContext())) {
-            new RxDialogGPSCheck(RxActivityUtils.currentActivity())
-                    .show();
+            SelectDialog.show(RxActivityUtils.currentActivity(), "提示",
+                    "您需要在系统设置中打开GPS\n部分手机可能搜索不到蓝牙设备", "设置",
+                    (dialogInterface, i) -> {
+                        RxLocationUtils.openGpsSettings(getApplicationContext());
+                    });
+
             RxBus.getInstance().post(new LocationBus(mAddress));
             return;
         }

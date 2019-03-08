@@ -194,6 +194,12 @@ public class MonitorFragment extends BaseAcFragment {
     }
 
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        myTimer.stopTimer();
+    }
+
     private void isStartTimer() {
         if (isConnected && isVisibled()) {
             myTimer.startTimer();
@@ -244,7 +250,9 @@ public class MonitorFragment extends BaseAcFragment {
 
     private void checkTemp(AddTempDataBean data) {
         if (data == null) return;
-        if (mWarningRuleBean == null) return;
+        if (mWarningRuleBean == null) {
+            return;
+        }
         List<Double> tempLists = new ArrayList<>();
         for (JsonDataBean bean : data.getDataList()) {
             if (CheckTempErrorUtil.isValidTemperature(bean.getNodeTemp())) {

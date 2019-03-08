@@ -118,7 +118,6 @@ public class BleService extends Service {
     private void initRxBus() {
         RxBus.getInstance().register2(ConnectDeviceBus.class)
                 .subscribe(new RxSubscriber<ConnectDeviceBus>() {
-
                     @Override
                     public void onSubscribe(Disposable d) {
                         super.onSubscribe(d);

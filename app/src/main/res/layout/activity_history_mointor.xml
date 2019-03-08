@@ -123,7 +123,7 @@
 
             <com.vondear.rxtools.view.cardview.CardView
                 android:layout_width="match_parent"
-                android:layout_height="121dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 app:cardCornerRadius="8dp"
@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="14dp"
-                    android:text="2018-12-01 12:02"
+                    tools:text="2018-12-01 12:02"
                     android:textColor="@color/font_475669"
                     android:textSize="12sp"/>
 
@@ -156,7 +156,7 @@
                     android:layout_marginLeft="14dp"
                     android:layout_marginTop="52dp"
                     android:lineSpacingExtra="6dp"
-                    android:text="单点温差：1.6°C\nL03：34.6°C"
+                    tools:text="单点温差：1.6°C\nL03：34.6°C"
                     android:textColor="#2C272D"
                     android:textSize="12sp"/>
 
@@ -169,7 +169,7 @@
                     android:layout_marginRight="14dp"
                     android:layout_marginTop="52dp"
                     android:lineSpacingExtra="6dp"
-                    android:text="单点温差：1.6°C\nL03：34.6°C"
+                    tools:text="单点温差：1.6°C\nL03：34.6°C"
                     android:textColor="#2C272D"
                     android:textSize="12sp"/>
 

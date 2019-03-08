@@ -46,6 +46,7 @@ import com.wesmartclothing.tbra.entity.rxbus.LocationBus;
 import com.wesmartclothing.tbra.entity.rxbus.RefreshUserInfoBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.service.BleService;
 import com.wesmartclothing.tbra.service.LocationIntentService;
 import com.wesmartclothing.tbra.ui.main.MainActivity;
 
@@ -106,7 +107,7 @@ public class ScanDeviceActivity extends BaseActivity {
         initTitle(mRxTitle);
         initRecyclerView();
         initPermissions();
-
+        startService(new Intent(mContext, BleService.class));
     }
 
     private void initPermissions() {
@@ -151,6 +152,9 @@ public class ScanDeviceActivity extends BaseActivity {
                     //通知后台服务设备
                     RxBus.getInstance().post(new ConnectDeviceBus(mBleDevice));
                     waitDialog = WaitDialog.show(RxActivityUtils.currentActivity(), "正在连接");
+                    waitDialog.setOnBackPressListener(alertDialog -> {
+                        waitDialog.doDismiss();
+                    });
                 }
         );
     }
