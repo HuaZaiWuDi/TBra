@@ -150,7 +150,7 @@ public class GuideActivity extends BaseActivity {
 
     @OnClick(R.id.tv_go)
     public void onViewClicked() {
-        CustomDialog.show(mContext, R.layout.dialog_agreement, rootView -> {
+        CustomDialog.show(mContext, R.layout.dialog_agreement, (dialog, rootView) -> {
             rootView.findViewById(R.id.tv_agreement)
                     .setOnClickListener(view -> {
                         //协议1

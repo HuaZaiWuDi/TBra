@@ -207,36 +207,42 @@ public class BleService extends Service {
         BleTools.getBleManager().connect(bleDevice, new BleGattCallback() {
             @Override
             public void onStartConnect() {
-                RxLogUtils.d("开始连接：" + Thread.currentThread().getName());
+                RxLogUtils.d("开始连接：" + bleDevice.getMac());
                 currentConnectState = BluetoothProfile.STATE_CONNECTING;
-                BleTools.getInstance().disConnect();
             }
 
             @Override
             public void onConnectFail(BleDevice bleDevice, BleException exception) {
+                RxLogUtils.d("连接失败：" + bleDevice.getMac());
+
+                if (!bleDevice.getMac().equals(BleTools.getInstance().getBleDevice().getMac())) {
+                    return;
+                }
                 currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
-                RxLogUtils.d("连接失败：");
                 RxBus.getInstance().post(new ConnectStateBus(false));
                 //连接失败或断开连接给3000的延迟
                 reConnectHandler.postDelayed(() -> scanConnectDevice(), 3000);
-
             }
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 currentConnectState = BluetoothProfile.STATE_CONNECTED;
-                RxLogUtils.d("连接成功：" + Thread.currentThread().getName());
-
+                RxLogUtils.d("连接成功：" + bleDevice.getMac());
+                BleTools.getInstance().diaConnectLastDevice(bleDevice);
                 new Handler().postDelayed(() -> connectSuccess(), 300);
-
             }
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
-                currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
-                RxLogUtils.d("断开连接：");
-                RxBus.getInstance().post(new ConnectStateBus(false));
 
+                RxLogUtils.d("断开连接：" + bleDevice.getMac());
+
+                if (!bleDevice.getMac().equals(BleTools.getInstance().getBleDevice().getMac())) {
+                    return;
+                }
+
+                currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
+                RxBus.getInstance().post(new ConnectStateBus(false));
                 TipDialog tipDialog = TipDialog.build(RxActivityUtils.currentActivity(), "断开连接", TipDialog.SHOW_TIME_SHORT, TipDialog.TYPE_ERROR);
                 tipDialog.setCanCancel(true);
                 tipDialog.showDialog();

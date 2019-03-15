@@ -51,25 +51,16 @@ public class UsedTipDialog {
     }
 
     private void firstUsedTip() {
-        dialog1 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_use_tip, null), new CustomDialog.BindView() {
-            @Override
-            public void onBind(View rootView) {
-                rootView.findViewById(R.id.tv_complete)
-                        .setOnClickListener(view -> dialog1.doDismiss());
-            }
+        dialog1 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_use_tip, null), (dialog, rootView) -> {
+            rootView.findViewById(R.id.tv_complete)
+                    .setOnClickListener(view -> dialog1.doDismiss());
         });
-        dialog2 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_wear_bra_tip, null), new CustomDialog.BindView() {
-            @Override
-            public void onBind(View rootView) {
-                rootView.findViewById(R.id.tv_complete)
-                        .setOnClickListener(view -> dialog2.doDismiss());
-            }
+        dialog2 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_wear_bra_tip, null), (dialog, rootView) -> {
+            rootView.findViewById(R.id.tv_complete)
+                    .setOnClickListener(view -> dialog2.doDismiss());
         });
-        dialog3 = CustomDialog.build(mContext, View.inflate(mContext, R.layout.dialog_power_setting, null), new CustomDialog.BindView() {
-            @Override
-            public void onBind(View rootView) {
-                initView(rootView);
-            }
+        dialog3 = CustomDialog.build(mContext, R.layout.dialog_power_setting, (dialog, rootView) -> {
+            initView(rootView);
         }).setCanCancel(true);
         dialog1.showDialog();
     }

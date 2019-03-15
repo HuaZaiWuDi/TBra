@@ -39,7 +39,7 @@ public class AddTempData {
 
     //15天数据最多4200条
     private int maxCount = 0, endIndex = 0, lastIndex = 0;
-    private List<AddTempDataBean> tempDataBeans = new ArrayList<>();
+    private List<AddTempDataBean> tempDataBeans;
     private RxSubscriber<Integer> mRxSubscriber;
 
     public AddTempData() {
@@ -64,6 +64,7 @@ public class AddTempData {
                     if (mRxSubscriber != null) {
                         mRxSubscriber.onSubscribe(null);
                     }
+                    tempDataBeans = new ArrayList<>(integer);
                     getTempData();
                 }
             }
@@ -117,7 +118,7 @@ public class AddTempData {
                 }
 
                 if (mRxSubscriber != null)
-                    mRxSubscriber.onError(new ExplainException("获取失败", -3));
+                    mRxSubscriber.onError(new ExplainException("获取失败，请检查蓝牙连接", -3));
             }
         });
     }
@@ -222,7 +223,7 @@ public class AddTempData {
                     public void onError(Throwable e) {
                         super.onError(e);
                         if (mRxSubscriber != null)
-                            mRxSubscriber.onError(new ExplainException("上传失败", -6));
+                            mRxSubscriber.onError(new ExplainException("上传失败，请检查网络连接", -6));
                         //上传出现异常，刷新本地缓存，清空已经上传的数据源
                         saveCache(tempDataBeans.subList(Math.max(endIndex - 200, 0), tempDataBeans.size()));
 

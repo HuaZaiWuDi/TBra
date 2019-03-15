@@ -6,7 +6,6 @@ import android.location.Address;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -103,11 +102,12 @@ public class ScanDeviceActivity extends BaseActivity {
     @Override
     public void initViews() {
         mRxTitle.setRightTextVisibility(false);
+        startService(new Intent(mContext, BleService.class));
 
         initTitle(mRxTitle);
         initRecyclerView();
         initPermissions();
-        startService(new Intent(mContext, BleService.class));
+
     }
 
     private void initPermissions() {
@@ -236,7 +236,7 @@ public class ScanDeviceActivity extends BaseActivity {
 
     private void startScan() {
         if (!BleTools.getBleManager().isBlueEnable()) {
-            CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->
+            CustomDialog.build(mContext, R.layout.dialog_default, (dialog, rootView) ->
                     rootView.findViewById(R.id.tv_complete)
                             .setOnClickListener(view1 -> {
                                 CustomDialog.unloadAllDialog();
@@ -244,15 +244,13 @@ public class ScanDeviceActivity extends BaseActivity {
                             })).setCanCancel(true).showDialog();
             return;
         }
-
-
         final BleScanRuleConfig bleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(new UUID[]{UUID.fromString(BLEKey.UUID_Servie)})
                 .setDeviceName(true, BLEKey.DEVICE_NAME)
                 .setScanTimeOut(15000)
                 .build();
         BleTools.getBleManager().initScanRule(bleConfig);
-
+        BleTools.getInstance().stopScan();
         BleTools.getBleManager().scan(new BleScanCallback() {
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
@@ -263,6 +261,8 @@ public class ScanDeviceActivity extends BaseActivity {
                     tipDialog.showDialog();
                 }
                 mImgBleScan.clearAnimation();
+                mTvBtn.setAlpha(1f);
+                mTvBtn.setEnabled(true);
             }
 
             @Override
@@ -270,6 +270,8 @@ public class ScanDeviceActivity extends BaseActivity {
                 RxLogUtils.d("扫描开始：" + success);
                 //清空列表
                 if (success) {
+                    mTvBtn.setAlpha(0.6f);
+                    mTvBtn.setEnabled(false);
                     mLayoutBleScan.setVisibility(View.VISIBLE);
                     mImgBleScan.startAnimation(RxAnimationUtils.RotateAnim(15));
                     adapter.setNewData(null);

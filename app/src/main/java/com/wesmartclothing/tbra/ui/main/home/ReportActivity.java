@@ -139,7 +139,7 @@ public class ReportActivity extends BaseActivity {
         } else {
             reportData = reportDetailBean.getWeekData();
         }
-        //统计天数
+        //采集次数
         mTvCollectionCount.setText(reportData.getCollectCount() + "");
         mTvMonitorTime.setText("监测时段\t\t\t\t\t" + RxFormat.setFormatDate(reportData.getStartTime(), RxFormat.Date_Date2) + "～" +
                 RxFormat.setFormatDate(reportData.getEndTime(), RxFormat.Date_Date2));

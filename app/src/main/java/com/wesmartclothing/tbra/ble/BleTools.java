@@ -352,6 +352,20 @@ public class BleTools {
             getBleManager().disconnect(bleDevice);
     }
 
+    public void diaConnectLastDevice(BleDevice newBleDevice) {
+        getBleManager().disconnect(getLastDevice(newBleDevice));
+    }
+
+    public BleDevice getLastDevice(BleDevice newBleDevice) {
+        List<BleDevice> deviceLists = getBleManager().getAllConnectedDevice();
+        for (BleDevice bleDevice : deviceLists) {
+            if (!bleDevice.getMac().equals(newBleDevice.getMac())) {
+                return bleDevice;
+            }
+        }
+        return null;
+    }
+
 
     public boolean isBind(String Mac) {
         return BluetoothAdapter.checkBluetoothAddress(Mac);

@@ -1,7 +1,6 @@
 package com.wesmartclothing.tbra.ui.main.monitor;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -295,12 +294,13 @@ public class MonitorFragment extends BaseAcFragment {
             case R.id.tv_switchDevice:
             case R.id.tv_bindDevice:
                 if (!BleTools.getBleManager().isBlueEnable()) {
-                    CustomDialog.build(mContext, LayoutInflater.from(mContext).inflate(R.layout.dialog_default, null), rootView ->
-                            rootView.findViewById(R.id.tv_complete)
-                                    .setOnClickListener(view1 -> {
-                                        CustomDialog.unloadAllDialog();
-                                        BleTools.getBleManager().enableBluetooth();
-                                    })).setCanCancel(true).showDialog();
+                    CustomDialog.build(mContext, R.layout.dialog_default, (dialog, rootView) -> {
+                        rootView.findViewById(R.id.tv_complete)
+                                .setOnClickListener(view1 -> {
+                                    CustomDialog.unloadAllDialog();
+                                    BleTools.getBleManager().enableBluetooth();
+                                });
+                    }).setCanCancel(true).showDialog();
                 } else {
                     //去绑定或者连接
                     RxActivityUtils.skipActivitySingleTop(mContext, ScanDeviceActivity.class);

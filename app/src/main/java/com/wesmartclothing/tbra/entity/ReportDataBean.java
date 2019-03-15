@@ -268,7 +268,25 @@ public class ReportDataBean {
         private int warningFlag;
         private int weeks;
         private int readState;
+        private int collectDays;
+        private int unusualDays;
 
+
+        public int getUnusualDays() {
+            return unusualDays;
+        }
+
+        public void setUnusualDays(int unusualDays) {
+            this.unusualDays = unusualDays;
+        }
+
+        public int getCollectDays() {
+            return collectDays;
+        }
+
+        public void setCollectDays(int collectDays) {
+            this.collectDays = collectDays;
+        }
 
         public int getReadState() {
             return readState;

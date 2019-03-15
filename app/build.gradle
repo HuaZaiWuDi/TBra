@@ -7,6 +7,21 @@ def gitVersion = cmd.execute().text.trim().toInteger()
 
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'jack'
+            keyPassword '123456'
+            storeFile file('D:/Android/jack.jks')
+            storePassword '123456'
+        }
+        release {
+            keyAlias 'jack'
+            keyPassword '123456'
+            storeFile file('D:/Android/jack.jks')
+            storePassword '123456'
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.wesmartclothing.tbra"
@@ -41,15 +56,15 @@ android {
     buildTypes {
         release {
             buildConfigField "boolean", "LeakCanary", "false"//9月5号演示版本置为true
-            signingConfig signingConfigs.debug
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
-            signingConfig signingConfigs.debug
             buildConfigField "boolean", "LeakCanary", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     sourceSets {
@@ -58,14 +73,7 @@ android {
         }
     }
 
-    signingConfigs {
-        debug {
-            keyAlias 'jack'
-            keyPassword '123456'
-            storeFile file('D:/Android/jack.jks')
-            storePassword '123456'
-        }
-    }
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
@@ -91,12 +99,11 @@ dependencies {
     //友盟社会分享
     implementation 'com.umeng.umsdk:share-core:6.9.4'
     implementation 'com.umeng.umsdk:share-qq:6.9.4'
-//    implementation 'com.umeng.umsdk:share-wechat:6.9.4'
     implementation 'com.umeng.umsdk:share-sina:6.9.4'
+    implementation 'com.umeng.umsdk:share-wx:6.9.4'
     implementation 'com.umeng.umsdk:common:1.5.4'
     implementation 'com.umeng.umsdk:utdid:1.1.5.3'
     //官方文档中没有这个依赖，要是不添加会导致初始化的时候的UMConfigure这个类不能识别
-    implementation files('libs/umeng-share-wechat-simplify-6.9.4.jar')
     //BUGly
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
@@ -123,7 +130,7 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    implementation 'com.kongzue.dialog:dialog:2.4.7.1'
+    implementation 'com.kongzue.dialog:dialog:2.4.8'
     implementation 'com.tencent.sonic:sdk:3.1.0'
 
     implementation('com.jackUtil:ImagePicker:1.0.1') {
