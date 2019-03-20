@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.kongzue.dialog.v2.DialogSettings;
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.sonic.sdk.SonicConfig;
 import com.tencent.sonic.sdk.SonicEngine;
 import com.umeng.commonsdk.UMConfigure;
@@ -174,6 +175,8 @@ public class APP extends Application {
         RxLogUtils.i("启动时长：开始启动");
 //        MultiDex.install(base);
 
+        // 安装tinker
+        Beta.installTinker();
     }
 
 }

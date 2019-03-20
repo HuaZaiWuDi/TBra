@@ -14,7 +14,6 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.tencent.sonic.sdk.SonicCacheInterceptor;
 import com.tencent.sonic.sdk.SonicConfig;
 import com.tencent.sonic.sdk.SonicEngine;
 import com.tencent.sonic.sdk.SonicSession;
@@ -80,12 +79,12 @@ public class BaseWebFragment extends BaseAcFragment {
         //如果是脱机pkg模式，我们需要拦截会话连接
         SonicSessionConfig.Builder sessionConfigBuilder = new SonicSessionConfig.Builder();
         sessionConfigBuilder.setSupportLocalServer(true);
-        sessionConfigBuilder.setCacheInterceptor(new SonicCacheInterceptor(null) {
-            @Override
-            public String getCacheData(SonicSession session) {
-                return null; // offline pkg does not need cache
-            }
-        });
+//        sessionConfigBuilder.setCacheInterceptor(new SonicCacheInterceptor(null) {
+//            @Override
+//            public String getCacheData(SonicSession session) {
+//                return null; // offline pkg does not need cache
+//            }
+//        });
 
         sessionConfigBuilder.setConnectionInterceptor(new SonicSessionConnectionInterceptor() {
             @Override

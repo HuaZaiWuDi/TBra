@@ -6,6 +6,10 @@ def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger()
 
 
+// 依赖插件脚本
+//apply from: 'tinker-support.gradle'
+
+
 android {
     signingConfigs {
         debug {
@@ -47,8 +51,7 @@ android {
         android.applicationVariants.all { variant ->
             variant.outputs.all {
                 // apk_渠道名-版本号-版本名称-编译时间.apk
-                def fileName = "tbra-v${variant.versionName}-${new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}-${variant.buildType.name}.apk"
-                outputFileName = fileName
+                outputFileName = "tbra-v${variant.versionName}c${variant.versionCode}-${new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))}-${variant.buildType.name}.apk"
             }
         }
     }
@@ -107,10 +110,11 @@ dependencies {
     //BUGly
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
-
+    // 指定tinker依赖版本（注：应用升级1.3.5版本起，不再内置tinker）
+    implementation 'com.tencent.tinker:tinker-android-lib:1.9.9'
     //蓝牙库
     implementation 'com.clj.fastble:FastBleLib:2.3.4'
-    implementation 'no.nordicsemi.android:dfu:1.6.1'
+    implementation 'no.nordicsemi.android:dfu:1.8.1'
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
