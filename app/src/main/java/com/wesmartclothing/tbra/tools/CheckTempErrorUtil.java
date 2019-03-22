@@ -52,11 +52,12 @@ public class CheckTempErrorUtil {
     /**
      * 判断是否是有效温度。温度在32到42之间为有效温度
      *
+     * 2019-03-21 修改有效温度的最大值为39
      * @param temp
      * @return
      */
     public static boolean isValidTemperature(double temp) {
-        return 32 <= temp && temp <= 42;
+        return 32 <= temp && temp <= 39;
     }
 
 }

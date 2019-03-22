@@ -46,7 +46,6 @@ public class UserInfoBean {
     private String phone;
     private String province;
     private String signature;
-    private int status;
     private String userName;
     private List<IllnessBean> illnessList;
     private List<String> macAddrList;
@@ -140,14 +139,6 @@ public class UserInfoBean {
         this.signature = signature;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -187,7 +178,6 @@ public class UserInfoBean {
                 ", phone='" + phone + '\'' +
                 ", province='" + province + '\'' +
                 ", signature='" + signature + '\'' +
-                ", status=" + status +
                 ", userName='" + userName + '\'' +
                 ", illnessList=" + illnessList +
                 ", macAddrList=" + macAddrList +

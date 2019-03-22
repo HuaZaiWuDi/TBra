@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_logDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="2018-06-06 12:45.log"/>
+
+
+
+
+    <TextView
+        android:id="@+id/tv_details"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:text="查看"
+        />
+
+</RelativeLayout>

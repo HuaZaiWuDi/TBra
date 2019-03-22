@@ -4,34 +4,26 @@
           package="com.wesmartclothing.tbra">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-
-    <uses-permission android:name="android.permission.READ_LOGS" />
-
-
-
-    <!--极光-->
+    <uses-permission android:name="android.permission.READ_LOGS"/> <!-- 极光 -->
     <!-- Required -->
     <permission
         android:name="com.wesmartclothing.tbra.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature"/>
-
-    <!-- Required -->
+        android:protectionLevel="signature"/> <!-- Required -->
     <uses-permission android:name="com.wesmartclothing.tbra.permission.JPUSH_MESSAGE"/>
 
-
-    <!--极光-->
     <application
         android:name=".app.APP"
         android:allowBackup="true"
+        android:appComponentFactory="appComponentFactory"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
         android:networkSecurityConfig="@xml/http_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:appComponentFactory="appComponentFactory"
         tools:replace="label,icon,roundIcon,theme,appComponentFactory">
-
+        <activity android:name=".ui.test.LogActivity">
+        </activity>
         <!-- android7.0适配 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -43,26 +35,17 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path"/>
-        </provider>
-
-        <!-- BUGly升级 -->
+        </provider> <!-- BUGly升级 -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:theme="@android:style/Theme.Translucent"/>
-
-        <!-- 高德地图KEY -->
+            android:theme="@android:style/Theme.Translucent"/> <!-- 高德地图KEY -->
         <!-- <meta-data -->
         <!-- android:name="com.amap.api.v2.apikey" -->
         <!-- android:value="20cc8510855f543b2bf4c59d647852e2"/> -->
-
-
         <!-- <service android:name="com.amap.api.location.APSService"/> -->
-
-
         <!-- 极光通知广播 -->
-
-        <!-- Required SDK 核心功能-->
+        <!-- Required SDK 核心功能 -->
         <!-- 可配置 android:process 参数将 PushService 放在其他进程中 -->
         <service
             android:name="cn.jpush.android.service.PushService"
@@ -74,15 +57,10 @@
                 <action android:name="cn.jpush.android.intent.PushService"/>
                 <action android:name="cn.jpush.android.intent.PUSH_TIME"/>
             </intent-filter>
-        </service>
-
-        <!-- since 3.0.9 Required SDK 核心功能-->
+        </service> <!-- since 3.0.9 Required SDK 核心功能 -->
         <provider
             android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="com.wesmartclothing.tbra.DataProvider"
-            />
-
-        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的 JPush 服务相互拉起的功能。 -->
+            android:authorities="com.wesmartclothing.tbra.DataProvider"/> <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的 JPush 服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，或把 enabled 设置成 false ；拉起服务被关闭，App 不会通过拉起服务拉起其他的 App，也不会被其他 App 拉起。 -->
         <service
             android:name="cn.jpush.android.service.DaemonService"
@@ -90,23 +68,20 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService"/>
+
                 <category android:name="com.wesmartclothing.tbra"/>
             </intent-filter>
-        </service>
-
-        <!-- since 3.1.0 Required SDK 核心功能-->
+        </service> <!-- since 3.1.0 Required SDK 核心功能 -->
         <provider
             android:name="cn.jpush.android.service.DownloadProvider"
             android:authorities="com.wesmartclothing.tbra.DownloadProvider"
-            android:exported="true"
-            />
-
-        <!-- Required SDK 核心功能-->
+            android:exported="true"/> <!-- Required SDK 核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true">
             <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY"/>
+
                 <category android:name="com.wesmartclothing.tbra"/>
             </intent-filter>
             <intent-filter>
@@ -120,9 +95,7 @@
 
                 <data android:scheme="package"/>
             </intent-filter>
-        </receiver>
-
-        <!-- Required SDK 核心功能-->
+        </receiver> <!-- Required SDK 核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -134,8 +107,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="com.wesmartclothing.tbra"/>
             </intent-filter>
-        </activity>
-        <!-- SDK 核心功能-->
+        </activity> <!-- SDK 核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -147,17 +119,12 @@
             </intent-filter>
         </activity>
 
-
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
             android:exported="false">
-        </service>
-
-        <!-- Required SDK 核心功能-->
+        </service> <!-- Required SDK 核心功能 -->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
-
-
         <receiver
             android:name=".tools.jpush.MyJpushReceiver"
             android:enabled="true"
@@ -169,43 +136,31 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION"/>
 
-
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <action android:name="cn.jpush.android.intent.CONNECTION"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/> <!-- 开机广播 -->
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/> <!-- 网络状态改变广播 -->
 
-
                 <category android:name="com.wesmartclothing.tbra"/>
             </intent-filter>
         </receiver>
-
         <receiver android:name=".tools.jpush.MyJPushMessageReceiver">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE"/>
 
                 <category android:name="com.wesmartclothing.tbra"/>
             </intent-filter>
-        </receiver>
-
-
-        <!-- &lt;!&ndash; DUF服务 &ndash;&gt; -->
+        </receiver> <!-- &lt;!&ndash; DUF服务 &ndash;&gt; -->
         <!-- <activity android:name=".ble.dfu.NotificationActivity"/> -->
-
-
         <!-- <service -->
         <!-- android:name=".ble.dfu.DfuService" -->
         <!-- android:exported="true"/> -->
-
-
         <!-- 友盟社会SDK -->
         <!-- 友盟 -->
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="5a38b2e8b27b0a02a7000026">
-        </meta-data>
-
-        <!-- 友盟社会分享登录 -->
+        </meta-data> <!-- 友盟社会分享登录 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -249,10 +204,7 @@
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-        </activity>
-
-        <!-- 分割线============================================================================== -->
-
+        </activity> <!-- 分割线============================================================================== -->
         <activity
             android:name=".ui.guide.SplashActivity"
             android:theme="@style/StartTheme">
@@ -267,7 +219,6 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAINAC"/>
-
             </intent-filter>
         </activity>
         <activity

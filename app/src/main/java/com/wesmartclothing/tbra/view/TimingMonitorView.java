@@ -303,6 +303,4 @@ public class TimingMonitorView extends LinearLayout {
     }
 
 
-
-
 }

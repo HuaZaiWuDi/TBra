@@ -1,6 +1,7 @@
 package com.wesmartclothing.tbra.net;
 
 
+import com.google.gson.reflect.TypeToken;
 import com.vondear.rxtools.model.lifecycyle.LifeCycleEvent;
 import com.vondear.rxtools.utils.net.HttpResult;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
@@ -68,6 +69,23 @@ public class RxManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 ;
     }
+
+    public <T> Observable<T> doNetSubscribe(Observable<HttpResult<T>> observable,
+                                            BehaviorSubject<LifeCycleEvent> lifecycleSubject,
+                                            String cacheKey,
+                                            IObservableStrategy strategy
+    ) {
+        return observable
+                .compose(RxComposeUtils.<T>handleResult2())
+                .compose(RxComposeUtils.<T>rxThreadHelper())
+                .compose(RxComposeUtils.<T>bindLife(lifecycleSubject))
+                .compose(RxCache.getDefault().<T>transformObservable(cacheKey, new TypeToken<T>() {
+                }.getType(), strategy))
+                .map(new CacheResult.MapFunc<T>())
+                .observeOn(AndroidSchedulers.mainThread())
+                ;
+    }
+
 
     public <T> Observable<T> doNetSubscribe(Observable<HttpResult<T>> observable,
                                             BehaviorSubject<LifeCycleEvent> lifecycleSubject

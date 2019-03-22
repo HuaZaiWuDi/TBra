@@ -16,6 +16,7 @@ import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.cardview.CardView;
 import com.vondear.rxtools.view.layout.RxImageView;
+import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.constant.SPKey;
@@ -26,6 +27,7 @@ import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
 import com.wesmartclothing.tbra.tools.GlideImageLoader;
 import com.wesmartclothing.tbra.ui.main.mine.relationphone.RelationPhoneActivity;
+import com.wesmartclothing.tbra.ui.test.LogActivity;
 import com.zchu.rxcache.RxCache;
 import com.zchu.rxcache.data.CacheResult;
 import com.zchu.rxcache.stategy.CacheStrategy;
@@ -211,6 +213,8 @@ public class MineFragment extends BaseAcFragment {
                 RxActivityUtils.skipActivity(mContext, FeedbackActivity.class);
                 break;
             case R.id.layout_shareApp:
+                if (BuildConfig.DEBUG)
+                    RxActivityUtils.skipActivity(mContext, LogActivity.class);
                 break;
             case R.id.layout_aboutUs:
                 RxActivityUtils.skipActivity(mContext, AboutUsActivity.class);

@@ -30,6 +30,7 @@ import com.wesmartclothing.tbra.ble.listener.BleOpenNotifyCallBack;
 import com.wesmartclothing.tbra.constant.BLEKey;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.rxbus.ConnectStateBus;
+import com.wesmartclothing.tbra.tools.LogTools;
 
 import java.util.List;
 
@@ -135,6 +136,8 @@ public class BleTools {
         }
         this.bytes = bytes;
         this.subscriber = subscriber;
+
+        LogTools.saveDeviceLog("写数据:" + HexUtil.encodeHexStr(bytes));
         if (currentCount > reWriteCount) {
             Log.e(TAG, "写失败--次数：" + currentCount);
             if (subscriber != null) subscriber.onError(new ExplainException("写入失败", -2));
@@ -212,6 +215,8 @@ public class BleTools {
             @Override
             public void onCharacteristicChanged(byte[] data) {
                 Log.d(TAG, "蓝牙数据更新:" + HexUtil.encodeHexStr(data));
+
+                LogTools.saveDeviceLog("蓝牙数据更新:" + HexUtil.encodeHexStr(data));
 
                 //命令数据
                 if (subscriber != null && data[3] == bytes[3]) {

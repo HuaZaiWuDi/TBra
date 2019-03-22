@@ -13,7 +13,7 @@ public class ServiceAPI {
 
     //一期
 //    public static final String BASE_URL = "https://dev.wesmartclothing.com/mix/";//外网
-    public static final String BASE_URL_192 = "http://10.10.11.192:16320";//德人服务器
+    public static final String BASE_URL_192 = "http://10.10.11.233:16320";//德人服务器
 
     //二期
     public static final String BASE_URL_208 = "http://10.10.11.208:15390";//牛耕测试环境
@@ -24,10 +24,10 @@ public class ServiceAPI {
 
 
     //上线
-    public static final String BASE_RELEASE = "http://tbra-dev.wesmartclothing.com/";//上线版本
+    public static final String BASE_RELEASE = "http://tbra.wesmartclothing.com/";//上线版本
 
 
-    public static final String BASE_DEBUG = "http://tbra-dev.wesmartclothing.com/";//测试版本
+    public static final String BASE_DEBUG = "http://tbra.wesmartclothing.com/";//测试版本
 
 
     public static String BASE_URL = BASE_DEBUG;
@@ -40,8 +40,6 @@ public class ServiceAPI {
         BASE_SERVICE = baseUrl.replace("mix", "system");
         RxLogUtils.e("系统配置接口:" + BASE_SERVICE);
     }
-
-
 
 
 }

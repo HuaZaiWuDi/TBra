@@ -42,6 +42,7 @@ import com.wesmartclothing.tbra.entity.rxbus.NetWorkTypeBus;
 import com.wesmartclothing.tbra.entity.rxbus.SystemBleOpenBus;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
+import com.wesmartclothing.tbra.tools.LogTools;
 
 import java.util.List;
 
@@ -209,6 +210,8 @@ public class BleService extends Service {
             public void onStartConnect() {
                 RxLogUtils.d("开始连接：" + bleDevice.getMac());
                 currentConnectState = BluetoothProfile.STATE_CONNECTING;
+
+                LogTools.saveDeviceLog("开始连接：" + bleDevice.getMac());
             }
 
             @Override
@@ -218,6 +221,9 @@ public class BleService extends Service {
                 if (!bleDevice.getMac().equals(BleTools.getInstance().getBleDevice().getMac())) {
                     return;
                 }
+
+                LogTools.saveDeviceLog("连接失败：" + bleDevice.getMac());
+
                 currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
                 RxBus.getInstance().post(new ConnectStateBus(false));
                 //连接失败或断开连接给3000的延迟
@@ -228,18 +234,21 @@ public class BleService extends Service {
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 currentConnectState = BluetoothProfile.STATE_CONNECTED;
                 RxLogUtils.d("连接成功：" + bleDevice.getMac());
+
+                LogTools.saveDeviceLog("连接成功：" + bleDevice.getMac());
+
                 BleTools.getInstance().diaConnectLastDevice(bleDevice);
                 new Handler().postDelayed(() -> connectSuccess(), 300);
             }
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device, BluetoothGatt gatt, int status) {
-
                 RxLogUtils.d("断开连接：" + bleDevice.getMac());
 
                 if (!bleDevice.getMac().equals(BleTools.getInstance().getBleDevice().getMac())) {
                     return;
                 }
+                LogTools.saveDeviceLog("断开连接：" + bleDevice.getMac());
 
                 currentConnectState = BluetoothProfile.STATE_DISCONNECTED;
                 RxBus.getInstance().post(new ConnectStateBus(false));

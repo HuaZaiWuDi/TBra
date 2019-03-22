@@ -144,6 +144,9 @@ public class MonitorFragment extends BaseAcFragment {
                 .subscribe(new RxNetSubscriber<List<CarouselPictureBean>>() {
                     @Override
                     protected void _onNext(List<CarouselPictureBean> carouselPictureBeans) {
+
+                        RxLogUtils.d("轮播图：" + carouselPictureBeans.get(0).toString());
+
                         if (!RxDataUtils.isEmpty(mImgInformationEmpty)) {
                             mImgInformationEmpty.setVisibility(View.GONE);
                         }

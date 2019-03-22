@@ -5,7 +5,6 @@ apply plugin: 'com.jakewharton.butterknife'
 def cmd = 'git rev-list HEAD --count'
 def gitVersion = cmd.execute().text.trim().toInteger()
 
-
 // 依赖插件脚本
 //apply from: 'tinker-support.gradle'
 

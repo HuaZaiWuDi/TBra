@@ -59,9 +59,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Tbra"
+                android:text="威觅乳腺监测内衣"
                 android:textColor="@color/Gray"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -101,22 +102,22 @@
                 android:gravity="center"
                 android:textColor="@color/color_978E9D"
                 android:textSize="13sp"
-                tools:text="固件版本号 v1.0"/>
+                tools:text="软件版本号 v1.0"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="智裳科技APP"
+                android:text="威觅乳腺监测APP"
                 android:textColor="@color/Gray"
                 android:textSize="18sp"/>
 
             <com.vondear.rxtools.view.layout.RxImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 app:corner_radius="8dp"
-                app:icon_src_normal="@mipmap/ic_launcher"
+                app:icon_src_normal="@mipmap/ic_logo"
                 />
 
 
@@ -134,7 +135,7 @@
         android:layout_marginBottom="16dp"
         android:textColor="@color/Gray"
         android:textSize="11sp"
-        tools:text="智裳科技 服务条款和隐私条款"/>
+        tools:text="《法律声明及隐私权政策》"/>
 
 
     <LinearLayout
