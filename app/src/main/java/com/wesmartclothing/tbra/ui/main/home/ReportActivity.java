@@ -188,30 +188,34 @@ public class ReportActivity extends BaseActivity {
                 .append(leftTotalCount + "次").setProportion(0.9f)
                 .into(mTvLeftProportion);
 
-        RxTextUtils.getBuilder("L\t" + rightProportion + "%\n")
+        RxTextUtils.getBuilder("R\t" + rightProportion + "%\n")
                 .append(rightTotalCount + "次").setProportion(0.9f)
                 .into(mTvRightProportion);
 
-        ArrayList<PieEntry> leftEntrys = sortUtil(lefeErorCountMap, leftTotalCount);
-        ArrayList<PieEntry> rightEntrys = sortUtil(rightErorCountMap, rightTotalCount);
+        List<PieEntry> leftEntrys = sortUtil(lefeErorCountMap, leftTotalCount);
+        List<PieEntry> rightEntrys = sortUtil(rightErorCountMap, rightTotalCount);
 
         setPieData(mPieLeft, "mPieLeft", leftEntrys);
         setPieData(mPieRight, "mPieRight", rightEntrys);
-
     }
 
 
-    private ArrayList<PieEntry> sortUtil(Map<String, Integer> map, int total) {
+    private List<PieEntry> sortUtil(Map<String, Integer> map, int total) {
         ArrayList<PieEntry> entrys = new ArrayList<>();
+
         if (RxDataUtils.isEmpty(map) || total == 0) return entrys;
         map = MapSortUtil.sortMapByValue(map);
         map.forEach((s, integer) -> {
-            RxLogUtils.d("异常次数排名：Key:" + s + "--值:" + integer);
-            if (entrys.size() < 3) {
-                entrys.add(new PieEntry(integer * 1f / total, integer + "次", s));
-            }
+            entrys.add(new PieEntry(integer * 1f / total, "", s));
         });
-        return entrys;
+
+        entrys.forEach(pieEntry ->
+                RxLogUtils.d("异常次数排名：Key:" + pieEntry.getLabel()));
+
+
+        RxLogUtils.d("分割------------");
+
+        return entrys.subList(0, Math.min(entrys.size(), 3));
     }
 
 
@@ -288,7 +292,7 @@ public class ReportActivity extends BaseActivity {
      * @param label
      * @param entries
      */
-    private void setPieData(PieChart chart, String label, ArrayList<PieEntry> entries) {
+    private void setPieData(PieChart chart, String label, List<PieEntry> entries) {
 
         PieDataSet dataSet = new PieDataSet(entries, label);
 

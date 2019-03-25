@@ -59,7 +59,7 @@ public class MapSortUtil {
     }
 
 
-    public static <T, V> Map<T, V> sortMapByValue(Map<T, V> oriMap) {
+    public static <T> Map<T, Integer> sortMapByValue(Map<T, Integer> oriMap) {
         return sortMapByValue(oriMap, false);
     }
 
@@ -75,22 +75,24 @@ public class MapSortUtil {
      * @param isDown 是否是降序
      * @return
      */
-    public static <T, V> Map<T, V> sortMapByValue(Map<T, V> oriMap, boolean isDown) {
+    public static <T> Map<T, Integer> sortMapByValue(Map<T, Integer> oriMap, boolean isDown) {
         if (oriMap == null || oriMap.isEmpty()) {
             return new HashMap<>();
         }
-        Map<T, V> sortedMap = new LinkedHashMap<>();
-        List<Map.Entry<T, V>> entryList = new ArrayList<>(oriMap.entrySet());
+
+        Map<T, Integer> sortedMap = new LinkedHashMap<>();
+        List<Map.Entry<T, Integer>> entryList = new ArrayList<>(oriMap.entrySet());
+
         Collections.sort(entryList, (t1, t2) -> {
             if (isDown) {
-                return t2.hashCode() - t1.hashCode();
+                return t1.getValue() - t2.getValue();
             } else {
-                return t1.hashCode() - t2.hashCode();
+                return t2.getValue() - t1.getValue();
             }
         });
 
-        Iterator<Map.Entry<T, V>> iter = entryList.iterator();
-        Map.Entry<T, V> tmpEntry = null;
+        Iterator<Map.Entry<T, Integer>> iter = entryList.iterator();
+        Map.Entry<T, Integer> tmpEntry = null;
         while (iter.hasNext()) {
             tmpEntry = iter.next();
             sortedMap.put(tmpEntry.getKey(), tmpEntry.getValue());

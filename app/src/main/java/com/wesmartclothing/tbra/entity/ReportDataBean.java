@@ -270,7 +270,16 @@ public class ReportDataBean {
         private int readState;
         private int collectDays;
         private int unusualDays;
+        private int ruleNum;
 
+
+        public int getRuleNum() {
+            return ruleNum;
+        }
+
+        public void setRuleNum(int ruleNum) {
+            this.ruleNum = ruleNum;
+        }
 
         public int getUnusualDays() {
             return unusualDays;

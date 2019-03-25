@@ -147,6 +147,7 @@ public class MainActivity extends BaseActivity {
         initSystemConfig();
         serviceIntent = new Intent(mContext, BleService.class);
         startService(serviceIntent);
+
     }
 
 

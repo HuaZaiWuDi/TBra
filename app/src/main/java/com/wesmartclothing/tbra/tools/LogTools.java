@@ -2,8 +2,9 @@ package com.wesmartclothing.tbra.tools;
 
 import android.os.Environment;
 
+import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.dateUtils.RxFormat;
-import com.wesmartclothing.tbra.ble.BleTools;
+import com.wesmartclothing.tbra.constant.SPKey;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +31,7 @@ public class LogTools {
         String date = RxFormat.setFormatDate(System.currentTimeMillis(), RxFormat.Date);
         String time = RxFormat.setFormatDate(System.currentTimeMillis(), RxFormat.Date_Time);
 
-        String MACAddr = BleTools.getInstance().getBleDevice().getMac();
+        String MACAddr = SPUtils.getString(SPKey.SP_BIND_DEVICE, "");
         String dir = LogDir;
 
         File destDir = new File(dir);

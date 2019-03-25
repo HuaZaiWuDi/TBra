@@ -76,6 +76,11 @@ public class LocationIntentService extends Service {
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
         }
+
+        @Override
+        public void onLocationFail(boolean b, boolean b1) {
+
+        }
     };
 
 

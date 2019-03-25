@@ -219,14 +219,14 @@ public class HomeFragment extends BaseAcFragment {
 
             @Override
             protected void convert(BaseViewHolder helper, ReportDataBean.ListBean item) {
+
+                int ruleNum = item.getRuleNum() == 0 ? 1 : item.getRuleNum();
                 SpannableStringBuilder stringBuilder = RxTextUtils.getBuilder("监测时长\t")
                         .append(item.getCollectCount() * 5 + "min").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
                         .append("\n采集次数\t")
                         .append(item.getCollectCount() + "").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
-//                        .append("\n异常点位\t")
-//                        .append("L03,L04,L05").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
-                        .append("\n告警次数\t")
-                        .append(item.getUnusualCount() + "").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
+                        .append(item.getMonths() == 0 ? "\n告警次数\t" : "")
+                        .append(item.getMonths() == 0 ? item.getUnusualDays() / ruleNum + "" : "").setForegroundColor(ContextCompat.getColor(mContext, R.color.color_444A59))
                         .create();
 
                 helper.setImageResource(R.id.img_date, mCommonTabLayout.getCurrentTab() == 0 ? R.mipmap.ic_week : R.mipmap.ic_month)
@@ -349,7 +349,7 @@ public class HomeFragment extends BaseAcFragment {
                 lifecycleSubject,
                 position == 0 ? "weekDataList" : "monthDataList",
                 ReportDataBean.class,
-                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT_DAY)
+                CacheStrategy.firstRemote()
         )
                 .subscribe(new RxSubscriber<ReportDataBean>() {
                     @Override

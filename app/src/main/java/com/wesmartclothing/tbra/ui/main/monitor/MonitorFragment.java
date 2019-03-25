@@ -23,7 +23,6 @@ import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
-import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.CarouselPictureBean;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
@@ -139,7 +138,7 @@ public class MonitorFragment extends BaseAcFragment {
                 "fetchCarouselPictureList",
                 new TypeToken<List<CarouselPictureBean>>() {
                 }.getType(),
-                CacheStrategy.firstCacheTimeout(Key.CACHE_TIME_OUT_DAY)
+                CacheStrategy.firstRemote()
         )
                 .subscribe(new RxNetSubscriber<List<CarouselPictureBean>>() {
                     @Override

@@ -335,7 +335,7 @@ public class HistoryTempView extends LinearLayout {
         }
         if (mOnErrorPointListener != null && errorPointMap != null) {
             //排序
-            errorPointMap = MapSortUtil.sortMapByValue(errorPointMap, true);
+            errorPointMap = MapSortUtil.sortMapByValue(errorPointMap);
             mOnErrorPointListener.errorPoint(errorPointMap);
         }
     }
