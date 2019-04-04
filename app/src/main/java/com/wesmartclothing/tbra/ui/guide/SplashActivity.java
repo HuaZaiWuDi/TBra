@@ -5,12 +5,14 @@ import android.os.Bundle;
 
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.RxDataUtils;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.constant.SPKey;
+import com.wesmartclothing.tbra.entity.GidBean;
 import com.wesmartclothing.tbra.entity.UserInfoBean;
 import com.wesmartclothing.tbra.net.NetManager;
 import com.wesmartclothing.tbra.net.RxManager;
@@ -75,6 +77,9 @@ public class SplashActivity extends BaseActivity {
         otherSetting();
 
         startService(new Intent(mContext, BleService.class));
+
+
+        RxLogUtils.d("GidBean：" + new GidBean("11111").toString());
     }
 
     private void otherSetting() {

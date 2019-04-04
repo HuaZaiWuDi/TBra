@@ -30,7 +30,7 @@ public class ServiceAPI {
     public static final String BASE_DEBUG = "http://tbra.wesmartclothing.com/";//测试版本
 
 
-    public static String BASE_URL = BASE_URL_192;
+    public static String BASE_URL = BASE_DEBUG;
 
     public static String BASE_SERVICE = BASE_URL.replace("mix", "system");
 

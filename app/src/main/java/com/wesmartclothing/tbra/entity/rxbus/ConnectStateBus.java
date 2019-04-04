@@ -1,5 +1,7 @@
 package com.wesmartclothing.tbra.entity.rxbus;
 
+import com.vondear.rxtools.model.JavaBean;
+
 /**
  * @Package com.wesmartclothing.tbra.entity
  * @FileName ConnectStateBus
@@ -8,10 +10,11 @@ package com.wesmartclothing.tbra.entity.rxbus;
  * @Describe TODO
  * @Project tbra
  */
-public class ConnectStateBus {
+public class ConnectStateBus extends JavaBean {
 
 
     private boolean connect;
+
 
     public ConnectStateBus(boolean connect) {
         this.connect = connect;

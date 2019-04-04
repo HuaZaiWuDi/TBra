@@ -29,14 +29,12 @@ import com.vondear.rxtools.utils.RxDataUtils;
 import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.RxTextUtils;
 import com.vondear.rxtools.utils.RxUtils;
-import com.vondear.rxtools.utils.dateUtils.RxFormat;
 import com.vondear.rxtools.utils.net.ExplainException;
 import com.vondear.rxtools.utils.net.RxComposeUtils;
 import com.vondear.rxtools.utils.net.RxNetSubscriber;
 import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.vondear.rxtools.view.RxToast;
 import com.vondear.rxtools.view.roundprogressbar.RxRoundProgressBar;
-import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
 import com.wesmartclothing.tbra.ble.BleAPI;
@@ -44,7 +42,6 @@ import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.constant.Key;
 import com.wesmartclothing.tbra.constant.PointDate;
 import com.wesmartclothing.tbra.constant.SPKey;
-import com.wesmartclothing.tbra.entity.AddTempDataBean;
 import com.wesmartclothing.tbra.entity.BottomTabItem;
 import com.wesmartclothing.tbra.entity.DeviceBatteryInfoBean;
 import com.wesmartclothing.tbra.entity.RecordBean;
@@ -318,28 +315,11 @@ public class HomeFragment extends BaseAcFragment {
 
             @Override
             public void onTabReselect(int position) {
-                //测试功能
-                if (BuildConfig.DEBUG) {
-                    if (position == 0) {
-                        clearHistoryData();
-                    } else if (position == 1) {
-                        List<AddTempDataBean> tempDataBeans = new ArrayList<>();
-                        BleAPI.getTempData(0, 10, new RxSubscriber<AddTempDataBean>() {
-                            @Override
-                            protected void _onNext(AddTempDataBean addTempDataBean) {
-                                tempDataBeans.add(addTempDataBean);
-                            }
-                        });
-                    }
-                }
+
             }
         });
     }
 
-    private boolean checkSameDate(long targetTime) {
-        return RxFormat.setFormatDate(System.currentTimeMillis(), RxFormat.Date)
-                .equals(RxFormat.setFormatDate(targetTime, RxFormat.Date));
-    }
 
     //一号更新月报，星期一更新周报
     private void getReportData(int position) {
@@ -385,7 +365,6 @@ public class HomeFragment extends BaseAcFragment {
                             mTvSeeMore.setAlpha(1f);
                             mTvSeeMore.setEnabled(true);
                         }
-
                     }
 
                     @Override
@@ -429,7 +408,6 @@ public class HomeFragment extends BaseAcFragment {
                                     });
                             getPointData(PointDate.week);
                         }
-
                     }
                 });
     }

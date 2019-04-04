@@ -32,7 +32,6 @@ public class LoginSuccessUtils {
         SPUtils.put(SPKey.SP_UserId, bean.getUserId());
         SPUtils.put(SPKey.SP_token, bean.getToken());
 
-        NetManager.flushInstance();
         initUserInfo(lifecycleSubject);
 
     }

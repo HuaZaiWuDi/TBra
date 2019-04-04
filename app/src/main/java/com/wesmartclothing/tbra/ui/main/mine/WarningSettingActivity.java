@@ -85,7 +85,7 @@ public class WarningSettingActivity extends BaseActivity {
                     @Override
                     protected void _onNext(WarningRuleBean warningRuleBean) {
                         mWarningRuleBean = warningRuleBean;
-                        mRulerTemp.initViewParam((float) mWarningRuleBean.getTempNum(), 0f, 4f, 1);
+                        mRulerTemp.initViewParam((float) mWarningRuleBean.getTempNum(), 0f, 2f, 1);
                         mTvType.setText(mWarningRuleBean.getPointType().equals("1") ? "单点累计异常次数" : "多点累计异常次数");
                         mEditFrequency.setText(mWarningRuleBean.getBaseNum() + "");
                     }

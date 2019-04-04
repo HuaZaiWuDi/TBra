@@ -301,9 +301,9 @@ public class BleAPI {
                 for (int i = 13; i < bytes.length; i = i + 2) {
                     JsonDataBean bean = new JsonDataBean();
                     if (i < (13 + 16)) {
-                        bean.setNodeName("L0" + ((i - 13) / 2 + 1));
+                        bean.setNodeName("R0" + ((i - 13) / 2 + 1));
                     } else {
-                        bean.setNodeName("R0" + ((i - 13 - 16) / 2 + 1));
+                        bean.setNodeName("L0" + ((i - 13 - 16) / 2 + 1));
                     }
                     bean.setNodeTemp(bytes2Temp(bytes[i], bytes[i + 1]));
 

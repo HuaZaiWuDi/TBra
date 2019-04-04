@@ -192,6 +192,11 @@ public class BleTools {
     }
 
 
+    /**
+     * 蓝牙数据通知通道
+     *
+     * @param notifySubscriber
+     */
     public void openNotify(RxSubscriber<Boolean> notifySubscriber) {
         bleDevice = getBleDevice();
         if (bleDevice == null || !bleManager.isConnected(bleDevice)) {
@@ -216,7 +221,8 @@ public class BleTools {
             public void onCharacteristicChanged(byte[] data) {
                 Log.d(TAG, "蓝牙数据更新:" + HexUtil.encodeHexStr(data));
 
-                LogTools.saveDeviceLog("蓝牙数据更新:" + HexUtil.encodeHexStr(data));
+//                LogTools.saveDeviceLog("蓝牙数据更新:" + HexUtil.encodeHexStr(data));
+
 
                 //命令数据
                 if (subscriber != null && data[3] == bytes[3]) {

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.vondear.rxtools.utils.RxDeviceUtils;
+import com.vondear.rxtools.utils.RxLogUtils;
 import com.vondear.rxtools.utils.SPUtils;
 import com.wesmartclothing.tbra.BuildConfig;
 import com.wesmartclothing.tbra.constant.SPKey;
@@ -128,6 +129,7 @@ public class NetManager {
 
     //在请求头添加参数
     private static Interceptor NetInterceptor = chain -> {
+        RxLogUtils.d("用户UserID：" + SPUtils.getString(SPKey.SP_UserId));
         Request request = chain.request().newBuilder()
                 .header("userId", SPUtils.getString(SPKey.SP_UserId))
 //                    .header("userId", "255bd665a36e461294aa9f66959fbbbb")

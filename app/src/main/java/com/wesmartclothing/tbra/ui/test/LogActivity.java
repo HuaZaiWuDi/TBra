@@ -49,6 +49,8 @@ public class LogActivity extends BaseActivity {
         initTitle(mRxTitle);
         initRecyclerView();
         initData();
+
+
     }
 
     private void initData() {

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -125,7 +126,7 @@ public class LocationActivity extends BaseActivity {
 
     private void initPermissions() {
         //判断是否有权限
-        new RxPermissions(mActivity)
+        new RxPermissions((FragmentActivity) mActivity)
                 .request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
                 .compose(RxComposeUtils.bindLife(lifecycleSubject))
                 .subscribe(new RxSubscriber<Boolean>() {

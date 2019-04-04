@@ -21,6 +21,7 @@ import com.vondear.rxtools.view.cardview.CardView;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.adapter.UltraPagerAdapter;
 import com.wesmartclothing.tbra.base.BaseAcFragment;
+import com.wesmartclothing.tbra.base.BaseTitleWebActivity;
 import com.wesmartclothing.tbra.ble.BleAPI;
 import com.wesmartclothing.tbra.ble.BleTools;
 import com.wesmartclothing.tbra.entity.AddTempDataBean;
@@ -152,7 +153,7 @@ public class MonitorFragment extends BaseAcFragment {
                         //UltraPagerAdapter 绑定子view到UltraViewPager
                         adapter = new UltraPagerAdapter(carouselPictureBeans, ultraViewPager);
                         adapter.setSelectImgListener(bean -> {
-
+                            BaseTitleWebActivity.startBaseWebAc(mContext, bean.getTitle(), bean.getHref());
                         });
                         ultraViewPager.setAdapter(adapter);
                     }

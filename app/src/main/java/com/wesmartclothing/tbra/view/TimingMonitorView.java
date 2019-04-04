@@ -127,10 +127,22 @@ public class TimingMonitorView extends LinearLayout {
         for (int i = 0; i < jsonDataBeans.size(); i++) {
             if (i < 8) {
                 valuesLeft.add(new BarEntry(i, (float) jsonDataBeans.get(i).getNodeTemp()));
-            } else {
-                valuesRight.add(new BarEntry((i - 8), (float) jsonDataBeans.get(i).getNodeTemp()));
             }
         }
+
+        /**
+         * 上面一行是HR5HR6HR7HR8HR1HR2HR3HR4
+         * 下面一行是HL1HL2HL3HL4HL5HL6HL7HL8
+         */
+        valuesRight.add(new BarEntry(0, (float) jsonDataBeans.get(7 + 5).getNodeTemp()));
+        valuesRight.add(new BarEntry(1, (float) jsonDataBeans.get(7 + 6).getNodeTemp()));
+        valuesRight.add(new BarEntry(2, (float) jsonDataBeans.get(7 + 7).getNodeTemp()));
+        valuesRight.add(new BarEntry(3, (float) jsonDataBeans.get(7 + 8).getNodeTemp()));
+        valuesRight.add(new BarEntry(4, (float) jsonDataBeans.get(7 + 1).getNodeTemp()));
+        valuesRight.add(new BarEntry(5, (float) jsonDataBeans.get(7 + 2).getNodeTemp()));
+        valuesRight.add(new BarEntry(6, (float) jsonDataBeans.get(7 + 3).getNodeTemp()));
+        valuesRight.add(new BarEntry(7, (float) jsonDataBeans.get(7 + 4).getNodeTemp()));
+
 
         for (int i = 0; i < valuesRight.size(); i++) {
             float tempDiff = (float) RxFormatValue.format4S5R(valuesLeft.get(i).getY() - valuesRight.get(i).getY(), 1);

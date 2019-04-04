@@ -1,6 +1,5 @@
 package com.wesmartclothing.tbra.ui.guide;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -13,11 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kongzue.dialog.v2.CustomDialog;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.vondear.rxtools.activity.RxActivityUtils;
 import com.vondear.rxtools.utils.StatusBarUtils;
-import com.vondear.rxtools.utils.net.RxComposeUtils;
-import com.vondear.rxtools.utils.net.RxSubscriber;
 import com.wesmartclothing.tbra.R;
 import com.wesmartclothing.tbra.base.BaseActivity;
 import com.wesmartclothing.tbra.base.BaseTitleWebActivity;
@@ -125,19 +121,6 @@ public class GuideActivity extends BaseActivity {
         });
     }
 
-    private void initPermissions() {
-        new RxPermissions(mActivity)
-                .request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .compose(RxComposeUtils.bindLife(lifecycleSubject))
-                .subscribe(new RxSubscriber<Boolean>() {
-                    @Override
-                    protected void _onNext(Boolean aBoolean) {
-                        RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
-                    }
-                });
-    }
-
     @Override
     public void initNetData() {
 
@@ -166,7 +149,7 @@ public class GuideActivity extends BaseActivity {
             rootView.findViewById(R.id.img_agree)
                     .setOnClickListener(view -> {
                         CustomDialog.unloadAllDialog();
-                        initPermissions();
+                        RxActivityUtils.skipActivityAndFinish(mContext, LoginActivity.class);
                     });
             rootView.findViewById(R.id.img_unAgree)
                     .setOnClickListener(view -> {

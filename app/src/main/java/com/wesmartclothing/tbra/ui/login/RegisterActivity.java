@@ -83,7 +83,6 @@ public class RegisterActivity extends BaseActivity {
                 .setUrl(Key.WEB_URL_Registration_Agreement)
                 .setClickSpan(new CustomClickUrlSpan(view -> {
                     BaseTitleWebActivity.startBaseWebAc(mContext, "注册协议", Key.WEB_URL_Registration_Agreement);
-
                 }))
                 .append("和")
                 .append("《服务条款和隐私条款》")

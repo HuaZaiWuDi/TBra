@@ -22,7 +22,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="label,icon,roundIcon,theme,appComponentFactory">
-        <activity android:name=".ui.test.LogActivity">
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false"/>
+
+        <activity
+            android:name=".ui.test.LogActivity"
+            android:launchMode="singleTop">
         </activity>
         <!-- android7.0适配 -->
         <provider

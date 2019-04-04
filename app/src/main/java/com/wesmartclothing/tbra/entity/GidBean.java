@@ -1,5 +1,8 @@
 package com.wesmartclothing.tbra.entity;
 
+
+import com.vondear.rxtools.model.JavaBean;
+
 /**
  * @Package com.wesmartclothing.tbra.entity
  * @FileName GidBean
@@ -8,7 +11,7 @@ package com.wesmartclothing.tbra.entity;
  * @Describe TODO
  * @Project tbra
  */
-public class GidBean {
+public class GidBean extends JavaBean {
 
 
     /**
@@ -16,6 +19,7 @@ public class GidBean {
      */
 
     private String gid;
+
 
     public GidBean(String gid) {
         this.gid = gid;
