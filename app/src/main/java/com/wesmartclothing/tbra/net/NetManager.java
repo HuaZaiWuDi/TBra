@@ -137,6 +137,16 @@ public class NetManager {
                 .header("version", RxDeviceUtils.getAppVersionName())
                 .header("phoneType", RxDeviceUtils.getBuildMANUFACTURER())
                 .header("system", "Android")
+                .header("company", "tbra")
+                .header("Request-Type", "app")
+                .header("user_agent", "tbra/" +
+                        RxDeviceUtils.getAppVersionName() + //软件版本号
+                        "(android: " + //系统名称
+                        android.os.Build.VERSION.RELEASE + ";" +//软件版本号
+//                            RxDeviceUtils.getNetworkOperatorName() + "; " +//网络运营商
+                        RxDeviceUtils.getBuildMANUFACTURER() + ":" +//手机设备厂商
+                        RxDeviceUtils.getBuildBrandModel() + ";" +//设备型号
+                        ")")
                 .header("macAddr", RxDeviceUtils.getAndroidId())
                 .header("token", SPUtils.getString(SPKey.SP_token)).build();
 //                .header("token", "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwYjFiZTMyZDkzNjY0MGQxODI1ZTUzMTk4YjE3MmFiOCIsImlhdCI6MTU0NzE3NzUxMiwiZXhwIjoxNTYyODE1OTEyLCJzdWIiOiJ1c2VyIn0.mve64-k8dKsj79ndsGsUuUCpEMeLO07lPS6O3_nSO7U").build();
